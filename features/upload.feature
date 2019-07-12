@@ -11,7 +11,7 @@ Feature: Upload
   Scenario: Upload a csv file whose name is compliant with the naming rules
     Given I am on the Upload page
     When I upload a valid csv file
-    Then I should see "Result of upload"
+    Then I should see "Upload successful"
 
   Scenario: Upload a csv file whose name is not compliant with the naming rules
     Given I am on the Upload page
