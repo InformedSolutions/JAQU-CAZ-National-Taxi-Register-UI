@@ -12,6 +12,9 @@ require 'webmock/cucumber'
 # add 'show_me_the_cookies' gem helpers to manipulate cookies.
 World(ShowMeTheCookies)
 
+# stub connect to the AWS metadata server to get the AWS credentials.
+Aws.config.update(stub_responses: true)
+
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
 # selectors in your step definitions to use the XPath syntax.

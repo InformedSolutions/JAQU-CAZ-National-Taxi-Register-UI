@@ -10,8 +10,12 @@ require 'rspec/rails'
 # load support folder
 Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
 
+# stub connect to the AWS metadata server to get the AWS credentials.
+Aws.config.update(stub_responses: true)
+
 RSpec.configure do |config|
   config.include RequestSpecHelper, type: :request
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
