@@ -3,7 +3,10 @@
 require 'webmock/rspec'
 require 'simplecov'
 require 'show_me_the_cookies'
-SimpleCov.start
+
+SimpleCov.start do
+  add_filter 'config/initializers/content_security_policy.rb'
+end
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

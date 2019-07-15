@@ -1,0 +1,28 @@
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  %fieldset.govuk-fieldset
+    %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
+      %h1.govuk-heading-l Setup your new password
+      - if alert
+        = render 'shared/errors'
+      %p
+        You are logging in for the first time. For security reasons please update your password.
+      %p
+        Please enter new password below. It should be at least 8 characters long and include at least one upper case letter and a number.
+
+      = form_for(current_user, url: passwords_path, method: :post) do |f|
+        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
+          = f.label :password, class: 'govuk-label'
+          %span#govuk-error-message.govuk-error-message
+            - if alert
+              %span.govuk-visually-hidden Error:
+              =alert
+          = f.password_field :password, class: 'govuk-input govuk-!-width-two-thirds'
+        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
+          = f.label :password_confirmation, class: 'govuk-label'
+          %span.govuk-error-message
+            - if alert
+              %span.govuk-visually-hidden Error:
+              =alert
+          = f.password_field :password_confirmation, class: 'govuk-input govuk-!-width-two-thirds'
+        .govuk-form-group
+          = f.submit 'Continue', class: 'govuk-button'

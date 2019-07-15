@@ -11,6 +11,12 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :passwords, only: %i[new create] do
+    collection do
+      get :success
+    end
+  end
+
   get :data_rules, to: 'upload#data_rules'
   get 'cookies', to: 'cookies#index'
   get '/health', to: 'application#health'
