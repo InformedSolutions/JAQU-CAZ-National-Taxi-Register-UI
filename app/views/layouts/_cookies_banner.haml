@@ -2,9 +2,9 @@
   .govuk-width-container
     %p
       Centralised Taxi and PHV Data Maintenance uses cookies to make the site simpler.
-      %a.govuk-link{ href: cookies_path }
-        Find out more about cookies
-      %span
-        or
-        %a#close-banner.govuk-link{ href:"#" }
-          hide this message
+
+    .cookie-banner__buttons
+      .cookie-banner__button.cookie-banner__button-accept
+        %a.button.govuk-button.govuk-link{href: '#', role: 'button', id: '#close-banner'} Accept cookies
+      .cookie-banner__button.cookie-banner__button-settings
+        %a.button.govuk-button.govuk-link{href: cookies_path, role: 'button'} Cookie settings

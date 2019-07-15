@@ -1,36 +1,75 @@
+@import "~govuk-frontend/all";
+
 //TODO Replace when https://github.com/alphagov/govuk-design-system-backlog/issues/12 is done
 $background-white: #d5e8f3;
+$green: #00823b;
+$darker-green: #00692f;
+$cookie-border: #0b0c0c;
 
 .global-cookie-message {
+  background-color: govuk-colour('white');
+  border: 2px solid $cookie-border;
+  box-sizing: border-box;
+  padding: 20px 0;
   width: 100%;
-  background-color: $background-white;
-  padding-top: 10px;
-  padding-bottom: 10px;
 
   .govuk-width-container {
-    max-width: 960px;
     margin: 0 15px;
+    max-width: 960px;
 
     @media (min-width: 1020px) {
       margin: 0 auto;
     }
 
     p {
+      color: $green;
+      display: inline-block;
+      font-size: 16px;
       font-weight: 400;
-      text-transform: none;
-      font-size: 14px;
-      line-height: 1.14286;
-      max-width: 960px;
+      line-height: 1.25;
       margin: 0 15px;
+      max-width: 960px;
+      padding-bottom: 10px;
+      padding-right: 20px;
+      text-transform: none;
 
       @media (min-width: 641px) {
-        font-size: 16px;
-        line-height: 1.25;
+        font-size: 19px;
+        line-height: 1.3157894737;
       }
 
       @media (min-width: 1020px) {
         margin: 0 auto;
       }
+    }
+
+    .cookie-banner__buttons {
+      display: inline-block;
+    }
+
+    .cookie-banner__button {
+      display: inline-block;
+      width: auto;
+    }
+
+    .button {
+      background-color: govuk-colour('white');
+      border-color: $green;
+      box-shadow: none;
+      color: $green;
+      display: inline-block;
+      margin-bottom: 0;
+      margin-right: 10px;
+      padding: 10px 10px 7px;
+      vertical-align: baseline;
+      width: auto;
+    }
+
+    .button:hover {
+      background-color: govuk-colour('grey-4');
+      border-color: $darker-green;
+      color: $darker-green;
+      text-decoration: none;
     }
   }
 }
