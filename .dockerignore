@@ -9,6 +9,6 @@ log/*
 coverage
 .idea
 #config/ssl
-config/credentials/production.key
-db/development.sqlite3
-db/test.sqlite3
+node_modules
+public/packs
+public/packs-test

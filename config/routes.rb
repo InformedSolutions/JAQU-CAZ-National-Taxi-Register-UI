@@ -13,4 +13,5 @@ Rails.application.routes.draw do
 
   get :data_rules, to: 'upload#data_rules'
   get 'cookies', to: 'cookies#index'
+  get '/health', to: 'application#health'
 end
