@@ -39,7 +39,13 @@ describe UploadController, type: :request do
     end
 
     context 'with invalid params' do
-      let(:file_path) { file_fixture('сAZ-2020-01-08-AuthorityID-4321.csv') }
+      let(:file_path) do
+        File.join('spec',
+                  'fixtures',
+                  'files',
+                  'empty',
+                  'сAZ-2020-01-08-AuthorityID-4321.csv')
+      end
 
       it 'returns error' do
         http_request
