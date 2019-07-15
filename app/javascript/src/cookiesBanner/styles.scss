@@ -1,13 +1,13 @@
-@import "~govuk-frontend/all";
-
 //TODO Replace when https://github.com/alphagov/govuk-design-system-backlog/issues/12 is done
 $background-white: #d5e8f3;
 $green: #00823b;
+$white: #ffffff;
+$grey-4: #f8f8f8;
 $darker-green: #00692f;
 $cookie-border: #0b0c0c;
 
 .global-cookie-message {
-  background-color: govuk-colour('white');
+  background-color: $white;
   border: 2px solid $cookie-border;
   box-sizing: border-box;
   padding: 20px 0;
@@ -53,7 +53,7 @@ $cookie-border: #0b0c0c;
     }
 
     .button {
-      background-color: govuk-colour('white');
+      background-color: $white;
       border-color: $green;
       box-shadow: none;
       color: $green;
@@ -66,7 +66,7 @@ $cookie-border: #0b0c0c;
     }
 
     .button:hover {
-      background-color: govuk-colour('grey-4');
+      background-color: $grey-4;
       border-color: $darker-green;
       color: $darker-green;
       text-decoration: none;
