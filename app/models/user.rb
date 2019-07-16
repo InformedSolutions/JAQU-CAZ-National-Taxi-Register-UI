@@ -14,4 +14,8 @@ class User
   # Latest devise(v4.6.2) tries to initialize this class with values
   # ignore it for now
   def initialize(options = {}); end
+
+  def sub
+    SecureRandom.uuid
+  end
 end

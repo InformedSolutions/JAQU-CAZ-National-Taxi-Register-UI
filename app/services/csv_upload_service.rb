@@ -5,8 +5,9 @@ class CsvUploadService < BaseService
   UPLOAD_ERROR_MSG = 'The selected file could not be uploaded – try again'
   attr_reader :file, :errors
 
-  def initialize(file:)
+  def initialize(file:, user:)
     @file = file
+    @user = user
     @errors = nil
   end
 
@@ -43,7 +44,8 @@ class CsvUploadService < BaseService
 
   def upload_to_s3
     s3_object = AMAZON_S3_CLIENT.bucket(bucket_name).object(file.original_filename)
-    return true if s3_object.upload_file(file)
+    metadata = { 'uploader': @user.sub }
+    return true if s3_object.upload_file(file, metadata: metadata)
 
     raise CsvUploadFailureException, UPLOAD_ERROR_MSG
   rescue Aws::S3::Errors::ServiceError => e
