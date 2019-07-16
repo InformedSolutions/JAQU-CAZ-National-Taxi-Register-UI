@@ -18,5 +18,7 @@ import '../src/GovUKAssets';
 import { initAll } from 'govuk-frontend';
 import initBanner from '../src/cookiesBanner/init';
 
-initAll();
+document.addEventListener('turbolinks:load', function() {
+    initAll();
+});
 initBanner();
