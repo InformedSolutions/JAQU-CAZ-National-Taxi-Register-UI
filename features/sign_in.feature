@@ -9,6 +9,8 @@ Feature: Sign In
     Then I am redirected to the Sign in page
       And I should see "Sign In"
       And I should see "Centralised Taxi and PHV Data Maintenance" title
+      And I should not see "Upload" link
+      And I should not see "Data rules" link
     Then I should enter valid credentials and press the Continue
     When I should see "Taxi/PHV Data Upload"
       And Cookie is created for my session
@@ -18,6 +20,8 @@ Feature: Sign In
     When I navigate to a Upload page
     Then I am redirected to the Upload page
       And I should see "Taxi/PHV Data Upload"
+      And I should see "Upload" link
+      And I should see "Data rules" link
 
   Scenario: View upload page with cookie that has expired
     Given I have authentication cookie that has expired
