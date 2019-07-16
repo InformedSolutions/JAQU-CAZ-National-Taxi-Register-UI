@@ -3,13 +3,13 @@
 %nav
   %ul#navigation.govuk-header__navigation{"aria-label" => "Top Level Navigation"}
     - if user_signed_in?
-      %li.govuk-header__navigation-item{ class: is_current_path?(upload_index_path) }
+      %li.govuk-header__navigation-item{ class: current_path?(upload_index_path) }
         %a.govuk-header__link{href: upload_index_path}
           Upload
-      %li.govuk-header__navigation-item{ class: is_current_path?(data_rules_path) }
+      %li.govuk-header__navigation-item{ class: current_path?(data_rules_path) }
         %a.govuk-header__link{href: data_rules_path}
           Data rules
-    %li.govuk-header__navigation-item{ class: is_current_path?(new_user_session_path) }
+    %li.govuk-header__navigation-item{ class: current_path?(new_user_session_path) }
       %a
         - if user_signed_in?
           = link_to('Sign Out', destroy_user_session_path, method: :delete, class: "govuk-header__link")

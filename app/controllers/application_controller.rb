@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  protect_from_forgery prepend: true
   rescue_from CsvUploadFailureException, with: :handle_exception
 
   def health
-    render json: 'OK', status: 200
+    render json: 'OK', status: :ok
   end
 
   private
