@@ -9,6 +9,10 @@ class UploadController < ApplicationController
 
   def data_rules; end
 
+  def index
+    flash[:alert] ||= params[:error]
+  end
+
   private
 
   def file

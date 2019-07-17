@@ -1,7 +1,7 @@
-.govuk-error-summary{"aria-labelledby" => "error-summary-title", "data-module" => "error-summary", :role => "alert", :tabindex => "-1"}
+.govuk-error-summary{"aria-labelledby" => "error-summary-title", "data-module" => "error-summary", role: "alert", tabindex: "-1"}
   %h2#error-summary-title.govuk-error-summary__title
     There was a problem
   .govuk-error-summary__body
     %ul.govuk-list.govuk-error-summary__list
       %li
-        %a{:href => ""}= alert
+        =link_to(alert, "#{request.path_info}?error=#{alert}#govuk-error-message")
