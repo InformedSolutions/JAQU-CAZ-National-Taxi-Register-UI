@@ -20,20 +20,28 @@ class UpdatePasswordForm < BaseForm
   end
 
   def filled?
-    if parameter['confirmation_code'].blank?
-      @message = 'You must enter your confirmation code'
-      @error_input = 'confirmation_code'
-      return false
-    elsif parameter['password'].blank?
-      @message = 'You must enter your password'
-      @error_input = 'password'
-      return false
-    elsif parameter['password_confirmation'].blank?
-      @message = 'You must confirm your password'
-      @error_input = 'password_confirmation'
-      return false
-    else
-      return true
-    end
+    return confirmation_code_error if parameter['confirmation_code'].blank?
+    return password_error if parameter['password'].blank?
+    return password_confirmation_error if parameter['password_confirmation'].blank?
+
+    true
+  end
+
+  def confirmation_code_error
+    @message = 'You must enter your confirmation code'
+    @error_input = 'confirmation_code'
+    false
+  end
+
+  def password_error
+    @message = 'You must enter your password'
+    @error_input = 'password'
+    false
+  end
+
+  def password_confirmation_error
+    @message = 'You must confirm your password'
+    @error_input = 'password_confirmation'
+    false
   end
 end

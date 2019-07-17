@@ -12,10 +12,10 @@
 
       = form_tag(import_upload_index_path, multipart: true) do
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
-          %label.govuk-label{:for => "file-upload-1"}
+          %label.govuk-label{for: "file-upload-1"}
             Upload a file
           - if alert
-            %span#file-upload-1-error.govuk-error-message
+            %span#govuk-error-message.govuk-error-message
               %span.govuk-visually-hidden Error:
               = alert
           %input#file-upload-1.govuk-file-upload{class:('govuk-file-upload--error' if alert),

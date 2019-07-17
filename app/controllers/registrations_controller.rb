@@ -1,5 +1,6 @@
-class RegistrationsController < Devise::RegistrationsController
+# frozen_string_literal: true
 
+class RegistrationsController < Devise::RegistrationsController
   def reset_password
     assign_error
   end
@@ -25,8 +26,6 @@ class RegistrationsController < Devise::RegistrationsController
       return
     end
   end
-
-  protected
 
   private
 

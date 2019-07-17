@@ -40,3 +40,11 @@ end
 Given('I am on the Sign in page') do
   visit new_user_session_path
 end
+
+Then('I should see {string} link') do |string|
+  expect(page).to have_link(string)
+end
+
+Then('I should not see {string} link') do |string|
+  expect(page).not_to have_link(string)
+end

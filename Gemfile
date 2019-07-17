@@ -19,7 +19,6 @@ gem 'logstash-logger'
 gem 'puma'
 gem 'rubocop-rails'
 gem 'sass-rails'
-gem 'turbolinks'
 gem 'webpacker'
 
 group :development, :test do
