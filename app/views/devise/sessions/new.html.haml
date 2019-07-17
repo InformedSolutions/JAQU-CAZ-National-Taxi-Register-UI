@@ -2,7 +2,6 @@
   %fieldset.govuk-fieldset
     %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
       %h1.govuk-heading-l Sign In
-
       - if alert
         = render 'shared/errors'
 
@@ -11,11 +10,19 @@
         %a.govuk-link{href: '#'} xyz@email.com.
 
       = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
-        .govuk-form-group
+        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
           = f.label :username, class: 'govuk-label'
-          = f.text_field :username, autofocus: true, autocomplete: 'username', class: 'govuk-input govuk-!-width-two-thirds'
-        .govuk-form-group
+          %span#govuk-error-message.govuk-error-message
+            - if alert
+              %span.govuk-visually-hidden Error:
+              Use correct username
+          = f.text_field :username, autofocus: true, autocomplete: 'username', class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
           = f.label :password, class: 'govuk-label'
-          = f.password_field :password, autocomplete: 'current-password', class: 'govuk-input govuk-!-width-two-thirds'
+          %span.govuk-error-message
+            - if alert
+              %span.govuk-visually-hidden Error:
+              Use correct password
+          = f.password_field :password, autocomplete: 'current-password', class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
         .govuk-form-group
           = f.submit 'Continue', class: 'govuk-button'
