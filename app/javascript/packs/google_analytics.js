@@ -1,4 +1,4 @@
-document.addEventListener('turbolinks:load', function(event) {
+document.addEventListener("DOMContentLoaded", function(event) {
   if (document.body.dataset['ga'])
   {
     if (typeof gtag === 'function') {
@@ -7,4 +7,4 @@ document.addEventListener('turbolinks:load', function(event) {
       })
     }
   }
-})
+});

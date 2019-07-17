@@ -4,4 +4,4 @@
   .govuk-error-summary__body
     %ul.govuk-list.govuk-error-summary__list
       %li
-        =link_to(alert, "#{request.path_info}?error=#{alert}#govuk-error-message")
+        =link_to(alert, '#govuk-error-message')
