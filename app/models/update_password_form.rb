@@ -2,16 +2,10 @@
 
 class UpdatePasswordForm < BaseForm
   def valid?
-    not_to_short? && filled? && correct_password_confirmation?
+    filled? && correct_password_confirmation?
   end
 
   private
-
-  def not_to_short?
-    @message = 'Your password should include at least 8 characters'
-    @error_input = 'password'
-    parameter['password'].length > 7
-  end
 
   def correct_password_confirmation?
     @message = "Your password doesn't match password confirmation"

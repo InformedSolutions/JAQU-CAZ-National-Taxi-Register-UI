@@ -1,10 +1,5 @@
 # frozen_string_literal: true
 
-# Scenario: Upload without file
-When('I press "Upload" button') do
-  click_button 'Upload'
-end
-
 # Scenario: Upload a csv file whose name is compliant with the naming rules
 When('I upload a valid csv file') do
   RSpec::Mocks.with_temporary_scope do

@@ -5,5 +5,5 @@ Feature: Data Rules
 
   Scenario: See Data rules
     Given I am on the Upload page
-    When I press "Data rules" button
+    When I press Data rules button
     Then I should see "Taxi/PHV Data Rules"

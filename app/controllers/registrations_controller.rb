@@ -20,9 +20,7 @@ class RegistrationsController < Devise::RegistrationsController
       redirect_to update_password_path(error: form.message,
                                        error_type: form.error_input,
                                        email: email,
-                                       confirmation_code: confirmation_code,
-                                       password: password,
-                                       password_confirmation: password_confirmation)
+                                       confirmation_code: confirmation_code)
       return
     end
   end
