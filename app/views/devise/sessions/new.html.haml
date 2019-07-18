@@ -7,7 +7,7 @@
 
       %p
         If you do not have an account, please email us at
-        %a.govuk-link{href: '#'} xyz@email.com.
+        = mail_to "TaxiandPHVCentralised.Database@defra.gov.uk", "TaxiandPHVCentralised.Database@defra.gov.uk", class: 'govuk-link'
 
       = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
