@@ -9,15 +9,11 @@ class User
   define_model_callbacks :validation
   devise :remote_authenticatable, :timeoutable
 
-  attr_accessor :email, :username, :aws_status, :aws_session
+  attr_accessor :email, :username, :aws_status, :aws_session, :sub
 
   # Latest devise(v4.6.2) tries to initialize this class with values
   # ignore it for now
   def initialize(options = {}); end
-
-  def sub
-    SecureRandom.uuid
-  end
 
   # needed for rendering user forms
   def to_key
@@ -30,7 +26,8 @@ class User
       email: email,
       username: username,
       aws_status: aws_status,
-      aws_session: aws_session
+      aws_session: aws_session,
+      sub: sub
     }
   end
 end

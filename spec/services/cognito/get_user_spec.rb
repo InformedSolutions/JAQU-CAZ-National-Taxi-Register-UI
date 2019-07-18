@@ -9,11 +9,12 @@ RSpec.describe Cognito::GetUser do
   let(:cognito_response) do
     OpenStruct.new(username: username, user_attributes: [
                      OpenStruct.new(name: 'email', value: email),
-                     OpenStruct.new(name: 'sub', value: SecureRandom.uuid)
+                     OpenStruct.new(name: 'sub', value: sub)
                    ])
   end
   let(:email) { 'test@example.com' }
   let(:username) { 'wojtek' }
+  let(:sub) { SecureRandom.uuid }
 
   before do
     allow(COGNITO_CLIENT).to receive(:get_user)
@@ -39,5 +40,9 @@ RSpec.describe Cognito::GetUser do
 
   it 'sets aws_session to nil' do
     expect(service_call.aws_session).to eq(nil)
+  end
+
+  it 'sets sub' do
+    expect(service_call.sub).to eq(sub)
   end
 end

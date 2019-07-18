@@ -36,6 +36,7 @@ module Devise
           resource.username = data['username']
           resource.aws_status = data['aws_status']
           resource.aws_session = data['aws_session']
+          resource.sub = data['sub']
           resource
         end
 

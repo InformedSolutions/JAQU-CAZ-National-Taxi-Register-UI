@@ -3,7 +3,7 @@
 class CsvUploadService < BaseService
   NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))-([a-zA-Z]+)-\d+$/.freeze
   UPLOAD_ERROR_MSG = 'The selected file could not be uploaded – try again'
-  attr_reader :file, :errors
+  attr_reader :file, :errors, :user
 
   def initialize(file:, user:)
     @file = file
@@ -44,7 +44,7 @@ class CsvUploadService < BaseService
 
   def upload_to_s3
     s3_object = AMAZON_S3_CLIENT.bucket(bucket_name).object(file.original_filename)
-    metadata = { 'uploader': @user.sub }
+    metadata = { 'uploader': user.sub }
     return true if s3_object.upload_file(file, metadata: metadata)
 
     raise CsvUploadFailureException, UPLOAD_ERROR_MSG

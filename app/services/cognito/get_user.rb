@@ -17,10 +17,18 @@ module Cognito
     private
 
     def update_user
-      user_data = COGNITO_CLIENT.get_user(access_token: access_token)
       user.username = user_data.username
-      user.email = user_data.user_attributes.find { |attr| attr.name == 'email' }&.value
+      user.email = extract_attr('email')
+      user.sub = extract_attr('sub')
       user.aws_status = 'OK'
+    end
+
+    def extract_attr(name)
+      user_data.user_attributes.find { |attr| attr.name == name }&.value
+    end
+
+    def user_data
+      @user_data ||= COGNITO_CLIENT.get_user(access_token: access_token)
     end
   end
 end
