@@ -8,10 +8,10 @@ Feature: Upload
     When I press "Upload" button
     Then I should see "Select a CSV"
 
-  Scenario: Upload a csv file whose name is compliant with the naming rules
+  Scenario: Upload a csv file and redirect to processing page
     Given I am on the Upload page
     When I upload a valid csv file
-    Then I should see "Upload successful"
+    Then I should see "Validating submission"
 
   Scenario: Upload a csv file whose name is not compliant with the naming rules
     Given I am on the Upload page

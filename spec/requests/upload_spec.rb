@@ -34,7 +34,7 @@ describe UploadController, type: :request do
 
       it 'returns a success response' do
         http_request
-        expect(response).to have_http_status(:success)
+        expect(response).to have_http_status(:found)
       end
     end
 

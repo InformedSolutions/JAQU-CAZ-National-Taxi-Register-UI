@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   resources :upload, only: %i[index] do
     collection do
       post :import
+      get :processing
     end
   end
 
