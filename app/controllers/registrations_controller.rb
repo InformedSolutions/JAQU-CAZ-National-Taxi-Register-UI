@@ -10,7 +10,6 @@ class RegistrationsController < Devise::RegistrationsController
     form = EmailForm.new(email)
     unless form.valid?
       redirect_to reset_password_path(error: form.message, email: email)
-      return
     end
   end
 
@@ -23,7 +22,6 @@ class RegistrationsController < Devise::RegistrationsController
                                        confirmation_code: confirmation_code,
                                        password: password,
                                        password_confirmation: password_confirmation)
-      return
     end
   end
 

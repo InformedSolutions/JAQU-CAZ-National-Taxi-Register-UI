@@ -2,18 +2,24 @@
 
 class EmailForm < BaseForm
   def valid?
-    filled? && valid_format?
+    if unfilled? || invalid_format?
+      false
+    else
+      true
+    end
   end
 
   private
 
-  def filled?
-    @message = 'You must enter your email address'
-    parameter.present?
+  def unfilled?
+    if parameter.blank?
+      @message = 'You must enter your email address'
+    end
   end
 
-  def valid_format?
-    @message = 'You must enter your email in valid format'
-    /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/.match(parameter).present?
+  def invalid_format?
+    if /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/.match(parameter).blank?
+      @message = 'You must enter your email in valid format'
+    end
   end
 end

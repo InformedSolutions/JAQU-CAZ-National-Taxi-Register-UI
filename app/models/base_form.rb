@@ -7,6 +7,5 @@ class BaseForm
     @parameter = parameter
     @message = ''
     @error_input = ''
-    valid?
   end
 end
