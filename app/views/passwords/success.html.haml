@@ -7,10 +7,16 @@
         .govuk-panel__body
           We have successfully updated you password
       %h2.govuk-heading-m What happens next
-      %p
-        You can now
-        = link_to 'submit CSV', upload_index_path
-        with Taxi/PHV data
+      -if user_signed_in?
+        %p
+          You can now
+          = link_to 'submit CSV', upload_index_path
+          with Taxi/PHV data
+      -else
+        %p
+          You can now
+          = link_to 'log in', new_user_session_path
+          using your new password
       %p
         = link_to 'What did you think of this service?', root_path
         (takes 30 seconds)

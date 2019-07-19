@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class BaseForm
-  attr_reader :parameter, :message, :error_input
+  attr_reader :parameter, :message
 
   def initialize(parameter)
     @parameter = parameter
     @message = ''
-    @error_input = ''
   end
 end

@@ -3,12 +3,6 @@
 Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: 'registrations' }
 
-  devise_scope :user do
-    get 'reset-password', to: 'registrations#reset_password'
-    get 'update-password', to: 'registrations#update_password'
-    get 'password-updated', to: 'registrations#password_updated'
-  end
-
   root 'upload#index'
 
   resources :upload, only: %i[index] do
@@ -22,10 +16,14 @@ Rails.application.routes.draw do
   resources :passwords, only: %i[new create] do
     collection do
       get :success
+      get :reset
+      post :send_confirmation_code
+      get :confirm_reset
+      post :change
     end
   end
 
   get :data_rules, to: 'upload#data_rules'
   get 'cookies', to: 'cookies#index'
-  get '/health', to: 'application#health'
+  get 'health', to: 'application#health'
 end
