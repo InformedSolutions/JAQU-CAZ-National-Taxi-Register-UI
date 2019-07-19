@@ -5,11 +5,19 @@ class UploadController < ApplicationController
   before_action :redirect_to_new_password_path
 
   def import
-    file_name = CsvUploadService.call(file: file, user: current_user)
-    redirect_to processing_upload_index_path(file_name: file_name)
+    CsvUploadService.call(file: file, user: current_user)
+    session[:job_uuid] = Connection::RegisterCheckerApi.register_job(file.original_filename)
+
+    redirect_to processing_upload_index_path
   end
 
-  def processing; end
+  def processing
+    if session[:job_uuid]
+      # ProcessingJobService.call(job_uuid: session[:job_uuid])
+      session[:job_uuid] = nil
+      redirect_to success_upload_index_path
+    end
+  end
 
   def data_rules; end
 

@@ -43,12 +43,10 @@ When('I enter invalid credentials') do
   fill_in('user_username', with: 'user@example.com')
   fill_in('user_password', with: 'invalid-password')
 
-  RSpec::Mocks.with_temporary_scope do
-    expect_any_instance_of(Aws::CognitoIdentityProvider::Client).to receive(:initiate_auth)
-      .and_return(false)
+  expect_any_instance_of(Aws::CognitoIdentityProvider::Client).to receive(:initiate_auth)
+    .and_return(false)
 
-    click_button 'Continue'
-  end
+  click_button 'Continue'
 end
 
 Then('I remain on the current page') do

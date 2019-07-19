@@ -19,3 +19,7 @@ Metrics/LineLength:
 
 Metrics/BlockLength:
   ExcludedMethods: ['describe', 'context']
+
+Style/MixinUsage:
+  Exclude:
+    - 'features/step_definitions/*.rb'

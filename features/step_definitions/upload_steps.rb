@@ -1,13 +1,18 @@
 # frozen_string_literal: true
 
-# Scenario: Upload a csv file whose name is compliant with the naming rules
+# Scenario: Upload a csv file and redirect to processing page
 When('I upload a valid csv file') do
-  RSpec::Mocks.with_temporary_scope do
-    allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(true)
+  allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(true)
+  allow(Connection::RegisterCheckerApi).to receive(:register_job)
+    .with('CAZ-2020-01-08-AuthorityID-4321.csv')
+    .and_return('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
 
-    attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4321.csv'))
-    click_button 'Upload'
-  end
+  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4321.csv'))
+  click_button 'Upload'
+end
+
+Then('I am redirected to the Success page') do
+  expect(page).to have_current_path(success_upload_index_path)
 end
 
 #  Scenario: Upload a csv file whose name is not compliant with the naming rules
@@ -49,12 +54,10 @@ end
 
 # Upload a valid csv file during error is encountered writing to S3
 When('I upload a csv file during error on S3') do
-  RSpec::Mocks.with_temporary_scope do
-    allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(false)
+  allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(false)
 
-    attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4321.csv'))
-    click_button 'Upload'
-  end
+  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4321.csv'))
+  click_button 'Upload'
 end
 
 When('I upload a csv file with invalid number of values') do
@@ -93,9 +96,9 @@ When('I upload a csv file with pound, dollar and hash characters') do
 end
 
 def empty_csv_file(filename)
-  File.join('spec', 'fixtures', 'files', 'empty', filename)
+  File.join('spec', 'fixtures', 'files', 'csv', 'empty', filename)
 end
 
 def csv_file(filename)
-  File.join('spec', 'fixtures', 'files', filename)
+  File.join('spec', 'fixtures', 'files', 'csv', filename)
 end

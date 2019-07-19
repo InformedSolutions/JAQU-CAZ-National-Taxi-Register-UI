@@ -3,10 +3,19 @@
 require 'rails_helper'
 
 describe UploadController, type: :request do
+  let(:file_path) do
+    File.join(
+      'spec',
+      'fixtures', 'files', 'csv', 'CAZ-2020-01-08-AuthorityID-4321.csv'
+    )
+  end
+
+  before :each do
+    sign_in User.new
+  end
+
   describe 'GET #index' do
     subject(:http_request) { get upload_index_path }
-
-    before { sign_in User.new }
 
     it 'returns a success response' do
       http_request
@@ -21,16 +30,11 @@ describe UploadController, type: :request do
 
     let(:csv_file) { fixture_file_upload(file_path) }
 
-    before :each do
-      sign_in User.new
-    end
-
     context 'with valid params' do
       before do
-        allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(true)
+        allow(CsvUploadService).to receive(:call).and_return(true)
+        mock_register_job
       end
-
-      let(:file_path) { file_fixture('CAZ-2020-01-08-AuthorityID-4321.csv') }
 
       it 'returns a success response' do
         http_request
@@ -41,10 +45,7 @@ describe UploadController, type: :request do
     context 'with invalid params' do
       let(:file_path) do
         File.join('spec',
-                  'fixtures',
-                  'files',
-                  'empty',
-                  'сAZ-2020-01-08-AuthorityID-4321.csv')
+                  'fixtures', 'files', 'csv', 'empty', 'сAZ-2020-01-08-AuthorityID-4321.csv')
       end
 
       it 'returns error' do
@@ -58,11 +59,30 @@ describe UploadController, type: :request do
   describe 'GET #data_rules' do
     subject(:http_request) { get data_rules_path }
 
-    before { sign_in User.new }
-
     it 'returns a success response' do
       http_request
       expect(response).to have_http_status(:success)
+    end
+  end
+
+  describe 'GET #processing' do
+    subject(:upload_file_request) do
+      post import_upload_index_path, params: { file: csv_file }
+    end
+
+    let(:csv_file) { fixture_file_upload(file_path) }
+
+    before do
+      allow(CsvUploadService).to receive(:call).and_return(true)
+      mock_register_job
+      mock_finished_job
+      # we call upload endpoint and will be redirected to processing page
+      upload_file_request
+      follow_redirect!
+    end
+
+    it 'returns a found response' do
+      expect(response).to have_http_status(:found)
     end
   end
 end
