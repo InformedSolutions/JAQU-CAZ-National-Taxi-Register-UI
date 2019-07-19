@@ -31,7 +31,7 @@ And('I enter password that does not comply with Cognito setup password policy') 
 end
 
 Then('I am presented with an error') do
-  expect(page).to have_content('Password and password confirmation must be at least 8 characters')
+  expect(page).to have_content('Password must be at least 8 characters long')
 end
 
 And('I can retry') do

@@ -13,9 +13,8 @@ class PasswordsController < ApplicationController
     update_session_data
     redirect_to success_passwords_path
   rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException
-    redirect_to new_password_path,
-                alert: 'Password must be at least 8 characters long and ' \
-                       'include at least one upper case letter and a number'
+    redirect_to new_password_path, alert: 'Password must be at least 8 characters long,' \
+                                          'include at least one upper case letter and a number'
   rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
     Rails.logger.error e
     sign_out current_user
