@@ -30,6 +30,7 @@ RSpec.describe UpdatePasswordForm, type: :model do
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must enter your password')
     end
   end
@@ -42,6 +43,7 @@ RSpec.describe UpdatePasswordForm, type: :model do
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must enter your confirmation code')
     end
   end
@@ -54,6 +56,7 @@ RSpec.describe UpdatePasswordForm, type: :model do
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must confirm your password')
     end
   end
@@ -66,6 +69,7 @@ RSpec.describe UpdatePasswordForm, type: :model do
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq("Your password doesn't match password confirmation")
     end
   end

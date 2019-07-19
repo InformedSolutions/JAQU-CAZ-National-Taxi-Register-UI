@@ -13,7 +13,7 @@ class PasswordsController < ApplicationController
     update_session_data
     redirect_to success_passwords_path
   rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException
-    redirect_to new_password_path, alert: 'Password must be at least 8 characters long,' \
+    redirect_to new_password_path, alert: 'Password must be at least 8 characters long, ' \
                                           'include at least one upper case letter and a number'
   rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
     Rails.logger.error e
@@ -43,17 +43,10 @@ class PasswordsController < ApplicationController
   end
 
   def validate_passwords
-    # TODO: move to form object
-    confirmation = password_params[:password_confirmation]
-    unless password && confirmation
-      return redirect_to new_password_path,
-                         alert: 'Password and password confirmation are required'
-    end
+    form = NewPasswordForm.new(password_params)
+    return if form.valid?
 
-    return if password == confirmation
-
-    redirect_to new_password_path,
-                alert: 'Password and password confirmation must be the same'
+    redirect_to new_password_path, alert: form.message
   end
 
   def password_params

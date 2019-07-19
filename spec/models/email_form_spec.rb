@@ -23,6 +23,7 @@ RSpec.describe EmailForm, type: :model do
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must enter your email address')
     end
   end
@@ -35,6 +36,7 @@ RSpec.describe EmailForm, type: :model do
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must enter your email in valid format')
     end
   end
