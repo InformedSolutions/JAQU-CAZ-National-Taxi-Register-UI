@@ -21,10 +21,14 @@ Rails.application.routes.draw do
   resources :passwords, only: %i[new create] do
     collection do
       get :success
+      get :reset
+      post :send_confirmation_code
+      get :confirm_reset
+      post :change
     end
   end
 
   get :data_rules, to: 'upload#data_rules'
   get 'cookies', to: 'cookies#index'
-  get '/health', to: 'application#health'
+  get 'health', to: 'application#health'
 end
