@@ -15,7 +15,7 @@ RSpec.describe UpdatePasswordForm, type: :model do
   end
 
   it 'is valid with a proper password' do
-    expect(form.valid?).to eq(true)
+    expect(form).to be_valid
   end
 
   it 'has params set as parameter' do
@@ -26,10 +26,11 @@ RSpec.describe UpdatePasswordForm, type: :model do
     before { params['password'] = '' }
 
     it 'is not valid' do
-      expect(form.valid?).to eq(false)
+      expect(form).to_not be_valid
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must enter your password')
     end
   end
@@ -38,10 +39,11 @@ RSpec.describe UpdatePasswordForm, type: :model do
     before { params['confirmation_code'] = '' }
 
     it 'is not valid' do
-      expect(form.valid?).to eq(false)
+      expect(form).to_not be_valid
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must enter your confirmation code')
     end
   end
@@ -50,10 +52,11 @@ RSpec.describe UpdatePasswordForm, type: :model do
     before { params['password_confirmation'] = '' }
 
     it 'is not valid' do
-      expect(form.valid?).to eq(false)
+      expect(form).to_not be_valid
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must confirm your password')
     end
   end
@@ -62,10 +65,11 @@ RSpec.describe UpdatePasswordForm, type: :model do
     before { params['password_confirmation'] = '1234' }
 
     it 'is not valid' do
-      expect(form.valid?).to eq(false)
+      expect(form).to_not be_valid
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq("Your password doesn't match password confirmation")
     end
   end

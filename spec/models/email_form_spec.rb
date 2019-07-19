@@ -8,7 +8,7 @@ RSpec.describe EmailForm, type: :model do
   let(:email) { 'user@example.com' }
 
   it 'is valid with a proper email' do
-    expect(form.valid?).to eq(true)
+    expect(form).to be_valid
   end
 
   it 'has email set as parameter' do
@@ -19,10 +19,11 @@ RSpec.describe EmailForm, type: :model do
     let(:email) { '' }
 
     it 'is not valid' do
-      expect(form.valid?).to eq(false)
+      expect(form).to_not be_valid
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must enter your email address')
     end
   end
@@ -31,10 +32,11 @@ RSpec.describe EmailForm, type: :model do
     let(:email) { 'user' }
 
     it 'is not valid' do
-      expect(form.valid?).to eq(false)
+      expect(form).to_not be_valid
     end
 
     it 'has a proper error message' do
+      form.valid?
       expect(form.message).to eq('You must enter your email in valid format')
     end
   end
