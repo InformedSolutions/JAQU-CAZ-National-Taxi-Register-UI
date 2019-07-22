@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   private
 
   def handle_exception(exception)
-    redirect_to(upload_index_path, alert: exception.response[:errors])
+    redirect_to(upload_index_path, alert: exception.errors)
   end
 
   # Overwriting the sign_out redirect path method

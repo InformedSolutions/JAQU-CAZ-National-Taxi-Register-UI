@@ -7,12 +7,33 @@ When('I upload a valid csv file') do
     .with('CAZ-2020-01-08-AuthorityID-4321.csv')
     .and_return('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
 
+  allow(Connection::RegisterCheckerApi).to receive(:check_job_status)
+    .with('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
+    .and_return('RUNNING')
+
   attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4321.csv'))
   click_button 'Upload'
 end
 
+When('I press refresh page link') do
+  allow(Connection::RegisterCheckerApi).to receive(:check_job_status)
+    .with('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
+    .and_return('FINISHED_OK_NO_ERRORS')
+
+  click_link 'click here.'
+end
+
 Then('I am redirected to the Success page') do
   expect(page).to have_current_path(success_upload_index_path)
+end
+
+# Scenario: Upload a csv file and redirect to error page when api response not running or finished
+When('I press refresh page link when api response not running or finished') do
+  allow(Connection::RegisterCheckerApi).to receive(:check_job_status)
+    .with('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
+    .and_return('STARTUP_FAILURE_NO_S3_FILE')
+
+  click_link 'click here.'
 end
 
 #  Scenario: Upload a csv file whose name is not compliant with the naming rules

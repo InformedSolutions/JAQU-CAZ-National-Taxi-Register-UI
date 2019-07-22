@@ -3,6 +3,7 @@
 class UploadController < ApplicationController
   before_action :authenticate_user!
   before_action :redirect_to_new_password_path
+  before_action :check_job_uuid, only: %i[processing]
 
   def import
     CsvUploadService.call(file: file, user: current_user)
@@ -12,10 +13,14 @@ class UploadController < ApplicationController
   end
 
   def processing
-    if session[:job_uuid]
-      # ProcessingJobService.call(job_uuid: session[:job_uuid])
+    result = Connection::RegisterCheckerApi.check_job_status(session[:job_uuid])
+    if result == 'RUNNING'
+    elsif result == 'FINISHED_OK_NO_ERRORS'
       session[:job_uuid] = nil
       redirect_to success_upload_index_path
+    else
+      session[:job_uuid] = nil
+      redirect_to upload_index_path, alert: result
     end
   end
 
@@ -31,5 +36,9 @@ class UploadController < ApplicationController
     if current_user.aws_status == 'FORCE_NEW_PASSWORD'
       redirect_to new_password_path
     end
+  end
+
+  def check_job_uuid
+    redirect_to root_path if session[:job_uuid].nil?
   end
 end
