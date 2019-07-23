@@ -6,7 +6,7 @@ Feature: Password reset
   Scenario: Go to forgotten password page
     Given I am on the Sign in page
       When I press "Forgot your password?" link
-      Then I should see "Enter you username to reset your password"
+      Then I should see "Enter your username to reset your password."
 
   Scenario: Go to update password page
     Given I am on the forgotten password page
