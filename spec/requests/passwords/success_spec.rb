@@ -3,13 +3,11 @@
 require 'rails_helper'
 
 describe 'PasswordsController - GET #success', type: :request do
-  let(:user) { User.new }
-
   subject(:http_request) { get success_passwords_path }
 
   context 'when user is logged in' do
     before do
-      sign_in user
+      sign_in new_user
       http_request
     end
 

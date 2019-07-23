@@ -19,14 +19,14 @@ class ConfirmResetPasswordForm < BaseForm
   def filled_code?
     return true if code.present?
 
-    @message = I18n.t('password.errors.code_missing')
+    @message = I18n.t('password.errors.code_required')
     false
   end
 
   def filled_passwords?
     return true if password.present? && confirmation.present?
 
-    @message = I18n.t('password.errors.password_missing')
+    @message = I18n.t('password.errors.password_required')
     false
   end
 

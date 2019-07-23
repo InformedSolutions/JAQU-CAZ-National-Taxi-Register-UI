@@ -11,7 +11,7 @@ class PasswordsController < ApplicationController
   end
 
   def create # rubocop:disable Metrics/AbcSize
-    # TODO refactor this by movinf redirects and form inside service
+    # TODO: refactor this by moving redirects and form inside service
     Cognito::RespondToAuthChallenge.call(user: current_user, password: password)
     update_session_data
     redirect_to success_passwords_path

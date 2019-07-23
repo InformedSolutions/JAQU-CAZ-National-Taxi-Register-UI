@@ -34,6 +34,6 @@ en:
     errors:
       complexity: 'Password must be at least 8 characters long, include at least one upper case letter and a number'
       code_mismatch: 'Provided confirmation code does not match or is expired'
-      code_missing: 'Confirmation code is required'
-      password_missing: 'Password and password confirmation are required'
+      code_required: 'Confirmation code is required'
+      password_required: 'Password and password confirmation are required'
       password_equality: 'Password and password confirmation must be the same'

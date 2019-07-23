@@ -26,7 +26,7 @@ RSpec.describe ConfirmResetPasswordForm, type: :model do
 
     it 'has a proper error message' do
       form.valid?
-      expect(form.message).to eq(I18n.t('password.errors.password_missing'))
+      expect(form.message).to eq(I18n.t('password.errors.password_required'))
     end
   end
 
@@ -39,7 +39,7 @@ RSpec.describe ConfirmResetPasswordForm, type: :model do
 
     it 'has a proper error message' do
       form.valid?
-      expect(form.message).to eq(I18n.t('password.errors.code_missing'))
+      expect(form.message).to eq(I18n.t('password.errors.code_required'))
     end
   end
 
@@ -52,7 +52,7 @@ RSpec.describe ConfirmResetPasswordForm, type: :model do
 
     it 'has a proper error message' do
       form.valid?
-      expect(form.message).to eq(I18n.t('password.errors.password_missing'))
+      expect(form.message).to eq(I18n.t('password.errors.password_required'))
     end
   end
 
