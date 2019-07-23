@@ -43,8 +43,9 @@ When('I enter invalid credentials') do
   fill_in('user_username', with: 'user@example.com')
   fill_in('user_password', with: 'invalid-password')
 
-  expect_any_instance_of(Aws::CognitoIdentityProvider::Client).to receive(:initiate_auth)
-    .and_return(false)
+  allow(Cognito::AuthUser).to receive(:call).and_raise(
+    Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
+  )
 
   click_button 'Continue'
 end

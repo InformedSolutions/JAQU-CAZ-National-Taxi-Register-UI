@@ -2,7 +2,7 @@
 
 # Scenario: Upload a csv file and redirect to processing page
 When('I upload a valid csv file') do
-  allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(true)
+  allow(CsvUploadService).to receive(:call).and_return(true)
   allow(Connection::RegisterCheckerApi).to receive(:register_job)
     .with('CAZ-2020-01-08-AuthorityID-4321.csv')
     .and_return('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
