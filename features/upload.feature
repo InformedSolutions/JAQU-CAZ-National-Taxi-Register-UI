@@ -17,14 +17,15 @@ Feature: Upload
     Then I am redirected to the Success page
       And I should see "Upload successful"
 
-  Scenario: Upload a csv file and redirect to error page when api response not running or finished
+  Scenario: Upload a csv file and redirect to error page when csv file has invalid structure
     Given I am on the Upload page
     When I upload a valid csv file
     Then I should see "Validating submission"
       And I should see "If the page does not refresh automatically in 30 seconds click here."
-    When I press refresh page link when api response not running or finished
+    When I press refresh page link when csv file has invalid structure
     Then I am redirected to the Upload page
-      And I should see "STARTUP_FAILURE_NO_S3_FILE"
+      And I should see "Invalid format of VRM in row 13"
+      And I should see "Uploaded file is not valid"
 
   Scenario: Upload a csv file whose name is not compliant with the naming rules
     Given I am on the Upload page
@@ -51,21 +52,11 @@ Feature: Upload
     When I upload a csv file during error on S3
     Then I should see "The selected file could not be uploaded – try again"
 
-  @wip
-  Scenario: Upload a csv file with invalid structure
+  Scenario: Upload a csv file when frontend api cannot start validation
     Given I am on the Upload page
-    When I upload a csv file with invalid number of values
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with header row
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with semicolons
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with comma for the last field
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with spaces between field values and separating commas
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with pound, dollar and hash characters
-    Then I should see "Uploaded file is not valid"
+    When I upload a csv file which is too large
+    Then I should see "Uploaded file is too large"
+      And I should see "Can't start validation"
 
   Scenario: Show processing page without uploaded csv file
     Given I am on the Upload page

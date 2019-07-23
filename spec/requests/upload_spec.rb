@@ -10,9 +10,7 @@ describe UploadController, type: :request do
     )
   end
 
-  before :each do
-    sign_in User.new
-  end
+  before { sign_in User.new }
 
   describe 'GET #index' do
     subject(:http_request) { get upload_index_path }
@@ -66,23 +64,35 @@ describe UploadController, type: :request do
   end
 
   describe 'GET #processing' do
-    subject(:upload_file_request) do
-      post import_upload_index_path, params: { file: csv_file }
+    context 'with valid params' do
+      subject(:upload_file_request) do
+        post import_upload_index_path, params: { file: csv_file }
+      end
+
+      let(:csv_file) { fixture_file_upload(file_path) }
+
+      before do
+        allow(CsvUploadService).to receive(:call).and_return(true)
+        mock_register_job
+        mock_finished_job
+        # call upload endpoint and then will be redirected to processing page
+        upload_file_request
+        follow_redirect!
+      end
+
+      it 'returns a found response' do
+        expect(response).to have_http_status(:found)
+      end
     end
 
-    let(:csv_file) { fixture_file_upload(file_path) }
+    context 'with invalid params' do
+      context 'show processing page without uploaded csv file' do
+        before { get processing_upload_index_path }
 
-    before do
-      allow(CsvUploadService).to receive(:call).and_return(true)
-      mock_register_job
-      mock_finished_job
-      # we call upload endpoint and will be redirected to processing page
-      upload_file_request
-      follow_redirect!
-    end
-
-    it 'returns a found response' do
-      expect(response).to have_http_status(:found)
+        it 'redirects to root path' do
+          expect(response).to redirect_to(root_path)
+        end
+      end
     end
   end
 end

@@ -21,8 +21,7 @@ module Connection
       end
 
       def check_job_status(job_uuid)
-        response = request(:get, "/register-csv-from-s3/jobs/#{job_uuid}")
-        response['registerCsvFromS3JobStatus']
+        request(:get, "/register-csv-from-s3/jobs/#{job_uuid}")
       end
 
       private

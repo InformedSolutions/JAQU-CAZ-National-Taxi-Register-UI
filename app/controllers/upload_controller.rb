@@ -13,18 +13,19 @@ class UploadController < ApplicationController
   end
 
   def processing
-    result = Connection::RegisterCheckerApi.check_job_status(session[:job_uuid])
-    if result == 'RUNNING'
-    elsif result == 'FINISHED_OK_NO_ERRORS'
-      session[:job_uuid] = nil
-      redirect_to success_upload_index_path
+    result = ProcessingJobService.call(job_uuid: session[:job_uuid])
+
+    if result.in_progress?
+      # render processing page
     else
       session[:job_uuid] = nil
-      redirect_to upload_index_path, alert: result
+      handle_job(result)
     end
   end
 
-  def data_rules; end
+  def data_rules
+    # static page
+  end
 
   private
 
@@ -42,6 +43,18 @@ class UploadController < ApplicationController
     if session[:job_uuid].nil?
       Rails.logger.error 'Job identifier is missing'
       redirect_to root_path
+    end
+  end
+
+  def handle_job(result)
+    if result.success?
+      redirect_to success_upload_index_path
+    elsif result.invalid_csv?
+      flash[:notice] = 'Uploaded file is not valid'
+      redirect_to upload_index_path, alert: result.errors
+    else
+      flash[:notice] = "Can't start validation"
+      redirect_to upload_index_path, alert: result.errors
     end
   end
 end

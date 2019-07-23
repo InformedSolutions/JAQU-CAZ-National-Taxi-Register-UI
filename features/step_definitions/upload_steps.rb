@@ -7,18 +7,14 @@ When('I upload a valid csv file') do
     .with('CAZ-2020-01-08-AuthorityID-4321.csv')
     .and_return('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
 
-  allow(Connection::RegisterCheckerApi).to receive(:check_job_status)
-    .with('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
-    .and_return('RUNNING')
+  mock_job_status(success: false, in_progress: true)
 
   attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4321.csv'))
   click_button 'Upload'
 end
 
 When('I press refresh page link') do
-  allow(Connection::RegisterCheckerApi).to receive(:check_job_status)
-    .with('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
-    .and_return('FINISHED_OK_NO_ERRORS')
+  mock_job_status(success: true, in_progress: false)
 
   click_link 'click here.'
 end
@@ -27,16 +23,15 @@ Then('I am redirected to the Success page') do
   expect(page).to have_current_path(success_upload_index_path)
 end
 
-# Scenario: Upload a csv file and redirect to error page when api response not running or finished
-When('I press refresh page link when api response not running or finished') do
-  allow(Connection::RegisterCheckerApi).to receive(:check_job_status)
-    .with('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
-    .and_return('STARTUP_FAILURE_NO_S3_FILE')
+# Scenario: Upload a csv file and redirect to error page when csv file has invalid structure
+When('I press refresh page link when csv file has invalid structure') do
+  error_msg = 'Invalid format of VRM in row 13'
+  mock_job_status(success: false, in_progress: false, invalid_csv: true, errors: [error_msg])
 
   click_link 'click here.'
 end
 
-#  Scenario: Upload a csv file whose name is not compliant with the naming rules
+# Scenario: Upload a csv file whose name is not compliant with the naming rules
 When('I upload a csv file whose name format is invalid #1') do
   attach_file(:file, empty_csv_file('сAZ-2020-01-08-AuthorityID-4321.csv'))
   click_button 'Upload'
@@ -81,38 +76,16 @@ When('I upload a csv file during error on S3') do
   click_button 'Upload'
 end
 
-When('I upload a csv file with invalid number of values') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-1.csv'))
-  click_button 'Upload'
-end
+# Scenario: Upload a csv file when frontend api cannot start validation
+When('I upload a csv file which is too large') do
+  allow(CsvUploadService).to receive(:call).and_return(true)
+  allow(Connection::RegisterCheckerApi).to receive(:register_job)
+    .with('CAZ-2020-01-08-AuthorityID-4321.csv')
+    .and_return('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
+  error_msg = 'Uploaded file is too large'
+  mock_job_status(success: false, in_progress: false, invalid_csv: false, errors: [error_msg])
 
-When('I upload a csv file with header row') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-2.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with semicolons') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-3.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with comma for the last field') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with invalid order of values') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-5.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with spaces between field values and separating commas') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-6.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with pound, dollar and hash characters') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-7.csv'))
+  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4321.csv'))
   click_button 'Upload'
 end
 
@@ -131,4 +104,17 @@ end
 
 def csv_file(filename)
   File.join('spec', 'fixtures', 'files', 'csv', filename)
+end
+
+def mock_job_status(success: false, in_progress: false, invalid_csv: false, errors: [])
+  allow(ProcessingJobService).to receive(:call)
+    .with(job_uuid: 'ae67c64a-1d9e-459b-bde0-756eb73f36fe')
+    .and_return(
+      OpenStruct.new(
+        success?: success,
+        in_progress?: in_progress,
+        invalid_csv?: invalid_csv,
+        errors: errors
+      )
+    )
 end
