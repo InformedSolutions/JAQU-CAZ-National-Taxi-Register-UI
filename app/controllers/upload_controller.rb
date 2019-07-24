@@ -39,6 +39,9 @@ class UploadController < ApplicationController
   end
 
   def check_job_uuid
-    redirect_to root_path if session[:job_uuid].nil?
+    if session[:job_uuid].nil?
+      Rails.logger.error 'Job identifier is missing'
+      redirect_to root_path
+    end
   end
 end

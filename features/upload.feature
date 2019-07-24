@@ -66,3 +66,8 @@ Feature: Upload
     Then I should see "Uploaded file is not valid"
     When I upload a csv file with pound, dollar and hash characters
     Then I should see "Uploaded file is not valid"
+
+  Scenario: Show processing page without uploaded csv file
+    Given I am on the Upload page
+    When I want go to processing page
+    Then I am redirected to the root page
