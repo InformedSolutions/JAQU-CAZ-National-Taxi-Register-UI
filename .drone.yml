@@ -11,18 +11,6 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # move rspec command to previous test to avoid loss of node_modules folder. 
-  # - name: test
-  #   image: vehicle-compliance-checker-frontend
-  #   pull: if-not-exists
-  #   commands:
-  #   - ls
-  #   - ls public
-  #   - rspec -f d
-  #   volumes:
-  #     - name: docker_sock
-  #       path: /var/run/docker.sock
-
 volumes:
 - name: docker_sock
   host:
