@@ -17,7 +17,7 @@
           - if alert
             %span#govuk-error-message.govuk-error-message
               %span.govuk-visually-hidden Error:
-              = notice || alert
+              = flash['custom_error'] || alert
           %input#file-upload-1.govuk-file-upload{class:('govuk-file-upload--error' if alert),
             "aria-describedby": "file-upload-1",
             name: "file",

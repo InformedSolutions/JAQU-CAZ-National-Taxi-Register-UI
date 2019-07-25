@@ -50,10 +50,10 @@ class UploadController < ApplicationController
     if result.success?
       redirect_to success_upload_index_path
     elsif result.invalid_csv?
-      flash[:notice] = 'Uploaded file is not valid'
+      flash[:custom_error] = 'Uploaded file is not valid'
       redirect_to upload_index_path, alert: result.errors
     else
-      flash[:notice] = "Can't start validation"
+      flash[:custom_error] = "Can't start validation"
       redirect_to upload_index_path, alert: result.errors
     end
   end
