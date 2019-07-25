@@ -55,6 +55,7 @@ steps:
       build_args:
         - secret_key_base=secret
         - S3_AWS_REGION=eu-west-2
+        - AWS_REGION=eu-west-2
 
   # Invoke terraform scripts with tagged image number
   - name: deploy
