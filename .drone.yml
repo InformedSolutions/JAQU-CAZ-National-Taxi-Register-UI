@@ -68,7 +68,7 @@ steps:
       TF_VAR_secret_key_base: secret
       TF_VAR_google_analytics_id: test
       TF_VAR_session_timeout: 15
-      TF_VAR_taxi_phv_register_api_url: https://jaqu-caz.herokuapp.com/
+      TF_VAR_taxi_phv_register_api_url: https://jaqu-caz.herokuapp.com
       TF_VAR_s3_aws_access_key_id:
         from_secret: aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
