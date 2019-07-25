@@ -32,6 +32,7 @@ steps:
       - terraform workspace select dev || terraform workspace new dev
       - terraform apply -target=module.ecr -auto-approve
     environment:
+      AWS_REGION: eu-west-2
       TF_VAR_access_key:
         from_secret: aws_access_key_id
       TF_VAR_secret_key:
