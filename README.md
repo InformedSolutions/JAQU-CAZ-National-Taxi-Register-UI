@@ -2,7 +2,7 @@
 
 ### Dependencies
 * Ruby 2.6.3
-* Ruby on Rails 6.0.0.rc1 - update to 6.0.0 as soon as it is available.
+* Ruby on Rails 6.0.0.rc2 - update to 6.0.0 as soon as it is available.
 * [GOV.UK Frontend](https://github.com/alphagov/govuk-frontend)
 * Other packages listed in Gemfile and package.json files.
 
