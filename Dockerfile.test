@@ -20,4 +20,7 @@ RUN gem install bundler \
 # Install node packages and precompile assets
 COPY . /home/app
 
+# Copy example env variables
+RUN cp .env.example .env
+
 CMD ["rspec"]

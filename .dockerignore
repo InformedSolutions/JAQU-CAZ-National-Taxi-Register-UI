@@ -1,6 +1,7 @@
 tmp/*
 log/*
 .byebug_history
+.env
 .git
 .gitignore
 .drone.yml
