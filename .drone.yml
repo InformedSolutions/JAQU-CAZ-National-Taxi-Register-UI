@@ -47,7 +47,7 @@ steps:
         from_secret: aws_secret_access_key
       repo: 018330602464.dkr.ecr.eu-west-2.amazonaws.com/ntr-web
       registry: 018330602464.dkr.ecr.eu-west-2.amazonaws.com
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile.build
       region: eu-west-2
       tags:
         - latest
