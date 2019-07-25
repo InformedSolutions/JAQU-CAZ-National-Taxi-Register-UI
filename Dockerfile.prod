@@ -28,9 +28,5 @@ RUN yarn install --frozen-lockfile --non-interactive \
  && yarn cache clean \
  && rm -rf /home/app/node_modules
 
-# Add healthcheck
-# https://blog.couchbase.com/docker-health-check-keeping-containers-healthy/
-HEALTHCHECK CMD curl --fail --insecure https://0.0.0.0:3000/health || exit 1
-
 EXPOSE 3000
-CMD ["rails", "server", "-b", "ssl://0.0.0.0:3000?key=config/ssl/app.key&cert=config/ssl/app.crt"]
+CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]
