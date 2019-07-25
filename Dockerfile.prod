@@ -4,10 +4,6 @@ FROM ruby:2.6.3-alpine3.9
 ENV RAILS_ENV production
 ENV RAILS_SERVE_STATIC_FILES true
 ENV NODE_ENV production
-ARG secret_key_base
-ENV SECRET_KEY_BASE=$secret_key_base
-ARG aws_region
-ENV AWS_REGION=$aws_region
 
 RUN apk add --no-cache --update build-base linux-headers tzdata nodejs \
   openssh libxml2-dev libxslt-dev yarn curl-dev sqlite-dev \
@@ -21,14 +17,13 @@ RUN mkdir -p /home/app
 WORKDIR /home/app
 COPY Gemfile Gemfile.lock /home/app/
 RUN gem install bundler \
-  && bundle install --without development test
+ && bundle install && yarn install # --frozen-lockfile --non-interactive
 
 # Install node packages and precompile assets
 COPY . /home/app
-RUN yarn install --frozen-lockfile --non-interactive \
- && bundle exec rails assets:precompile \
- && yarn cache clean \
- && rm -rf /home/app/node_modules
+
+# Copy example env variables
+RUN cp .env.example .env
 
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]

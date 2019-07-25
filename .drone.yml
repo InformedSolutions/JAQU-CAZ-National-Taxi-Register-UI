@@ -54,7 +54,6 @@ steps:
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=secret
-        - aws_region=eu-west-2
 
   # Invoke terraform scripts with tagged image number
   - name: deploy
