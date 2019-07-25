@@ -12,5 +12,5 @@
       %p We have saved your data to the National Taxi/PHV register.
       %p You will need to reupload updated document regularly.
       %p
-        = link_to 'What did you think of this service?', root_path
+        = link_to 'What did you think of this service?', Rails.configuration.x.feedback_url, target: '_blank'
         (takes 30 seconds)

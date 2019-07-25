@@ -22,5 +22,8 @@ module CsvUploader
     config.eager_load_paths << Rails.root.join('lib')
 
     config.x.session_timeout_in_min = (ENV['SESSION_TIMEOUT'].presence || 15).to_i
+
+    feedback_url_default = 'https://www.surveymonkey.co.uk/r/2T8BX2D'
+    config.x.feedback_url = (ENV['FEEDBACK_URL'].presence || feedback_url_default)
   end
 end
