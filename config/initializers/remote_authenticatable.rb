@@ -32,11 +32,9 @@ module Devise
         # Recreates a resource from session data
         def serialize_from_session(data, _salt)
           resource = new
-          resource.email = data['email']
-          resource.username = data['username']
-          resource.aws_status = data['aws_status']
-          resource.aws_session = data['aws_session']
-          resource.sub = data['sub']
+          resource.serializable_hash.keys.each do |key|
+            resource.public_send("#{key}=", data[key.to_s])
+          end
           resource
         end
 

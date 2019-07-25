@@ -4,23 +4,20 @@ class PasswordsController < ApplicationController
   before_action :authenticate_user!, only: %i[new create]
   before_action :validate_aws_status, only: %i[new create]
   before_action :validate_aws_session, only: %i[new create]
-  before_action :validate_new_password_form, only: :create
 
   def new
     # renders view for initial password change
   end
 
-  def create # rubocop:disable Metrics/AbcSize
-    # TODO: refactor this by moving redirects and form inside service
-    Cognito::RespondToAuthChallenge.call(user: current_user, password: password)
+  def create
+    Cognito::RespondToAuthChallenge.call(
+      user: current_user, password: password, confirmation: password_confirmation
+    )
     update_session_data
     redirect_to success_passwords_path
-  rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException
-    redirect_to new_password_path, alert: I18n.t('password.errors.complexity')
-  rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
-    Rails.logger.error e
-    sign_out current_user
-    redirect_to new_user_session_path, alert: 'Your session has expired'
+  rescue Cognito::CallException => e
+    sign_out current_user if e.path == new_user_session_path
+    redirect_to e.path, alert: e.message
   end
 
   def success
@@ -69,13 +66,6 @@ class PasswordsController < ApplicationController
 
     sign_out current_user
     redirect_to new_user_session_path, alert: 'Your session has expired'
-  end
-
-  def validate_new_password_form
-    form = NewPasswordForm.new(password_params)
-    return if form.valid?
-
-    redirect_to new_password_path, alert: form.message
   end
 
   def password_params

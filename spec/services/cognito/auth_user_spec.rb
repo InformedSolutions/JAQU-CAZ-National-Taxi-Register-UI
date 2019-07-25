@@ -27,7 +27,7 @@ RSpec.describe Cognito::AuthUser do
     let(:token) { SecureRandom.uuid }
 
     before do
-      allow(Cognito::GetUser).to receive(:call).with(access_token: token).and_return(true)
+      allow(Cognito::GetUser).to receive(:call).with(access_token: token).and_return(User.new)
     end
 
     it 'calls Cognito::GetUser' do
@@ -64,6 +64,10 @@ RSpec.describe Cognito::AuthUser do
 
     it 'sets aws_session' do
       expect(service_call.aws_session).to eq(session_key)
+    end
+
+    it 'sets hashed password' do
+      expect(service_call.hashed_password).to eq(Digest::MD5.hexdigest(password))
     end
   end
 end

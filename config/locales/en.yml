@@ -37,3 +37,5 @@ en:
       code_required: 'Confirmation code is required'
       password_required: 'Password and password confirmation are required'
       password_equality: 'Password and password confirmation must be the same'
+      password_unchanged: 'New password must be different than your temporary one'
+  expired_session: 'Your session has expired'
