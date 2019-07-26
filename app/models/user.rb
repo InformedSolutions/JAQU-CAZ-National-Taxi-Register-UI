@@ -9,7 +9,8 @@ class User
   define_model_callbacks :validation
   devise :remote_authenticatable, :timeoutable
 
-  attr_accessor :email, :username, :aws_status, :aws_session, :sub, :confirmation_code
+  attr_accessor :email, :username, :aws_status, :aws_session, :sub,
+                :confirmation_code, :hashed_password
 
   # Latest devise(v4.6.2) tries to initialize this class with values
   # ignore it for now
@@ -27,7 +28,8 @@ class User
       username: username,
       aws_status: aws_status,
       aws_session: aws_session,
-      sub: sub
+      sub: sub,
+      hashed_password: hashed_password
     }
   end
 end

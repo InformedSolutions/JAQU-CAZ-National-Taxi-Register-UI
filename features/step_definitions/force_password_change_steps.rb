@@ -25,7 +25,7 @@ end
 
 And('I enter password that does not comply with Cognito setup password policy') do
   allow(Cognito::RespondToAuthChallenge).to receive(:call).and_raise(
-    Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
+    Cognito::CallException.new(I18n.t('password.errors.complexity'), new_password_path)
   )
   fill_new_password_form
 end

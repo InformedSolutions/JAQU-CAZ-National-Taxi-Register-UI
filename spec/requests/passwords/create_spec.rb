@@ -65,7 +65,7 @@ describe 'PasswordsController - POST #create', type: :request do
 
       context 'when call to AWS is successful' do
         before do
-          allow(Cognito::RespondToAuthChallenge).to receive(:call).and_return(true)
+          allow(Cognito::RespondToAuthChallenge).to receive(:call).and_return(user)
           http_request
         end
 
@@ -77,7 +77,7 @@ describe 'PasswordsController - POST #create', type: :request do
       context 'when call to AWS raises invalid password' do
         before do
           allow(Cognito::RespondToAuthChallenge).to receive(:call).and_raise(
-            Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
+            Cognito::CallException.new(I18n.t('password.errors.complexity'), new_password_path)
           )
           http_request
         end
@@ -94,7 +94,7 @@ describe 'PasswordsController - POST #create', type: :request do
       context 'when call to AWS raises other error' do
         before do
           allow(Cognito::RespondToAuthChallenge).to receive(:call).and_raise(
-            Aws::CognitoIdentityProvider::Errors::NotAuthorizedException.new('', '')
+            Cognito::CallException.new(I18n.t('expired_session'), new_user_session_path)
           )
           http_request
         end

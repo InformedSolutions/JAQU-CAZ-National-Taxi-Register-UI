@@ -43,6 +43,7 @@ module Cognito
       user.email = JSON.parse(challenge_parameters['userAttributes'])['email']
       user.aws_status = 'FORCE_NEW_PASSWORD'
       user.aws_session = auth_response.session
+      user.hashed_password = Digest::MD5.hexdigest(password)
     end
 
     def update_unchallenged_user(access_token)

@@ -1,34 +1,39 @@
 # frozen_string_literal: true
 
 class NewPasswordForm < BaseForm
-  REQUIRED_MSG = 'Password and password confirmation are required'
-  EQUALITY_MSG = 'Password and password confirmation must be the same'
+  attr_reader :password, :confirmation, :old_password_hash
+
+  def initialize(password:, confirmation:, old_password_hash:)
+    @password = password
+    @confirmation = confirmation
+    @old_password_hash = old_password_hash
+    super(nil)
+  end
 
   def valid?
-    filled? && correct_password_confirmation?
+    filled? && password_changed? && correct_password_confirmation?
   end
 
   private
 
-  def password
-    parameter[:password]
-  end
-
-  def confirmation
-    parameter[:password_confirmation]
-  end
-
   def filled?
     return true if password.present? && confirmation.present?
 
-    @message = REQUIRED_MSG
+    @message = I18n.t('password.errors.password_required')
+    false
+  end
+
+  def password_changed?
+    return true if old_password_hash && Digest::MD5.hexdigest(password) != old_password_hash
+
+    @message = I18n.t('password.errors.password_unchanged')
     false
   end
 
   def correct_password_confirmation?
     return true if password == confirmation
 
-    @message = EQUALITY_MSG
+    @message = I18n.t('password.errors.password_equality')
     false
   end
 end

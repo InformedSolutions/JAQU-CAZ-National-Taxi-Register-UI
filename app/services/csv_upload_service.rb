@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CsvUploadService < BaseService
-  NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))-([a-zA-Z]+)-\d+$/.freeze
+  NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))-([a-zA-Z0-9]+)-\d+$/.freeze
   UPLOAD_ERROR_MSG = 'The selected file could not be uploaded – try again'
   attr_reader :file, :errors, :user
 

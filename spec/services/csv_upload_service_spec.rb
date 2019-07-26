@@ -55,6 +55,21 @@ RSpec.describe CsvUploadService do
     end
   end
 
+  describe 'name format regexp' do
+    subject(:regexp) { described_class::NAME_FORMAT }
+
+    it { is_expected.to match('CAZ-2018-01-08-leeds-4321') }
+    it { is_expected.to match('CAZ-2018-01-08-leed3434-432') }
+    it { is_expected.to match('CAZ-2018-01-08-1234-4321') }
+
+    it { is_expected.not_to match('CAZ-2018-01-08-leeds%@&-4321') }
+    it { is_expected.not_to match('cCAZ-2018-01-08-leeds-4321') }
+    it { is_expected.not_to match('cAZ-2018-01-08-leeds-4321') }
+    it { is_expected.not_to match('CAZ-01-08-2020-Leeds-4321') }
+    it { is_expected.not_to match('CAZ-2018-01-08-leedsf-') }
+    it { is_expected.not_to match('CAZ-leeds-2018-01-08-4321') }
+  end
+
   def csv_file(filename)
     File.join('spec', 'fixtures', 'files', 'csv', filename)
   end
