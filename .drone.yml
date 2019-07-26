@@ -2,26 +2,44 @@ kind: pipeline
 name: ci
 
 steps:
-  - name: build-test
+  - name: build
     image: docker
     commands:
     - docker build -t test-ntr -f Dockerfile.test .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+  - name: static code analysis
+    image: docker
+    commands:
+      - docker run --rm test-ntr rubocop
+      - docker run --rm test-ntr govuk-lint-sass app/javascript
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+  - name: security tests
+    image: docker
+    commands:
+       - docker run --rm test-ntr bundle audit check --update
+       - docker run --rm test-ntr yarn audit
+       - docker run --rm test-ntr brakeman
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+  - name: unit tests
+    image: docker
+    commands:
     - docker run --rm test-ntr rspec -f d
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-
-  # move rspec command to previous test to avoid loss of node_modules folder. 
-  # - name: test
-  #   image: vehicle-compliance-checker-frontend
-  #   pull: if-not-exists
-  #   commands:
-  #   - ls
-  #   - ls public
-  #   - rspec -f d
-  #   volumes:
-  #     - name: docker_sock
-  #       path: /var/run/docker.sock
+  - name: integration tests
+    image: docker
+    commands:
+    - docker run --rm test-ntr cucumber
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
 
 volumes:
 - name: docker_sock
