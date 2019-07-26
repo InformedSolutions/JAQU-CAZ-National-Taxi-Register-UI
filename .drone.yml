@@ -4,7 +4,7 @@ name: ci
 steps:
 
   # Clean agent images and containers to prevent disk space overuse
-  - name: clean-agent
+  - name: clean agent
     image: docker
     commands:
     - docker system prune -f
@@ -13,17 +13,54 @@ steps:
         path: /var/run/docker.sock
 
   # Build docker image and execute tests
-  - name: build-test
+  - name: build
     image: docker
     commands:
     - docker build -t test-ntr -f Dockerfile.test .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Trigger unit tests
+  - name: unit tests
+    image: docker
+    commands:
     - docker run --rm test-ntr rspec -f d
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # Invoke terraform scripts to ensure ecr is available for deploy step.
-  - name: initialise-ecr
+  # Invoke static code analysis through Ruby libraries
+  - name: static code analysis
+    image: docker
+    commands:
+      - docker run --rm test-ntr rubocop
+      - docker run --rm test-ntr govuk-lint-sass app/javascript
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Invoke security analysis through Ruby libraries
+  - name: security tests
+    image: docker
+    commands:
+       - docker run --rm test-ntr bundle audit check --update
+       - docker run --rm test-ntr yarn audit
+       - docker run --rm test-ntr brakeman
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  - name: integration tests
+    image: docker
+    commands:
+    - docker run --rm test-ntr cucumber
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+        
+    # Invoke terraform scripts to ensure ecr is available for deploy step.
+  - name: initialise ecr
     image: hashicorp/terraform:0.12.3
     commands:
       - git clone https://github.com/InformedSolutions/JAQU-CAZ-IAC.git
@@ -36,6 +73,10 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_secret_key:
         from_secret: aws_secret_access_key
+    when:
+      event:
+        exclude:
+        - pull_request
 
   # Push built image to ECR registry
   - name: publish-image-to-ecr
@@ -54,6 +95,10 @@ steps:
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
+    when:
+      event:
+        exclude:
+        - pull_request
 
   # Invoke terraform scripts with tagged image number
   - name: deploy
@@ -78,6 +123,10 @@ steps:
       TF_VAR_session_timeout: 15
       TF_VAR_taxi_phv_register_api_url: https://jaqu-caz.herokuapp.com/
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+    when:
+      event:
+        exclude:
+        - pull_request
 
 volumes:
 - name: docker_sock
@@ -85,5 +134,8 @@ volumes:
     path: /var/run/docker.sock
 
 trigger:
+  branch:
+  - develop
   event:
   - pull_request
+  - push
