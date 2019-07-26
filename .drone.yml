@@ -12,7 +12,7 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # Build docker image and execute tests
+  # Build docker images
   - name: build
     image: docker
     commands:
@@ -51,6 +51,7 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
+  # Execute integration/scenario tests
   - name: integration tests
     image: docker
     commands:
