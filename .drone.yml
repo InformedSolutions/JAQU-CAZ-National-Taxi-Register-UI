@@ -80,7 +80,7 @@ steps:
         - pull_request
 
   # Push built image to ECR registry
-  - name: publish-image-to-ecr
+  - name: publish image to ecr
     image: plugins/ecr
     settings:
       access_key:
