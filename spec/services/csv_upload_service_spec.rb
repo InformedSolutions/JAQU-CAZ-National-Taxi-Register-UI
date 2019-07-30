@@ -26,7 +26,7 @@ RSpec.describe CsvUploadService do
       end
 
       context 'uppercase extension format' do
-        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID-4321.CSV')) }
+        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID-8.CSV')) }
 
         it 'returns true' do
           expect(service_call).to be true
