@@ -1,24 +1,31 @@
 # frozen_string_literal: true
 
+def correlation_id
+  SecureRandom.uuid
+end
+
+def job_name
+  'ae67c64a-1d9e-459b-bde0-756eb73f36fe'
+end
+
 # Scenario: Upload a csv file and redirect to processing page
 When('I upload a valid csv file') do
+  allow(SecureRandom).to receive(:uuid).and_return(correlation_id)
   allow(CsvUploadService).to receive(:call).and_return(true)
-  allow(Connection::RegisterCheckerApi).to receive(:register_job)
-    .with('CAZ-2020-01-08-AuthorityID-4321.csv')
-    .and_return('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
+  allow(RegisterCheckerApi).to receive(:register_job)
+    .with('CAZ-2020-01-08-AuthorityID-4321.csv', correlation_id)
+    .and_return(job_name)
 
-  allow(Connection::RegisterCheckerApi).to receive(:check_job_status)
-    .with('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
-    .and_return('RUNNING')
+  allow(RegisterCheckerApi).to receive(:job_status)
+    .with(job_name, correlation_id).and_return('RUNNING')
 
   attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4321.csv'))
   click_button 'Upload'
 end
 
 When('I press refresh page link') do
-  allow(Connection::RegisterCheckerApi).to receive(:check_job_status)
-    .with('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
-    .and_return('FINISHED_OK_NO_ERRORS')
+  allow(RegisterCheckerApi).to receive(:job_status)
+    .with(job_name, correlation_id).and_return('SUCCESS')
 
   click_link 'click here.'
 end
@@ -29,10 +36,10 @@ end
 
 # Scenario: Upload a csv file and redirect to error page when api response not running or finished
 When('I press refresh page link when api response not running or finished') do
-  allow(Connection::RegisterCheckerApi).to receive(:check_job_status)
-    .with('ae67c64a-1d9e-459b-bde0-756eb73f36fe')
-    .and_return('STARTUP_FAILURE_NO_S3_FILE')
-
+  allow(RegisterCheckerApi).to receive(:job_status)
+    .with(job_name, correlation_id).and_return('FAILURE')
+  allow(RegisterCheckerApi).to receive(:job_errors)
+    .with(job_name, correlation_id).and_return(['error'])
   click_link 'click here.'
 end
 

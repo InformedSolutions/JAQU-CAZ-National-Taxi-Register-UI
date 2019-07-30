@@ -6,3 +6,8 @@ $govuk-assets-path: '/packs/media/';
 html {
   background-color: govuk-colour('grey-3');
 }
+
+.custom-csv-error {
+  color: govuk-colour('red');
+  font-weight: 700;
+}

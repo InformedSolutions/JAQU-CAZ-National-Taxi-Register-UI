@@ -24,7 +24,7 @@ Feature: Upload
       And I should see "If the page does not refresh automatically in 30 seconds click here."
     When I press refresh page link when api response not running or finished
     Then I am redirected to the Upload page
-      And I should see "STARTUP_FAILURE_NO_S3_FILE"
+      And I should see "There was a problem"
 
   Scenario: Upload a csv file whose name is not compliant with the naming rules
     Given I am on the Upload page

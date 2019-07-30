@@ -15,7 +15,7 @@ Aws.config.update(stub_responses: true)
 
 RSpec.configure do |config|
   config.include RequestSpecHelper, type: :request
-  config.include MockHelper, type: :request
+  config.include InjectSession, type: :request
   config.include MockUser
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures

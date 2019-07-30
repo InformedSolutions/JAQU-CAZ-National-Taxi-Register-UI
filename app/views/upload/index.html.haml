@@ -2,7 +2,9 @@
   .govuk-grid-row
     .govuk-grid-column-two-thirds
       %h1.govuk-heading-l Taxi/PHV Data Upload
-      - if alert
+      - if @job_errors
+        = render 'upload/job_errors'
+      - elsif alert
         = render 'shared/errors'
       %p
         Use this page to upload Taxi/PHV data.
