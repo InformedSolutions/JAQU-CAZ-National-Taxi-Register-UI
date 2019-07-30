@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe CsvUploadService do
   subject(:service_call) { described_class.call(file: file, user: User.new) }
 
-  let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID-4321.csv')) }
+  let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID-8.csv')) }
 
   describe '#call' do
     context 'with valid params' do
@@ -18,7 +18,7 @@ RSpec.describe CsvUploadService do
       end
 
       context 'lowercase extension format' do
-        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID-4321.csv')) }
+        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID-8.csv')) }
 
         it 'returns true' do
           expect(service_call).to be true
@@ -26,7 +26,7 @@ RSpec.describe CsvUploadService do
       end
 
       context 'uppercase extension format' do
-        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID-4321.CSV')) }
+        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID-8.CSV')) }
 
         it 'returns true' do
           expect(service_call).to be true
