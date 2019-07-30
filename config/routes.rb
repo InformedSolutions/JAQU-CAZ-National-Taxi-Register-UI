@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users, controllers: { registrations: 'registrations' }
+  devise_for :users
 
-  root 'upload#index'
+  authenticated(:user) { root 'upload#index', as: :authenticated_root }
+  devise_scope(:user) { root to: 'devise/sessions#new' }
 
   resources :upload, only: %i[index] do
     collection do
