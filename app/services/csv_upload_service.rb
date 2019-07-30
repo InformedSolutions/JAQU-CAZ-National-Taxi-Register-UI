@@ -44,7 +44,7 @@ class CsvUploadService < BaseService
 
   def upload_to_s3
     s3_object = AMAZON_S3_CLIENT.bucket(bucket_name).object(file.original_filename)
-    metadata = { 'uploader': user.sub }
+    metadata = { 'uploader-id': user.sub }
     return true if s3_object.upload_file(file, metadata: metadata)
 
     raise CsvUploadFailureException, UPLOAD_ERROR_MSG
