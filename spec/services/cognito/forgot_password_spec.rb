@@ -48,7 +48,7 @@ RSpec.describe Cognito::ForgotPassword do
 
   context 'when Cognito call fails' do
     let(:form) { OpenStruct.new(valid?: true) }
-    let(:error) { "User with username '#{username}' was not found" }
+    let(:error) { "User with email '#{username}' was not found" }
 
     it 'raises exception with proper params' do
       allow(COGNITO_CLIENT).to receive(:forgot_password).with(

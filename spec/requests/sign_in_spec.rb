@@ -34,7 +34,7 @@ describe 'User singing in', type: :request do
 
       it 'shows `The username or password you entered is incorrect` message' do
         http_request
-        expect(response.body).to include('The username or password you entered is incorrect')
+        expect(response.body).to include(I18n.t('devise.failure.invalid'))
       end
     end
 
@@ -46,7 +46,7 @@ describe 'User singing in', type: :request do
 
       it 'shows `The username or password you entered is incorrect` message' do
         http_request
-        expect(response.body).to include('The username or password you entered is incorrect')
+        expect(response.body).to include(I18n.t('devise.failure.invalid'))
       end
     end
 

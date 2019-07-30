@@ -11,7 +11,7 @@
 
       = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
-          = f.label :username, class: 'govuk-label'
+          = f.label :username, 'Email', class: 'govuk-label'
           %span#govuk-error-message.govuk-error-message
             - if alert
               %span.govuk-visually-hidden Error:

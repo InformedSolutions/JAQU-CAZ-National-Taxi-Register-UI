@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class ResetPasswordForm < BaseForm
-  REQUIRED_MSG = 'Username is required'
+  REQUIRED_MSG = 'Email is required'
 
   def valid?
     filled?

@@ -31,7 +31,7 @@ module Cognito
       )
     rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
       Rails.logger.error e
-      raise CallException.new("User with username '#{username}' was not found", ERROR_PATH)
+      raise CallException.new("User with email '#{username}' was not found", ERROR_PATH)
     end
   end
 end
