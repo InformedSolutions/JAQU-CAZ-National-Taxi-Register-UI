@@ -19,6 +19,8 @@ Then("I am taken to the 'Reset link sent' page") do
 end
 
 Given("I am on the 'Reset link sent' page") do
+  # visit reset_password to get token
+  visit reset_passwords_path
   visit confirm_reset_passwords_url(username: 'wojtek')
 end
 
