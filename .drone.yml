@@ -122,13 +122,12 @@ steps:
       TF_VAR_secret_key_base: ${DRONE_COMMIT}
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_taxi_phv_register_api_url: https://v7dmgi1dl2.execute-api.eu-west-2.amazonaws.com/dev
+      TF_VAR_taxi_phv_register_api_url: https://z1pg2xat9e.execute-api.eu-west-2.amazonaws.com/dev
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
     when:
       event:
         exclude:
         - pull_request
-
 volumes:
 - name: docker_sock
   host:
