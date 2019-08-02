@@ -128,6 +128,7 @@ steps:
       event:
         exclude:
         - pull_request
+
 volumes:
 - name: docker_sock
   host:
