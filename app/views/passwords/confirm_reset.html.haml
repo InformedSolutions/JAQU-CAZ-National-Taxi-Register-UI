@@ -1,3 +1,5 @@
+= link_to 'Back', reset_passwords_path, class: 'govuk-back-link'
+
 %main.govuk-main-wrapper#main-content{role: 'main'}
   - if alert
     = render 'shared/errors'
@@ -7,7 +9,7 @@
       %h1.govuk-heading-l Update your password
       %p You should receive a confirmation code on your email address. Please enter the confirmation code and your new password below.
       %p Your password should be at least 8 characters long, include at least one upper case letter and a number.
-      = form_for(User.new, url: change_passwords_path, method: :post) do |f|
+      = form_for(User.new, url: change_passwords_path, method: :post, html: { autocomplete: "off" }) do |f|
         =f.hidden_field(:username, value: @username)
         .govuk-form-group{class: ('govuk-form-group--error' if alert&.include?('code'))}
           =f.label :confirmation_code, class: 'govuk-label'
