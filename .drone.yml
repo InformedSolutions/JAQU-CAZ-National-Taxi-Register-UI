@@ -16,49 +16,69 @@ steps:
   - name: build
     image: docker
     commands:
-    - docker build -t test-ntr -f Dockerfile.test .
+    - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
 
   # Trigger unit tests
   - name: unit tests
-    image: docker
-    commands:
-    - docker run --rm test-ntr rspec -f d
+    image: test-national-taxi-register-frontend
+    pull: never
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    commands:
+      - yarn install
+      - rspec -f d
+
+  # Execute integration/scenario tests
+  - name: integration tests
+    image: test-national-taxi-register-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - cucumber
 
   # Invoke static code analysis through Ruby libraries
-  - name: static code analysis
-    image: docker
+  - name: static code analysis (Ruby)
+    image: test-national-taxi-register-frontend
+    pull: never
     commands:
-      - docker run --rm test-ntr rubocop
-      - docker run --rm test-ntr govuk-lint-sass app/javascript
+      - rubocop
+      - govuk-lint-sass app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
 
   # Invoke security analysis through Ruby libraries
-  - name: security tests
-    image: docker
+  - name: security tests (Ruby)
+    image: test-national-taxi-register-frontend
+    pull: never
     commands:
-       - docker run --rm test-ntr bundle audit check --update
-       - docker run --rm test-ntr yarn audit
-       - docker run --rm test-ntr brakeman
+       - bundle audit check --update
+       - yarn audit
+       - brakeman
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-
-  # Execute integration/scenario tests
-  - name: integration tests
-    image: docker
-    commands:
-    - docker run --rm test-ntr cucumber
+        
+  # Invoke sonar scan
+  - name: sonar scan
+    image: aosapps/drone-sonar-plugin
     volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
+      - name: coverage_reports
+        path: /coverage
+    environment:
+      sonar.exclusions: app/assets/**/*
+      sonar.ruby.coverage.reportPaths: coverage/.resultset.json
+    settings:
+      sonar_host:
+        from_secret: sonar_host
+      sonar_token:
+        from_secret: sonar_token
         
     # Invoke terraform scripts to ensure ecr is available for deploy step.
   - name: initialise ecr
