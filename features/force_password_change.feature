@@ -1,5 +1,3 @@
-# https://eaflood.atlassian.net/browse/NTR-148
-
 Feature: Force password change on first login
   As a Licensing Authority
   I want to be forced to change my password on first log in
