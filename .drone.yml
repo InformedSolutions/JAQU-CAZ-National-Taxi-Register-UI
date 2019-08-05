@@ -70,17 +70,19 @@ steps:
   # Invoke sonar scan
   - name: sonar scan
     image: aosapps/drone-sonar-plugin
-    volumes:
-      - name: coverage_reports
-        path: /coverage
     environment:
-      sonar.exclusions: app/assets/**/*
-      sonar.ruby.coverage.reportPaths: coverage/.resultset.json
-    settings:
       sonar_host:
         from_secret: sonar_host
       sonar_token:
         from_secret: sonar_token
+      sonar.ruby.coverage.reportPaths: coverage/.resultset.json
+    commands:
+      - sonar-scanner 
+        -Dsonar.projectKey=${DRONE_REPO}
+        -Dsonar.projectName=${DRONE_REPO}
+        -Dsonar.host.url=$sonar_host
+        -Dsonar.login=$sonar_token
+        -Dproject.settings=./sonar-project.properties
         
     # Invoke terraform scripts to ensure ecr is available for deploy step.
   - name: initialise ecr
