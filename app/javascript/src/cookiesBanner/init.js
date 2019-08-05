@@ -23,6 +23,9 @@ function hasSeenMessage(){
 function setCookie(){
     const date = new Date();
     date.setTime(date.getTime() + yearInMS);
+    // we set cookies `seen_cookie_message` because it non-sensitive information that need to live
+    // longer than the user session.
+    // https://rules.sonarsource.com/csharp/tag/owasp/RSPEC-2255
     document.cookie = cookieKey + '=true; expires=' + date.toGMTString();
 }
 
