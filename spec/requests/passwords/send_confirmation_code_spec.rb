@@ -15,10 +15,10 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
         .to receive(:call)
         .with(username: username)
         .and_return(true)
-      http_request
     end
 
     it 'redirects to confirm reset' do
+      http_request
       expect(response).to redirect_to(confirm_reset_passwords_path(username: username))
     end
 
