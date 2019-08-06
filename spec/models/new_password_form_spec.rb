@@ -24,9 +24,22 @@ RSpec.describe NewPasswordForm, type: :model do
       expect(form).not_to be_valid
     end
 
-    it 'has a proper error message' do
-      form.valid?
-      expect(form.message).to eq(I18n.t('password.errors.password_required'))
+    describe 'error object' do
+      before { form.valid? }
+
+      it 'has a proper base message' do
+        expect(form.error_object[:base_message])
+          .to eq(I18n.t('password.errors.passwords_required'))
+      end
+
+      it 'has a display link set to true' do
+        expect(form.error_object[:link]).to be_truthy
+      end
+
+      it 'has a proper password message' do
+        expect(form.error_object[:password])
+          .to eq(I18n.t('password.errors.password_required'))
+      end
     end
   end
 
@@ -37,9 +50,22 @@ RSpec.describe NewPasswordForm, type: :model do
       expect(form).not_to be_valid
     end
 
-    it 'has a proper error message' do
-      form.valid?
-      expect(form.message).to eq(I18n.t('password.errors.password_required'))
+    describe 'error object' do
+      before { form.valid? }
+
+      it 'has a proper base message' do
+        expect(form.error_object[:base_message])
+          .to eq(I18n.t('password.errors.passwords_required'))
+      end
+
+      it 'has a display link set to true' do
+        expect(form.error_object[:link]).to be_truthy
+      end
+
+      it 'has a proper password confirmation message' do
+        expect(form.error_object[:password_confirmation])
+          .to eq(I18n.t('password.errors.confirmation_required'))
+      end
     end
   end
 
@@ -50,9 +76,27 @@ RSpec.describe NewPasswordForm, type: :model do
       expect(form).not_to be_valid
     end
 
-    it 'has a proper error message' do
-      form.valid?
-      expect(form.message).to eq(I18n.t('password.errors.password_equality'))
+    describe 'error object' do
+      before { form.valid? }
+
+      it 'has a proper base message' do
+        expect(form.error_object[:base_message])
+          .to eq(I18n.t('password.errors.password_equality'))
+      end
+
+      it 'has a display link set to true' do
+        expect(form.error_object[:link]).to be_truthy
+      end
+
+      it 'has a proper password message' do
+        expect(form.error_object[:password])
+          .to eq(I18n.t('password.errors.password_equality'))
+      end
+
+      it 'has a proper password confirmation message' do
+        expect(form.error_object[:password_confirmation])
+          .to eq(I18n.t('password.errors.password_equality'))
+      end
     end
   end
 
@@ -63,9 +107,25 @@ RSpec.describe NewPasswordForm, type: :model do
       expect(form).not_to be_valid
     end
 
-    it 'has a proper error message' do
-      form.valid?
-      expect(form.message).to eq(I18n.t('password.errors.password_unchanged'))
+    describe 'error object' do
+      before { form.valid? }
+
+      it 'has a proper base message' do
+        expect(form.error_object[:base_message])
+          .to eq(I18n.t('password.errors.password_unchanged'))
+      end
+
+      it 'has a display link set to false' do
+        expect(form.error_object[:link]).to be_falsey
+      end
+
+      it 'has no password message' do
+        expect(form.error_object[:password]).to be_nil
+      end
+
+      it 'has no confirmation message' do
+        expect(form.error_object[:password_confirmation]).to be_nil
+      end
     end
   end
 end

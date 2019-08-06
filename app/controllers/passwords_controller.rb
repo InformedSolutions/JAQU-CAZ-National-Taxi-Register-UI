@@ -10,14 +10,13 @@ class PasswordsController < ApplicationController
   end
 
   def create
-    Cognito::RespondToAuthChallenge.call(
-      user: current_user, password: password, confirmation: password_confirmation
-    )
-    update_session_data
-    redirect_to success_passwords_path
+    respond_to_auth
   rescue Cognito::CallException => e
-    sign_out current_user if e.path == new_user_session_path
-    redirect_to e.path, alert: e.message
+    sign_out current_user
+    redirect_to new_user_session_path, alert: e.message
+  rescue NewPasswordException => e
+    @error = e.error_object
+    render :new
   end
 
   def success
@@ -50,6 +49,14 @@ class PasswordsController < ApplicationController
   end
 
   private
+
+  def respond_to_auth
+    Cognito::RespondToAuthChallenge.call(
+      user: current_user, password: password, confirmation: password_confirmation
+    )
+    update_session_data
+    redirect_to success_passwords_path
+  end
 
   def update_session_data
     session['warden.user.user.key'] = [current_user.serializable_hash.transform_keys(&:to_s), nil]

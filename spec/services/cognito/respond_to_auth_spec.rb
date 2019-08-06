@@ -48,7 +48,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
   end
 
   context 'when NewPasswordForm returns invalid' do
-    let(:form) { OpenStruct.new(valid?: false, message: error) }
+    let(:form) { OpenStruct.new(valid?: false, error_object: {}) }
     let(:error) { I18n.t('password.errors.password_unchanged') }
 
     before do
@@ -56,7 +56,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
     end
 
     it 'raises exception' do
-      expect { service_call }.to raise_exception(Cognito::CallException, error)
+      expect { service_call }.to raise_exception(NewPasswordException)
     end
   end
 
@@ -69,8 +69,8 @@ RSpec.describe Cognito::RespondToAuthChallenge do
       )
     end
 
-    it 'raises exception' do
-      expect { service_call }.to raise_exception(Cognito::CallException, error)
+    it 'raises the new password exception' do
+      expect { service_call }.to raise_exception(NewPasswordException)
     end
   end
 

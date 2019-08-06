@@ -33,29 +33,29 @@ describe 'PasswordsController - POST #create', type: :request do
     end
 
     context 'when params are empty or not equal' do
-      before { http_request }
+      # before { http_request }
 
       describe 'password' do
         let(:params) { { user: { password: nil, password_confirmation: 'test' } } }
 
-        it 'returns a redirect to new_password_path' do
-          expect(response).to redirect_to(new_password_path)
+        it 'renders new' do
+          expect(http_request).to render_template(:new)
         end
       end
 
       describe 'password confirmation' do
         let(:params) { { user: { password: 'test', password_confirmation: nil } } }
 
-        it 'returns a redirect to new_password_path' do
-          expect(response).to redirect_to(new_password_path)
+        it 'renders new' do
+          expect(http_request).to render_template(:new)
         end
       end
 
       describe 'not equal' do
         let(:params) { { user: { password: 'test', password_confirmation: 'test1' } } }
 
-        it 'returns a redirect to new_password_path' do
-          expect(response).to redirect_to(new_password_path)
+        it 'renders new' do
+          expect(http_request).to render_template(:new)
         end
       end
     end
@@ -77,13 +77,13 @@ describe 'PasswordsController - POST #create', type: :request do
       context 'when call to AWS raises invalid password' do
         before do
           allow(Cognito::RespondToAuthChallenge).to receive(:call).and_raise(
-            Cognito::CallException.new(I18n.t('password.errors.complexity'), new_password_path)
+            NewPasswordException.new({})
           )
           http_request
         end
 
-        it 'returns a redirect to new_password_path' do
-          expect(response).to redirect_to(new_password_path)
+        it 'renders new' do
+          expect(http_request).to render_template(:new)
         end
 
         it 'does not log out user' do

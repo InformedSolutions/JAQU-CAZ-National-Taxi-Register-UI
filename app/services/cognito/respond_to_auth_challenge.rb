@@ -19,21 +19,13 @@ module Cognito
 
     private
 
-    def validation_error_path
-      Rails.application.routes.url_helpers.new_password_path
-    end
-
-    def system_error_path
-      Rails.application.routes.url_helpers.new_user_session_path
-    end
-
     def validate_params
       form = NewPasswordForm.new(
         password: password, confirmation: confirmation, old_password_hash: user.hashed_password
       )
       return if form.valid?
 
-      raise CallException.new(form.message, validation_error_path)
+      raise NewPasswordException, form.error_object
     end
 
     def update_user(access_token)
@@ -43,10 +35,10 @@ module Cognito
     def respond_to_auth
       call_cognito
     rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException
-      raise CallException.new(I18n.t('password.errors.complexity'), validation_error_path)
+      raise NewPasswordException, self.class.password_complexity_error
     rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
       Rails.logger.error e
-      raise CallException.new(I18n.t('expired_session'), system_error_path)
+      raise CallException, I18n.t('expired_session')
     end
 
     def call_cognito
@@ -59,6 +51,16 @@ module Cognito
           'USERNAME' => user.username
         }
       )
+    end
+
+    class << self
+      def password_complexity_error
+        {
+          base_message: I18n.t('password.errors.complexity'),
+          link: true,
+          password: I18n.t('password.errors.complexity')
+        }
+      end
     end
   end
 end

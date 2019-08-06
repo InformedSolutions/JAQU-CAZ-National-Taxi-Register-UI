@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
   resources :passwords, only: %i[new create] do
     collection do
+      get '/', to: redirect('passwords/reset')
       get :success
       get :reset
       post :send_confirmation_code

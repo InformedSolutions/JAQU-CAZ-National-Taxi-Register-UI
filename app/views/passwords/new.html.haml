@@ -2,33 +2,38 @@
   %fieldset.govuk-fieldset
     %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
       %h1.govuk-heading-l Setup your new password
-      - if alert
-        = render 'shared/errors'
+      - if @error
+        .govuk-error-summary{"aria-labelledby" => "error-summary-title", "data-module" => "error-summary", role: "@error", tabindex: "-1"}
+          %h2#error-summary-title.govuk-error-summary__title
+            There was a problem
+          .govuk-error-summary__body
+            %ul.govuk-list.govuk-error-summary__list
+              - if @error[:link]
+                %li
+                  = link_to(@error[:base_message], '#govuk-error-message')
+              - else
+                %li.custom-csv-error
+                  = @error[:base_message]
+
       %p
         You are logging in for the first time. For security reasons please update your password.
       %p
         Please enter new password below. It should be at least 8 characters long, include at least one upper case letter and a number.
 
       = form_for(current_user, url: passwords_path, method: :post) do |f|
-        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
+        .govuk-form-group{class: ('govuk-form-group--error' if @error && @error[:password])}
           = f.label :password, class: 'govuk-label'
           %span#govuk-error-message.govuk-error-message
-            - if alert
+            - if @error && @error[:password]
               %span.govuk-visually-hidden Error:
-              = 'Password is required' if alert.include?('required')
-              = 'Must be at least 8 characters long, include one upper case letter and a number' if alert.include?('8 characters')
-              = 'Password and password confirmation must be the same' if alert.include?('the same')
-              = alert if alert.include?('temporary')
+              = @error[:password]
           = f.password_field :password, class: 'govuk-input govuk-!-width-two-thirds'
-        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
+        .govuk-form-group{class: ('govuk-form-group--error' if @error && @error[:password_confirmation])}
           = f.label :password_confirmation, class: 'govuk-label'
           %span.govuk-error-message
-            - if alert
+            - if @error && @error[:password_confirmation]
               %span.govuk-visually-hidden Error:
-              = 'Password confirmation is required' if alert.include?('required')
-              = 'Must be at least 8 characters long, include one upper case letter and a number' if alert.include?('8 characters')
-              = 'Password and password confirmation must be the same' if alert.include?('the same')
-              = alert if alert.include?('temporary')
+              = @error[:password_confirmation]
           = f.password_field :password_confirmation, class: 'govuk-input govuk-!-width-two-thirds'
         .govuk-form-group
           = f.submit 'Continue', class: 'govuk-button'

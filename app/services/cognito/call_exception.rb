@@ -4,7 +4,7 @@ module Cognito
   class CallException < RuntimeError
     attr_reader :path
 
-    def initialize(msg, path)
+    def initialize(msg, path = nil)
       @path = path
       super(msg)
     end

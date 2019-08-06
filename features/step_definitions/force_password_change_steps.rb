@@ -24,8 +24,9 @@ Given('I am on a Force Change password page') do
 end
 
 And('I enter password that does not comply with Cognito setup password policy') do
-  allow(Cognito::RespondToAuthChallenge).to receive(:call).and_raise(
-    Cognito::CallException.new(I18n.t('password.errors.complexity'), new_password_path)
+  service = Cognito::RespondToAuthChallenge
+  allow(service).to receive(:call).and_raise(
+    NewPasswordException.new(service.send(:password_complexity_error))
   )
   fill_new_password_form
 end
@@ -35,7 +36,6 @@ Then('I am presented with an error') do
 end
 
 And('I can retry') do
-  expect(current_path).to eq(new_password_path)
   fill_new_password_form
 end
 
