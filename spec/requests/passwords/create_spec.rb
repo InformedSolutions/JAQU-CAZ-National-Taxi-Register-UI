@@ -33,12 +33,10 @@ describe 'PasswordsController - POST #create', type: :request do
     end
 
     context 'when params are empty or not equal' do
-      # before { http_request }
-
       describe 'password' do
         let(:params) { { user: { password: nil, password_confirmation: 'test' } } }
 
-        it 'renders new' do
+        it 'renders passwords/new template' do
           expect(http_request).to render_template(:new)
         end
       end
@@ -46,7 +44,7 @@ describe 'PasswordsController - POST #create', type: :request do
       describe 'password confirmation' do
         let(:params) { { user: { password: 'test', password_confirmation: nil } } }
 
-        it 'renders new' do
+        it 'renders passwords/new template' do
           expect(http_request).to render_template(:new)
         end
       end
@@ -54,7 +52,7 @@ describe 'PasswordsController - POST #create', type: :request do
       describe 'not equal' do
         let(:params) { { user: { password: 'test', password_confirmation: 'test1' } } }
 
-        it 'renders new' do
+        it 'renders passwords/new template' do
           expect(http_request).to render_template(:new)
         end
       end
@@ -82,7 +80,7 @@ describe 'PasswordsController - POST #create', type: :request do
           http_request
         end
 
-        it 'renders new' do
+        it 'renders passwords/new template' do
           expect(http_request).to render_template(:new)
         end
 

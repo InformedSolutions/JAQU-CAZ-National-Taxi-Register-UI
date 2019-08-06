@@ -8,31 +8,54 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
   let(:params) { { user: { username: username } } }
   let(:username) { 'wojtek' }
 
-  before do
-    allow(Cognito::ForgotPassword)
-      .to receive(:call)
-      .with(username: username)
-      .and_return(true)
-  end
-
-  it 'returns redirect to confirm reset' do
-    http_request
-    expect(response).to redirect_to(confirm_reset_passwords_path(username: username))
-  end
-
-  context 'when service raises exception' do
-    let(:fallback_path) { reset_passwords_path }
-
+  context 'with password_reset_token set' do
     before do
+      inject_session(password_reset_token: SecureRandom.uuid)
       allow(Cognito::ForgotPassword)
         .to receive(:call)
         .with(username: username)
-        .and_raise(Cognito::CallException.new('Error', fallback_path))
+        .and_return(true)
     end
 
-    it 'returns redirect to fallback path' do
+    it 'redirects to confirm reset' do
       http_request
-      expect(response).to redirect_to(fallback_path)
+      expect(response).to redirect_to(confirm_reset_passwords_path(username: username))
+    end
+
+    context 'when service raises `ServiceError` exception' do
+      let(:fallback_path) { reset_passwords_path }
+
+      before do
+        allow(Cognito::ForgotPassword)
+          .to receive(:call)
+          .with(username: username)
+          .and_raise(Cognito::CallException.new('Something went wrong', fallback_path))
+        http_request
+      end
+
+      it 'redirects to fallback path' do
+        expect(response).to redirect_to(fallback_path)
+      end
+    end
+
+    context 'when service raises `UserNotFoundException` exception' do
+      before do
+        allow(COGNITO_CLIENT).to receive(:forgot_password).and_raise(
+          Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', '')
+        )
+        http_request
+      end
+
+      it 'redirects to confirm reset' do
+        expect(response).to redirect_to(confirm_reset_passwords_path(username: username))
+      end
+    end
+  end
+
+  context 'without password_reset_token set' do
+    it 'returns redirect to success page' do
+      http_request
+      expect(response).to redirect_to(success_passwords_path)
     end
   end
 end
