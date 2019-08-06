@@ -11,4 +11,9 @@ describe 'PasswordsController - GET #reset', type: :request do
     http_request
     expect(response).to be_successful
   end
+
+  it 'sets password_reset_token' do
+    http_request
+    expect(session[:password_reset_token]).not_to be_nil
+  end
 end
