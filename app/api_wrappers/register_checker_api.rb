@@ -10,19 +10,19 @@ class RegisterCheckerApi < BaseApi
         "s3Bucket": bucket_name
       }.to_json
 
-      response = request(:post, '/v1/schemeManagement/register-csv-from-s3/jobs',
+      response = request(:post, '/v1/scheme-management/register-csv-from-s3/jobs',
                          body: params, headers: custom_headers(correlation_id))
       response['jobName']
     end
 
     def job_status(job_uuid, correlation_id)
-      response = request(:get, "/v1/schemeManagement/register-csv-from-s3/jobs/#{job_uuid}",
+      response = request(:get, "/v1/scheme-management/register-csv-from-s3/jobs/#{job_uuid}",
                          headers: custom_headers(correlation_id))
       response['status']
     end
 
     def job_errors(job_uuid, correlation_id)
-      response = request(:get, "/v1/schemeManagement/register-csv-from-s3/jobs/#{job_uuid}",
+      response = request(:get, "/v1/scheme-management/register-csv-from-s3/jobs/#{job_uuid}",
                          headers: custom_headers(correlation_id))
       return nil unless response['status'] == 'FAILURE'
 
