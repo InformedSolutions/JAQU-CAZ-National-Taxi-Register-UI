@@ -11,6 +11,7 @@ Rails.application.routes.draw do
       post :import
       get :processing
       get :success
+      get :data_rules
     end
   end
 
@@ -25,7 +26,8 @@ Rails.application.routes.draw do
     end
   end
 
-  get :data_rules, to: 'upload#data_rules'
-  get 'cookies', to: 'cookies#index'
-  get 'health', to: 'application#health'
+  resources :cookies, only: :index
+
+  get :health, to: 'application#health'
+  get :build_id, to: 'application#build_id'
 end

@@ -82,7 +82,7 @@ describe UploadController, type: :request do
   end
 
   describe 'GET #data_rules' do
-    subject(:http_request) { get data_rules_path }
+    subject(:http_request) { get data_rules_upload_index_path }
 
     it 'returns a success response' do
       http_request

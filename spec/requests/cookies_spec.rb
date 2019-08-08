@@ -4,7 +4,7 @@ require 'rails_helper'
 
 describe CookiesController, type: :request do
   describe 'GET #index' do
-    subject(:http_request) { get upload_index_path }
+    subject(:http_request) { get cookies_path }
 
     before { sign_in User.new }
 
