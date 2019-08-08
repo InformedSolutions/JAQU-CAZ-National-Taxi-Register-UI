@@ -8,6 +8,10 @@ class ApplicationController < ActionController::Base
     render json: 'OK', status: :ok
   end
 
+  def build_id
+    render json: ENV.fetch('BUILD_ID', 'undefined'), status: :ok
+  end
+
   private
 
   def handle_exception(exception)
