@@ -1,4 +1,4 @@
-%main.govuk-main-wrapper#main-content{role: 'main'}
+%main.govuk-main-wrapper--auto-spacing#main-content{role: 'main'}
   %fieldset.govuk-fieldset
     %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
       %h1.govuk-heading-l Sign In
@@ -25,5 +25,5 @@
               Enter your password
           = f.password_field :password, autocomplete: 'current-password', class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
         .govuk-form-group
-          = f.submit 'Continue', class: 'govuk-button'
+          = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button'
           %p= link_to 'Forgot your password?', reset_passwords_path, class: 'govuk-link'

@@ -14,7 +14,7 @@ require("@rails/ujs").start();
 
 import '../styles/application.scss';
 import '../src/GovUKAssets';
-import { initAll } from 'govuk-frontend';
+import { initAll } from 'govuk-frontend/govuk/all.js';
 import initBanner from '../src/cookiesBanner/init';
 
 initAll();

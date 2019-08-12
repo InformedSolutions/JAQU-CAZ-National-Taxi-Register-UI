@@ -2,7 +2,7 @@
 $background-white: #d5e8f3;
 $green: #00823b;
 $white: #ffffff;
-$grey-4: #f8f8f8;
+$light-grey: #f3f2f1;
 $darker-green: #00692f;
 $cookie-border: #0b0c0c;
 
@@ -66,7 +66,7 @@ $cookie-border: #0b0c0c;
     }
 
     .button:hover {
-      background-color: $grey-4;
+      background-color: $light-grey;
       border-color: $darker-green;
       color: $darker-green;
       text-decoration: none;

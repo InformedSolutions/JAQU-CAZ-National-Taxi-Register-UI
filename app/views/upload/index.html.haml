@@ -1,4 +1,4 @@
-%main.govuk-main-wrapper#main-content{role: 'main'}
+%main.govuk-main-wrapper--auto-spacing#main-content{role: 'main'}
   .govuk-grid-row
     .govuk-grid-column-two-thirds
       %h1.govuk-heading-l Taxi/PHV Data Upload
@@ -21,8 +21,8 @@
               %span.govuk-visually-hidden Error:
               = alert
           %input#file-upload-1.govuk-file-upload{class:('govuk-file-upload--error' if alert),
-            "aria-describedby": "file-upload-1",
-            name: "file",
-            type: "file"}
+                                                 'aria-describedby': 'file-upload-1',
+                                                 name: 'file',
+                                                 type: 'file'}
         .govuk-form-group
-          = submit_tag 'Upload', class: 'govuk-button'
+          = submit_tag 'Upload', class: 'govuk-button', 'data-module': 'govuk-button'

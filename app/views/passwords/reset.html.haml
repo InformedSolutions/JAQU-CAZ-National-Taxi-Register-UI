@@ -1,6 +1,6 @@
 = link_to 'Back', new_user_session_path, class: 'govuk-back-link'
 
-%main.govuk-main-wrapper#main-content{role: 'main'}
+%main.govuk-main-wrapper--auto-spacing#main-content{role: 'main'}
   - if alert
     = render 'shared/errors'
 
@@ -17,4 +17,4 @@
               = alert
           =f.text_field :username, class: "govuk-input #{'govuk-input--error' if alert}"
         %br
-        = f.submit 'Reset password', 'data-role' => 'button', class: 'govuk-button'
+        = f.submit 'Reset password', class: 'govuk-button', 'data-module': 'govuk-button'

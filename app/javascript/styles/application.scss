@@ -1,10 +1,10 @@
 $govuk-global-styles: true;
 $govuk-assets-path: '/packs/media/';
 
-@import "~govuk-frontend/all";
+@import "~govuk-frontend/govuk/all";
 
 html {
-  background-color: govuk-colour('grey-3');
+  background-color: govuk-colour('light-grey');
 }
 
 .custom-csv-error {
