@@ -59,8 +59,8 @@ RSpec.describe Cognito::ForgotPassword do
         )
       end
 
-      it 'raises exception' do
-        expect { service_call }.to raise_exception(Cognito::CallException, 'Something went wrong')
+      it 'returns true' do
+        expect(service_call).to be_truthy
       end
     end
 
