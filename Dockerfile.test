@@ -3,8 +3,17 @@ FROM ruby:2.6.3-alpine3.9
 # Set correct environment variables.
 ENV SECRET_KEY_BASE=randomsecret
 
-RUN apk add --no-cache --update build-base linux-headers tzdata nodejs \
- openssh libxml2-dev libxslt-dev yarn curl-dev sqlite-dev \
+RUN apk add --no-cache --update build-base \
+  linux-headers \
+  tzdata \
+  nodejs \
+  openssh \
+  libxml2-dev \
+  libxslt-dev \
+  yarn \
+  curl-dev \
+  sqlite-dev \
+  git \
  && PACKAGES="ca-certificates procps curl pcre libstdc++ libexecinfo" \
  && BUILD_PACKAGES="pcre-dev libexecinfo-dev" \
  && apk add --update $PACKAGES $BUILD_PACKAGES \
