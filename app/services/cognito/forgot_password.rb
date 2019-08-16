@@ -32,11 +32,8 @@ module Cognito
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         username: username
       )
-    rescue Aws::CognitoIdentityProvider::Errors::UserNotFoundException => e
-      Rails.logger.error e
     rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
-      Rails.logger.error e
-      raise CallException.new('Something went wrong', error_path)
+      Rails.logger.error "#{e.class}: #{e}"
     end
   end
 end
