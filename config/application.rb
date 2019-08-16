@@ -26,5 +26,8 @@ module CsvUploader
 
     feedback_url_default = 'https://www.surveymonkey.co.uk/r/2T8BX2D'
     config.x.feedback_url = (ENV['FEEDBACK_URL'].presence || feedback_url_default)
+
+    # https://mattbrictson.com/dynamic-rails-error-pages
+    config.exceptions_app = routes
   end
 end

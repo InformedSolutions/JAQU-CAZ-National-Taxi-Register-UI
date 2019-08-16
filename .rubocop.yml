@@ -19,6 +19,8 @@ Metrics/LineLength:
 
 Metrics/BlockLength:
   ExcludedMethods: ['describe', 'context']
+  Exclude:
+    - 'config/routes.rb'
 
 Style/MixinUsage:
   Exclude:
