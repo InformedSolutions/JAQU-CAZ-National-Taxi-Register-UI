@@ -26,4 +26,4 @@
           = f.password_field :password, autocomplete: 'current-password', class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
         .govuk-form-group
           = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button'
-          %p= link_to 'Forgot your password?', reset_passwords_path, class: 'govuk-link'
+          %p= link_to 'Forgot your password?', reset_passwords_path, class: 'govuk-link', id: 'forgot-password'
