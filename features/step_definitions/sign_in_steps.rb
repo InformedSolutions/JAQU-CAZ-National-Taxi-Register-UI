@@ -76,3 +76,19 @@ end
 When('I request to sign out') do
   click_link 'Sign Out'
 end
+
+# Scenario: Sign in with invalid email format
+When('I enter invalid email format') do
+  fill_in('user_username', with: 'user.example.com')
+  fill_in('user_password', with: '12345678')
+
+  click_button 'Continue'
+end
+
+# Scenario: Sign in with too long email address
+When('I enter too long email address') do
+  fill_in('user_username', with: "#{SecureRandom.alphanumeric(36)}@email.com")
+  fill_in('user_password', with: '12345678')
+
+  click_button 'Continue'
+end

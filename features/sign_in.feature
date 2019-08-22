@@ -42,3 +42,15 @@ Feature: Sign In
     When I navigate to a Upload page
     Then I am redirected to the Sign in page
       And I should see "Sign In"
+
+  Scenario: Sign in with invalid email format
+    Given I am on the Sign in page
+    When I enter invalid email format
+    Then I remain on the current page
+      And I should see "Invalid Email Format"
+
+  Scenario: Sign in with too long email address
+    Given I am on the Sign in page
+    When I enter too long email address
+    Then I remain on the current page
+      And I should see "Email address exceeds the limit of 45 characters"

@@ -6,15 +6,27 @@ module AuthenticationStrategies
     # https://github.com/plataformatec/devise/blob/master/lib/devise/strategies/database_authenticatable.rb
     # Method called by warden to authenticate a resource.
     def authenticate!
+      errors = EmailValidator.call(email: username)
+      return fail!(errors) if errors
+
       # authentication_hash doesn't include the password
       auth_params = authentication_hash
       auth_params[:password] = password
 
       # mapping.to is a wrapper over the resource model
       resource = mapping.to.new
-
       return fail! unless resource
 
+      authenticate_user(resource, auth_params)
+    end
+
+    private
+
+    def username
+      authentication_hash[:username]
+    end
+
+    def authenticate_user(resource, auth_params)
       # remote_authentication method is defined in Devise::Models::RemoteAuthenticatable
       #
       # validate is a method defined in Devise::Strategies::Authenticatable. It takes
