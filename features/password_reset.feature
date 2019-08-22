@@ -22,7 +22,7 @@ Feature: Password reset
     Given I am on the forgotten password page
     When I enter invalid email
     Then I remain on the update password page
-      And I should see "Invalid Email Format"
+      And I should see "Invalid email format"
 
   Scenario: Filling too long email address
     Given I am on the forgotten password page

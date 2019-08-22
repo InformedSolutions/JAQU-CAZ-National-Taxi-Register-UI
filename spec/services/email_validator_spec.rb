@@ -37,7 +37,7 @@ RSpec.describe EmailValidator do
         let(:email) { 'user.example.com' }
 
         it 'returns error message' do
-          expect(service_call).to eq('Invalid Email Format')
+          expect(service_call).to eq('Invalid email format')
         end
       end
     end

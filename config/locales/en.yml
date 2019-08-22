@@ -30,6 +30,11 @@
 # available at https://guides.rubyonrails.org/i18n.html.
 
 en:
+  email:
+    errors:
+      invalid_format: 'Invalid email format'
+      required: 'Email is required'
+      too_long: 'Email address exceeds the limit of 45 characters'
   password:
     errors:
       complexity: 'Password must be at least 8 characters long, include at least one upper case letter and a number'

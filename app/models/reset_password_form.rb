@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ResetPasswordForm < BaseForm
-  REQUIRED_MSG = 'Email is required'
-
   def valid?
     filled? && valid_format?
   end
@@ -12,7 +10,7 @@ class ResetPasswordForm < BaseForm
   def filled?
     return true if parameter.present?
 
-    @message = REQUIRED_MSG
+    @message = I18n.t('email.errors.required')
     false
   end
 

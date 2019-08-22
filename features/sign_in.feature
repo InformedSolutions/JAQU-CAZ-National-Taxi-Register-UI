@@ -47,7 +47,7 @@ Feature: Sign In
     Given I am on the Sign in page
     When I enter invalid email format
     Then I remain on the current page
-      And I should see "Invalid Email Format"
+      And I should see "Invalid email format"
 
   Scenario: Sign in with too long email address
     Given I am on the Sign in page

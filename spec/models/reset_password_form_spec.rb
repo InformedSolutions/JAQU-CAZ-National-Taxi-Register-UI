@@ -24,7 +24,7 @@ RSpec.describe ResetPasswordForm, type: :model do
 
     it 'has a proper error message' do
       form.valid?
-      expect(form.message).to eq(described_class::REQUIRED_MSG)
+      expect(form.message).to eq(I18n.t('email.errors.required'))
     end
   end
 
@@ -37,7 +37,7 @@ RSpec.describe ResetPasswordForm, type: :model do
 
     it 'has a proper error message' do
       form.valid?
-      expect(form.message).to eq('Invalid Email Format')
+      expect(form.message).to eq(I18n.t('email.errors.invalid_format'))
     end
   end
 
@@ -50,7 +50,7 @@ RSpec.describe ResetPasswordForm, type: :model do
 
     it 'has a proper error message' do
       form.valid?
-      expect(form.message).to eq('Email address exceeds the limit of 45 characters')
+      expect(form.message).to eq(I18n.t('email.errors.too_long'))
     end
   end
 end

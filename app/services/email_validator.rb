@@ -9,9 +9,9 @@ class EmailValidator < BaseService
 
   def call
     if invalid_format?
-      'Invalid email format'
+      I18n.t('email.errors.invalid_format')
     elsif email_too_long?
-      'Email address exceeds the limit of 45 characters'
+      I18n.t('email.errors.too_long')
     end
   end
 

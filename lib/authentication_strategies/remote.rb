@@ -6,8 +6,8 @@ module AuthenticationStrategies
     # https://github.com/plataformatec/devise/blob/master/lib/devise/strategies/database_authenticatable.rb
     # Method called by warden to authenticate a resource.
     def authenticate!
-      errors = EmailValidator.call(email: username)
-      return fail!(errors) if errors
+      error = EmailValidator.call(email: username)
+      return fail!(error) if error
 
       # authentication_hash doesn't include the password
       auth_params = authentication_hash
