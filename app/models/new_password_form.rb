@@ -41,11 +41,12 @@ class NewPasswordForm
   def correct_password_confirmation?
     return true if password == confirmation
 
+    password_equality = I18n.t('password.errors.password_equality')
     @error_object = {
-      base_message: I18n.t('password.errors.password_equality'),
+      base_message: password_equality,
       link: true,
-      password: I18n.t('password.errors.password_equality'),
-      password_confirmation: I18n.t('password.errors.password_equality')
+      password: password_equality,
+      password_confirmation: password_equality
     }
     false
   end
