@@ -32,9 +32,9 @@
 en:
   email:
     errors:
-      invalid_format: 'Invalid email format'
+      invalid_format: 'The email is in an invalid format'
       required: 'Email is required'
-      too_long: 'Email address exceeds the limit of 45 characters'
+      too_long: 'The email exceeds the limit of 45 characters'
   password:
     errors:
       complexity: 'Password must be at least 8 characters long, include at least one upper case letter and a number'

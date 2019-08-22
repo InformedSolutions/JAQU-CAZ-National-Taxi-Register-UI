@@ -29,7 +29,7 @@ RSpec.describe EmailValidator do
         let(:email) { "#{SecureRandom.alphanumeric(36)}@email.com" }
 
         it 'returns error message' do
-          expect(service_call).to eq('Email address exceeds the limit of 45 characters')
+          expect(service_call).to eq(I18n.t('email.errors.too_long'))
         end
       end
 
@@ -37,7 +37,7 @@ RSpec.describe EmailValidator do
         let(:email) { 'user.example.com' }
 
         it 'returns error message' do
-          expect(service_call).to eq('Invalid email format')
+          expect(service_call).to eq(I18n.t('email.errors.invalid_format'))
         end
       end
     end
