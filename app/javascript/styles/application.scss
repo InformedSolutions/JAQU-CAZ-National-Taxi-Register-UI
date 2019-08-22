@@ -4,10 +4,10 @@ $govuk-assets-path: '/packs/media/';
 @import "~govuk-frontend/govuk/all";
 
 html {
-  background-color: govuk-colour('light-grey');
+  background-color: govuk-colour($colour: 'light-grey');
 }
 
 .custom-csv-error {
-  color: govuk-colour('red');
+  color: govuk-colour($colour: 'red');
   font-weight: 700;
 }
