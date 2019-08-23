@@ -7,8 +7,9 @@
   .govuk-grid-row
     .govuk-grid-column-two-thirds
       %h1.govuk-heading-l Reset password
-      %p Enter your email to reset your password.
-      = form_for(User.new, url: send_confirmation_code_passwords_path, method: :post, html: { autocomplete: "off" }) do |f|
+      %p Enter your email to reset password
+      = form_for(User.new, url: send_confirmation_code_passwords_path, method: :post,
+        html: {autocomplete: 'off'}) do |f|
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
           =f.label :username, 'Email', class: 'govuk-label'
           %span#govuk-error-message.govuk-error-message

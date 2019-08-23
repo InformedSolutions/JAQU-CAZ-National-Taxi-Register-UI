@@ -1,16 +1,16 @@
 %main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
     .govuk-grid-column-two-thirds
-      %h1.govuk-heading-l Taxi/PHV Data Upload
+      %h1.govuk-heading-l Taxi and PHV Data Upload
       - if @job_errors
         = render 'upload/job_errors'
       - elsif alert
         = render 'shared/errors'
       %p
-        Use this page to upload Taxi/PHV data.
+        Use this page to upload Taxi and PHV data.
         Your upload must be a CSV file with information in a specific format.
         For information on this format see the
-        %a{href: data_rules_upload_index_path} data rules.
+        %a{href: data_rules_upload_index_path} data rules
 
       = form_tag(import_upload_index_path, multipart: true) do
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
