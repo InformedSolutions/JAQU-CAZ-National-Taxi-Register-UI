@@ -23,9 +23,3 @@ Feature: Password reset
     When I enter invalid email
     Then I remain on the update password page
       And I should see "The email is in an invalid format"
-
-  Scenario: Filling too long email address
-    Given I am on the forgotten password page
-    When I enter too long email
-    Then I remain on the update password page
-      And I should see "The email exceeds the limit of 45 characters"

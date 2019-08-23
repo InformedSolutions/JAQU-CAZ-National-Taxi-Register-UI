@@ -48,9 +48,3 @@ Feature: Sign In
     When I enter invalid email format
     Then I remain on the current page
       And I should see "The email is in an invalid format"
-
-  Scenario: Sign in with too long email address
-    Given I am on the Sign in page
-    When I enter too long email address
-    Then I remain on the current page
-      And I should see "The email exceeds the limit of 45 characters"

@@ -48,9 +48,3 @@ end
 Then('I remain on the update password page') do
   expect(page).to have_current_path(reset_passwords_path)
 end
-
-When('I enter too long email') do
-  username = "#{SecureRandom.alphanumeric(36)}@email.com"
-  fill_in('user[username]', with: username)
-  click_button 'Reset password'
-end
