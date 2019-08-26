@@ -16,14 +16,16 @@
             - if alert
               %span.govuk-visually-hidden Error:
               = alert
-          = f.text_field :username, autofocus: true, autocomplete: 'username', class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+          = f.text_field :username, autofocus: true, autocomplete: 'username', maxlength: 45,
+            class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
           = f.label :password, class: 'govuk-label'
           %span.govuk-error-message
             - if alert
               %span.govuk-visually-hidden Error:
               Enter your password
-          = f.password_field :password, autocomplete: 'current-password', class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+          = f.password_field :password, autocomplete: 'current-password',
+            class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
         .govuk-form-group
           = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button'
           %p= link_to 'Forgot your password?', reset_passwords_path, class: 'govuk-link', id: 'forgot-password'

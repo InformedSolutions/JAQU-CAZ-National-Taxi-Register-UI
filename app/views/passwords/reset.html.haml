@@ -16,6 +16,6 @@
             - if alert
               %span.govuk-visually-hidden Error:
               = alert
-          =f.text_field :username, class: "govuk-input #{'govuk-input--error' if alert}"
+          =f.text_field :username, class: "govuk-input #{'govuk-input--error' if alert}", maxlength: 45
         %br
         = f.submit 'Reset password', class: 'govuk-button', 'data-module': 'govuk-button'

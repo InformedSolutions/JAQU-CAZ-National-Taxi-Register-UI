@@ -2,7 +2,8 @@
 %html{html_attrs('en')}
   %head
     %meta{charset: 'utf-8'}
-    %title Taxi and PHV Data Portal
+    %title
+      = content_for?(:title) ? yield(:title) : 'Taxi and PHV Data Portal'
     = csrf_meta_tags
     = csp_meta_tag
 

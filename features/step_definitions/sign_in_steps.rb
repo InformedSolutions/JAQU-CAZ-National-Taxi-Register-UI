@@ -84,11 +84,3 @@ When('I enter invalid email format') do
 
   click_button 'Continue'
 end
-
-# Scenario: Sign in with too long email address
-When('I enter too long email address') do
-  fill_in('user_username', with: "#{SecureRandom.alphanumeric(36)}@email.com")
-  fill_in('user_password', with: '12345678')
-
-  click_button 'Continue'
-end
