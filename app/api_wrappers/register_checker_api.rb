@@ -5,6 +5,7 @@ class RegisterCheckerApi < BaseApi
 
   class << self
     def register_job(file_name, correlation_id)
+      log_call("Registering job with file name: #{file_name}")
       params = {
         "filename": file_name,
         "s3Bucket": bucket_name
@@ -16,12 +17,14 @@ class RegisterCheckerApi < BaseApi
     end
 
     def job_status(job_uuid, correlation_id)
+      log_call("Getting job status with job uuid: #{job_uuid}")
       response = request(:get, "/v1/scheme-management/register-csv-from-s3/jobs/#{job_uuid}",
                          headers: custom_headers(correlation_id))
       response['status']
     end
 
     def job_errors(job_uuid, correlation_id)
+      log_call("Getting job errors with job uuid: #{job_uuid}")
       response = request(:get, "/v1/scheme-management/register-csv-from-s3/jobs/#{job_uuid}",
                          headers: custom_headers(correlation_id))
       return nil unless response['status'] == 'FAILURE'
@@ -30,6 +33,10 @@ class RegisterCheckerApi < BaseApi
     end
 
     private
+
+    def log_call(msg)
+      Rails.logger.info "[RegisterCheckerApi] #{msg}"
+    end
 
     def bucket_name
       ENV['S3_AWS_BUCKET']
