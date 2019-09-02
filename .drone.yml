@@ -88,7 +88,13 @@ steps:
   - name: initialise ecr
     image: hashicorp/terraform:0.12.3
     commands:
-      - git clone https://github.com/InformedSolutions/JAQU-CAZ-IAC.git
+      - mkdir /root/.ssh
+      - echo -n "$SSH_KEY" > /root/.ssh/id_rsa.pub
+      - chmod 600 /root/.ssh/id_rsa.pub
+      - touch /root/.ssh/known_hosts
+      - chmod 600 /root/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/ntr-web/environments/dev
       - terraform init
       - terraform workspace select dev || terraform workspace new dev
@@ -198,5 +204,4 @@ kind: secret
 name: github_ssh_key
 get:
   path: /secrets/drone.global
-  name: githubSSH
   name: githubSSH
