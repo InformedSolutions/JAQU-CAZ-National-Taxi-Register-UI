@@ -130,7 +130,6 @@ steps:
     image: hashicorp/terraform:0.12.3
     commands:
       - cd JAQU-CAZ-IAC/terraform/projects/ntr-web/environments/dev
-      - git checkout feature/NO_JIRA/refactor-ntr-environments
       - terraform init
       - terraform workspace select dev
       - terraform apply -auto-approve
