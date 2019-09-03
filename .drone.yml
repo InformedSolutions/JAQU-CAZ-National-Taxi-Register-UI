@@ -167,7 +167,7 @@ steps:
     commands:
       - pwd
       - gem install csv
-      - ruby jmeter/generate_taxi.csv
+      - ruby jmeter/generate_taxi.rb
       - mv CAZ-2020-01-08-100-1.csv jmeter
       - bzt jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
     volumes:
