@@ -174,7 +174,7 @@ steps:
         path: /var/run/docker.sock
     when:
       event:
-        include:
+        exclude:
         - pull_request
 
 volumes:
