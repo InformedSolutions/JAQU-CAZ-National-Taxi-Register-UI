@@ -313,8 +313,8 @@
             <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="upload the file - post" enabled="true">
               <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
                 <collectionProp name="HTTPFileArgs.files">
-                  <elementProp name="/home/vagrant/projects/JAQU-CAZ-QA-selenium/CAZ-2020-01-08-100-5.csv" elementType="HTTPFileArg">
-                    <stringProp name="File.path">/home/vagrant/projects/JAQU-CAZ-QA-selenium/CAZ-2020-01-08-100-5.csv</stringProp>
+                  <elementProp name="/drone/src/jmeter/CAZ-2020-01-08-100-1.csv" elementType="HTTPFileArg">
+                    <stringProp name="File.path">/drone/src/jmeter/CAZ-2020-01-08-100-1.csv</stringProp>
                     <stringProp name="File.paramname">file</stringProp>
                     <stringProp name="File.mimetype">text/csv</stringProp>
                   </elementProp>
