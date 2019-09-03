@@ -8,11 +8,7 @@ end
 
 # Scenario: View upload page with cookie that has not expired
 When('I navigate to a Upload page') do
-  visit upload_index_path
-end
-
-Then('I am redirected to the Sign in page') do
-  expect(page).to have_current_path(user_session_path)
+  visit authenticated_root_path
 end
 
 Then('I should enter valid credentials and press the Continue') do
@@ -35,7 +31,19 @@ When('I have authentication cookie that has not expired') do
 end
 
 Then('I am redirected to the Upload page') do
-  expect(page).to have_current_path(upload_index_path)
+  expect(page).to have_current_path(authenticated_root_path)
+end
+
+Then('I am redirected to the Sign in page') do
+  expect(page).to have_current_path(new_user_session_path)
+end
+
+Then('I am redirected to the unauthenticated root page') do
+  expect(page).to have_current_path('/')
+end
+
+Then('I am redirected to the root page') do
+  expect(page).to have_current_path('/')
 end
 
 # Scenario: Sign in with invalid credentials

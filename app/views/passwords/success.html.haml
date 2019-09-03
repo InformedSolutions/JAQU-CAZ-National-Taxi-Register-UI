@@ -10,7 +10,7 @@
       -if user_signed_in?
         %p
           You can now
-          = link_to 'submit CSV', upload_index_path
+          = link_to 'submit CSV', authenticated_root_path
           with Taxi and PHV data
       -else
         %p

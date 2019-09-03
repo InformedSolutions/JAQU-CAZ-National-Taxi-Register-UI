@@ -13,13 +13,13 @@ When('I upload a valid csv file') do
   allow(SecureRandom).to receive(:uuid).and_return(correlation_id)
   allow(CsvUploadService).to receive(:call).and_return(true)
   allow(RegisterCheckerApi).to receive(:register_job)
-    .with('CAZ-2020-01-08-AuthorityID-8.csv', correlation_id)
+    .with('CAZ-2020-01-08-AuthorityID-1.csv', correlation_id)
     .and_return(job_name)
 
   allow(RegisterCheckerApi).to receive(:job_status)
     .with(job_name, correlation_id).and_return('RUNNING')
 
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-8.csv'))
+  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-1.csv'))
   click_button 'Upload'
 end
 
@@ -84,52 +84,13 @@ end
 When('I upload a csv file during error on S3') do
   allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(false)
 
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-8.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with invalid number of values') do
   attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-1.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with header row') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-2.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with semicolons') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-3.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with comma for the last field') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-4.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with invalid order of values') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-5.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with spaces between field values and separating commas') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-6.csv'))
-  click_button 'Upload'
-end
-
-When('I upload a csv file with pound, dollar and hash characters') do
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-7.csv'))
   click_button 'Upload'
 end
 
 # Scenario: Show processing page without uploaded csv file
 When('I want go to processing page') do
   visit processing_upload_index_path
-end
-
-Then('I am redirected to the root page') do
-  expect(page).to have_current_path(root_path)
 end
 
 def empty_csv_file(filename)

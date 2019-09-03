@@ -6,7 +6,7 @@ Feature: Sign In
   Scenario: View upload page without cookie
     Given I have no authentication cookie
     When I navigate to a Upload page
-    Then I am redirected to the Sign in page
+    Then I am redirected to the unauthenticated root page
       And I should see "Sign In"
       And I should see "Taxi and PHV Data Portal" title
       And I should not see "Upload" link
@@ -26,7 +26,8 @@ Feature: Sign In
   Scenario: View upload page with cookie that has expired
     Given I have authentication cookie that has expired
     When I navigate to a Upload page
-    Then I am redirected to the Sign in page
+      And I should not see "Upload" link
+    Then I am redirected to the unauthenticated root page
       And I should see "Sign In"
 
   Scenario: Sign in with invalid credentials
@@ -40,7 +41,7 @@ Feature: Sign In
     When I request to sign out
     Then I am redirected to the Sign in page
     When I navigate to a Upload page
-    Then I am redirected to the Sign in page
+    Then I am redirected to the unauthenticated root page
       And I should see "Sign In"
 
   Scenario: Sign in with invalid email format

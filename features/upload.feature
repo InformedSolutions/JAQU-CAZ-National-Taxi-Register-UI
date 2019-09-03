@@ -25,6 +25,7 @@ Feature: Upload
     When I press refresh page link when api response not running or finished
     Then I am redirected to the Upload page
       And I should see "There was a problem"
+      And I should see "Uploaded file is not valid"
 
   Scenario: Upload a csv file whose name is not compliant with the naming rules
     Given I am on the Upload page
@@ -50,22 +51,6 @@ Feature: Upload
     Given I am on the Upload page
     When I upload a csv file during error on S3
     Then I should see "The selected file could not be uploaded – try again"
-
-  @wip
-  Scenario: Upload a csv file with invalid structure
-    Given I am on the Upload page
-    When I upload a csv file with invalid number of values
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with header row
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with semicolons
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with comma for the last field
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with spaces between field values and separating commas
-    Then I should see "Uploaded file is not valid"
-    When I upload a csv file with pound, dollar and hash characters
-    Then I should see "Uploaded file is not valid"
 
   Scenario: Show processing page without uploaded csv file
     Given I am on the Upload page

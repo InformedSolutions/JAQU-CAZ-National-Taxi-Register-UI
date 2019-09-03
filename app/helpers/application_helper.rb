@@ -2,8 +2,7 @@
 
 module ApplicationHelper
   def current_path?(path)
-    if (request.path_info == path) ||
-       (request.path_info == root_path && path == upload_index_path)
+    if request.path_info == path
       'govuk-header__navigation-item--active'
     end
   end
