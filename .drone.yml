@@ -165,7 +165,6 @@ steps:
   - name: micro-performance tests
     image: blazemeter/taurus
     commands:
-      - pwd
       - gem install csv
       - ruby jmeter/generate_taxi.rb
       - mv CAZ-2020-01-08-100-1.csv jmeter
