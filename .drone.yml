@@ -161,6 +161,22 @@ steps:
         exclude:
         - pull_request
 
+  # Execute jMeter scripts via taurus
+  - name: micro-performance tests
+    image: blazemeter/taurus
+    commands:
+      - pwd
+      - gem install csv
+      - ruby generate_taxi.csv
+      - bzt jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        include:
+        - pull_request
+
 volumes:
 - name: docker_sock
   host:
@@ -173,17 +189,6 @@ trigger:
   - pull_request
   - push
 
-    # Execute jMeter scripts via taurus
-  - name: micro-performance tests
-    image: blazemeter/taurus
-    commands:
-      - pwd
-      - gem install csv
-      - ruby generate_taxi.csv
-      - bzt jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
 
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
 ---
