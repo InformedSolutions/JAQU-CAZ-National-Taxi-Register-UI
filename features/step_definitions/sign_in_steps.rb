@@ -30,10 +30,6 @@ When('I have authentication cookie that has not expired') do
   expect(cookie[:expires] > Time.current).to be true
 end
 
-Then('I am redirected to the Upload page') do
-  expect(page).to have_current_path(authenticated_root_path)
-end
-
 Then('I am redirected to the Sign in page') do
   expect(page).to have_current_path(new_user_session_path)
 end
@@ -42,19 +38,12 @@ Then('I am redirected to the unauthenticated root page') do
   expect(page).to have_current_path('/')
 end
 
-Then('I am redirected to the root page') do
-  expect(page).to have_current_path('/')
-end
-
 # Scenario: Sign in with invalid credentials
 When('I enter invalid credentials') do
   fill_in('user_username', with: 'user@example.com')
   fill_in('user_password', with: 'invalid-password')
 
-  allow(Cognito::AuthUser).to receive(:call).and_raise(
-    Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
-  )
-
+  allow(Cognito::AuthUser).to receive(:call).and_return(false)
   click_button 'Continue'
 end
 

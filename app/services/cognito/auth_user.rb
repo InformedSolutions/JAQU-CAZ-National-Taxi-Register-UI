@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Cognito
-  class AuthUser < BaseService
+  class AuthUser < CognitoBaseService
     attr_reader :username, :password, :user
 
     def initialize(username:, password:)
@@ -13,20 +13,22 @@ module Cognito
     def call
       update_user(auth_user)
       user
+    rescue AWS_ERROR::ServiceError => e
+      log_error e
+      false
     end
 
     private
 
     def auth_user
-      COGNITO_CLIENT.initiate_auth(
+      log_action "Authenticating user: #{username}"
+      auth_response = COGNITO_CLIENT.initiate_auth(
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         auth_flow: 'USER_PASSWORD_AUTH',
-        auth_parameters:
-            {
-              'USERNAME' => username,
-              'PASSWORD' => password
-            }
+        auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }
       )
+      log_successful_call
+      auth_response
     end
 
     def update_user(auth_response)
@@ -47,7 +49,7 @@ module Cognito
     end
 
     def update_unchallenged_user(access_token)
-      @user = Cognito::GetUser.call(access_token: access_token)
+      @user = Cognito::GetUser.call(access_token: access_token, username: username)
     end
   end
 end

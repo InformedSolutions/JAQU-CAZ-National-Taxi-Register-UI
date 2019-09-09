@@ -2,8 +2,10 @@
 
 module ApplicationHelper
   def current_path?(path)
-    if request.path_info == path
-      'govuk-header__navigation-item--active'
-    end
+    'govuk-header__navigation-item--active' if request.path_info == path
+  end
+
+  def service_name
+    Rails.configuration.x.service_name
   end
 end

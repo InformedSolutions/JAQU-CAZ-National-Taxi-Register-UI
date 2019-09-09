@@ -3,12 +3,12 @@
 class CsvUploadService < BaseService
   NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))-([a-zA-Z0-9]+)-\d+$/.freeze
   UPLOAD_ERROR_MSG = 'The selected file could not be uploaded – try again'
-  attr_reader :file, :errors, :user
+  attr_reader :file, :error, :user
 
   def initialize(file:, user:)
     @file = file
     @user = user
-    @errors = nil
+    @error = nil
   end
 
   def call
@@ -20,37 +20,41 @@ class CsvUploadService < BaseService
 
   def validate
     if no_file_selected? || invalid_extname? || invalid_filename?
-      raise CsvUploadFailureException, errors
+      raise CsvUploadFailureException, error
     end
   end
 
   def no_file_selected?
     if file.nil?
-      @errors = 'Select a CSV'
+      @error = I18n.t('csv.errors.no_file')
     end
   end
 
   def invalid_extname?
     unless File.extname(file.original_filename).downcase == '.csv'
-      @errors = 'The selected file must be a CSV'
+      @error = I18n.t('csv.errors.invalid_ext')
     end
   end
 
   def invalid_filename?
     if File.basename(file.original_filename, '.*').match(NAME_FORMAT).nil?
-      @errors = 'The selected file must be named correctly'
+      @error = I18n.t('csv.errors.invalid_name')
     end
   end
 
   def upload_to_s3
-    s3_object = AMAZON_S3_CLIENT.bucket(bucket_name).object(file.original_filename)
-    metadata = { 'uploader-id': user.sub }
-    return true if s3_object.upload_file(file, metadata: metadata)
+    log_action "Uploading file to s3 by a user: #{user.username}"
+    return true if aws_call
 
-    raise CsvUploadFailureException, UPLOAD_ERROR_MSG
+    raise CsvUploadFailureException, I18n.t('csv.errors.base')
   rescue Aws::S3::Errors::ServiceError => e
-    Rails.logger.error e
-    raise CsvUploadFailureException, UPLOAD_ERROR_MSG
+    log_error e
+    raise CsvUploadFailureException, I18n.t('csv.errors.base')
+  end
+
+  def aws_call
+    s3_object = AMAZON_S3_CLIENT.bucket(bucket_name).object(file.original_filename)
+    s3_object.upload_file(file, metadata: { 'uploader-id': user.sub })
   end
 
   def bucket_name

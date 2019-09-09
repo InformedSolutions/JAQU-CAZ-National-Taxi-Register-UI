@@ -37,8 +37,10 @@ When('I enter valid code and passwords') do
   code = '123456'
   allow(Cognito::ConfirmForgotPassword)
     .to receive(:call).with(
-      username: username, password: password,
-      code: code, password_confirmation: password
+      username: username,
+      password: password,
+      code: code,
+      password_confirmation: password
     ).and_return(true)
   fill_in('user[confirmation_code]', with: code)
   fill_in('user[password]', with: password)
