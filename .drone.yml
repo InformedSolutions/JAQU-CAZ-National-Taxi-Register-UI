@@ -161,6 +161,91 @@ steps:
         exclude:
         - pull_request
 
+  # Build docker image
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: http://ntr-web-dev-1233262176.eu-west-2.elb.amazonaws.com/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        exclude:
+        - pull_request
+
+  # Execute jMeter scripts via taurus
+  - name: micro-performance tests
+    image: blazemeter/taurus
+    commands:
+      - gem install csv
+      - ruby jmeter/generate_taxi.rb
+      - mv CAZ-2020-01-08-100-1.csv jmeter
+      - bzt jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        exclude:
+        - pull_request
+
+  
+    # Build end to end tests docker image
+  - name: build end to end test image
+    image: docker:git
+    commands:
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
+      - cd JAQU-CAZ-QA-selenium
+      - docker build -t selenium-jaqu .
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        exclude:
+        - pull_request
+
+    # Run end to end tests
+  - name: run end to end tests
+    image: selenium-jaqu
+    pull: never
+    environment:
+      BS_USERNAME:
+        from_secret: browserstack_username
+      BS_AUTHKEY:
+        from_secret: browserstack_auth_key
+      BASEURL_NTR: 'http://ntr-web-dev-1233262176.eu-west-2.elb.amazonaws.com'
+      VALID_USERNAME: 'edmond.chhung@informed.com'
+      VALID_PASSWORD: 'Edc123.,'
+      BROWSER_SET: 'min'
+      SCREENSHOT_TYPE: 'base'
+      VCCS_USER: 'vccsservice'
+      VCCS_PASSWORD: 'Password001!'
+      BUILD: ${DRONE_BUILD_NUMBER}
+      SPECTRE: false
+      LOCATION: browserstack
+    commands:
+      - cd JAQU-CAZ-QA-selenium
+      - cucumber -t @NTR
+    when:
+      event:
+        exclude:
+        - pull_request
+
 volumes:
 - name: docker_sock
   host:
@@ -172,6 +257,7 @@ trigger:
   event:
   - pull_request
   - push
+
 
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
 ---
@@ -208,3 +294,17 @@ name: github_private_key
 get:
   path: /secret/drone.global
   name: githubPrivateKey
+
+---
+kind: secret
+name: browserstack_auth_key
+get:
+  path: /secret/drone.global
+  name: browserStackAuthKey
+
+---
+kind: secret
+name: browserstack_username
+get:
+  path: /secret/drone.global
+  name: browserStackUsername

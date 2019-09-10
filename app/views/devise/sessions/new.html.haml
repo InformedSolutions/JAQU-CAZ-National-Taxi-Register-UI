@@ -7,7 +7,7 @@
 
       %p
         If you do not have an account, please email us at
-        = mail_to "TaxiandPHVCentralised.Database@defra.gov.uk", "TaxiandPHVCentralised.Database@defra.gov.uk", class: 'govuk-link'
+        = mail_to 'TaxiandPHVCentralised.Database@defra.gov.uk', 'TaxiandPHVCentralised.Database@defra.gov.uk', class: 'govuk-link'
 
       = form_for(resource, as: resource_name, url: session_path(resource_name), html: {novalidate: 'novalidate'}) do |f|
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
@@ -15,17 +15,24 @@
           %span#govuk-error-message.govuk-error-message
             - if alert
               %span.govuk-visually-hidden Error:
-              = alert
-          = f.email_field :username, autofocus: true, autocomplete: 'username', maxlength: 45, spellcheck: false,
-            class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+              = 'Enter your email'
+          = f.email_field :username,
+                          autofocus: true,
+                          autocomplete: 'username',
+                          maxlength: 45,
+                          spellcheck: false,
+                          class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
           = f.label :password, class: 'govuk-label'
           %span.govuk-error-message
             - if alert
               %span.govuk-visually-hidden Error:
               Enter your password
-          = f.password_field :password, autocomplete: 'current-password',
-            class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+          = f.password_field :password,
+                              autocomplete: 'current-password',
+                              class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+
         .govuk-form-group
           = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button'
           %p
