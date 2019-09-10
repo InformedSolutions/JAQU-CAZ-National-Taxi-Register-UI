@@ -52,6 +52,18 @@ RSpec.describe CsvUploadService do
           expect { service_call }.to raise_exception(CsvUploadFailureException)
         end
       end
+
+      context 'when S3 raises an exception' do
+        before do
+          allow_any_instance_of(Aws::S3::Object)
+            .to receive(:upload_file)
+            .and_raise(Aws::S3::Errors::MultipartUploadError.new('', ''))
+        end
+
+        it 'raises a proper exception' do
+          expect { service_call }.to raise_exception(CsvUploadFailureException)
+        end
+      end
     end
   end
 

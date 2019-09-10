@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Cognito
-  class ForgotPassword < BaseService
+  class ForgotPassword < CognitoBaseService
     attr_reader :username
 
     def initialize(username:)
@@ -24,16 +24,19 @@ module Cognito
       form = ResetPasswordForm.new(username)
       return if form.valid?
 
+      log_invalid_params(form.message)
       raise CallException.new(form.message, error_path)
     end
 
     def cognito_call
+      log_action "Forgot password call by a user: #{username}"
       COGNITO_CLIENT.forgot_password(
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         username: username
       )
-    rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
-      Rails.logger.error "#{e.class}: #{e}"
+      log_successful_call
+    rescue AWS_ERROR::ServiceError => e
+      log_error e
     end
   end
 end

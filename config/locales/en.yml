@@ -38,7 +38,7 @@ en:
   password:
     errors:
       complexity: 'Password must be at least 8 characters long, include at least one upper case letter and a number'
-      code_mismatch: 'Confirmation code incorrect'
+      code_mismatch: 'Provided confirmation code does not match or is expired'
       code_required: 'Confirmation code is required'
       passwords_required: 'Password and password confirmation are required'
       confirmation_required: 'Password confirmation is required'
@@ -46,3 +46,9 @@ en:
       password_equality: 'Password and password confirmation must be the same'
       password_unchanged: 'New password must be different than your temporary one'
   expired_session: 'Your session has expired'
+  csv:
+    errors:
+      base: 'The selected file could not be uploaded – try again'
+      no_file: 'Select a CSV'
+      invalid_ext: 'The selected file must be a CSV'
+      invalid_name: 'The selected file must be named correctly'

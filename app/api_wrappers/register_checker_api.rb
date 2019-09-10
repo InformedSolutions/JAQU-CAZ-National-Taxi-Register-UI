@@ -6,26 +6,22 @@ class RegisterCheckerApi < BaseApi
   class << self
     def register_job(file_name, correlation_id)
       log_call("Registering job with file name: #{file_name}")
-      params = {
-        "filename": file_name,
-        "s3Bucket": bucket_name
-      }.to_json
-
-      response = request(:post, '/v1/scheme-management/register-csv-from-s3/jobs',
-                         body: params, headers: custom_headers(correlation_id))
+      response = request(:post, "#{base_path}/jobs",
+                         body: register_body(file_name),
+                         headers: custom_headers(correlation_id))
       response['jobName']
     end
 
     def job_status(job_uuid, correlation_id)
       log_call("Getting job status with job uuid: #{job_uuid}")
-      response = request(:get, "/v1/scheme-management/register-csv-from-s3/jobs/#{job_uuid}",
+      response = request(:get, "#{base_path}/jobs/#{job_uuid}",
                          headers: custom_headers(correlation_id))
       response['status']
     end
 
     def job_errors(job_uuid, correlation_id)
       log_call("Getting job errors with job uuid: #{job_uuid}")
-      response = request(:get, "/v1/scheme-management/register-csv-from-s3/jobs/#{job_uuid}",
+      response = request(:get, "#{base_path}/jobs/#{job_uuid}",
                          headers: custom_headers(correlation_id))
       return nil unless response['status'] == 'FAILURE'
 
@@ -34,12 +30,11 @@ class RegisterCheckerApi < BaseApi
 
     private
 
-    def log_call(msg)
-      Rails.logger.info "[RegisterCheckerApi] #{msg}"
-    end
-
-    def bucket_name
-      ENV['S3_AWS_BUCKET']
+    def register_body(file_name)
+      {
+        "filename": file_name,
+        "s3Bucket": ENV['S3_AWS_BUCKET']
+      }.to_json
     end
 
     def custom_headers(correlation_id)
@@ -47,6 +42,14 @@ class RegisterCheckerApi < BaseApi
         'Content-Type' => 'application/json',
         'X-Correlation-ID' => correlation_id
       }
+    end
+
+    def base_path
+      '/v1/scheme-management/register-csv-from-s3'
+    end
+
+    def log_call(msg)
+      Rails.logger.info "[RegisterCheckerApi] #{msg}"
     end
   end
 end

@@ -28,6 +28,11 @@
             <stringProp name="Argument.value">NONE</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
+          <elementProp name="count" elementType="Argument">
+            <stringProp name="Argument.name">count</stringProp>
+            <stringProp name="Argument.value">1</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
         </collectionProp>
       </Arguments>
       <hashTree/>
@@ -396,7 +401,7 @@
               <hashTree/>
             </hashTree>
             <WhileController guiclass="WhileControllerGui" testclass="WhileController" testname="While Controller" enabled="true">
-              <stringProp name="WhileController.condition">${__javaScript(&quot;${DONE}&quot; == &quot;NONE&quot; )}</stringProp>
+              <stringProp name="WhileController.condition">${__javaScript(&quot;${DONE}&quot; == &quot;NONE&quot; &amp;&amp; &quot;${count}&quot; != &quot;5&quot;)}</stringProp>
             </WhileController>
             <hashTree>
               <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="upload processing" enabled="true">
@@ -462,13 +467,20 @@
                   <stringProp name="Sample.scope">all</stringProp>
                 </RegexExtractor>
                 <hashTree/>
-                <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+                <JSR223Assertion guiclass="TestBeanGUI" testclass="JSR223Assertion" testname="JSR223 Assertion" enabled="true">
                   <stringProp name="scriptLanguage">groovy</stringProp>
                   <stringProp name="parameters"></stringProp>
                   <stringProp name="filename"></stringProp>
                   <stringProp name="cacheKey">true</stringProp>
-                  <stringProp name="script">log.info(&quot;***************************&quot;+vars.get(&quot;DONE&quot;))</stringProp>
-                </JSR223PostProcessor>
+                  <stringProp name="script">log.info(&quot;*********************DONE:&quot;+vars.get(&quot;DONE&quot;))
+Integer countint = Integer.parseInt(vars.get(&quot;count&quot;))
+countint +=1
+vars.put(&quot;count&quot;, Integer.toString(countint))
+log.info(&quot;********************count:&quot;+vars.get(&quot;count&quot;))
+if (vars.get(&quot;DONE&quot;) == &quot;There was a problem&quot; || countint &gt;= 5){
+	AssertionResult.setFailure(true)
+}</stringProp>
+                </JSR223Assertion>
                 <hashTree/>
               </hashTree>
               <ConstantTimer guiclass="ConstantTimerGui" testclass="ConstantTimer" testname="Constant Timer" enabled="true">
@@ -482,16 +494,8 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="false">
-          <stringProp name="scriptLanguage">groovy</stringProp>
-          <stringProp name="parameters"></stringProp>
-          <stringProp name="filename"></stringProp>
-          <stringProp name="cacheKey">true</stringProp>
-          <stringProp name="script">log.info(&quot;***************************&quot;+vars.get(&quot;DONE&quot;))</stringProp>
-        </JSR223PostProcessor>
-        <hashTree/>
       </hashTree>
-      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+      <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
         <boolProp name="ResultCollector.error_logging">false</boolProp>
         <objProp>
           <name>saveConfig</name>
@@ -572,7 +576,7 @@
         <stringProp name="ProxyControlGui.proxy_pause_http_sampler"></stringProp>
       </ProxyControl>
       <hashTree>
-        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="false">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
           <objProp>
             <name>saveConfig</name>
