@@ -4,8 +4,6 @@ module Cognito
   class ConfirmForgotPassword < CognitoBaseService
     attr_reader :username, :password, :code, :password_confirmation
 
-    ERROR_CLASS = Aws::CognitoIdentityProvider::Errors
-
     def initialize(username:, password:, code:, password_confirmation:)
       @username = username
       @password = password
@@ -41,7 +39,7 @@ module Cognito
     rescue AWS_ERROR::InvalidPasswordException, AWS_ERROR::InvalidParameterException => e
       log_error e
       raise CallException, I18n.t('password.errors.complexity')
-    rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
+    rescue AWS_ERROR::ServiceError => e
       log_error e
       raise CallException, 'Something went wrong'
     end

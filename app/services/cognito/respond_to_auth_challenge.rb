@@ -39,10 +39,10 @@ module Cognito
 
     def respond_to_auth
       call_cognito
-    rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException => e
+    rescue AWS_ERROR::InvalidPasswordException => e
       log_error e
       raise NewPasswordException, self.class.password_complexity_error
-    rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
+    rescue AWS_ERROR::ServiceError => e
       log_error e
       raise CallException, I18n.t('expired_session')
     end

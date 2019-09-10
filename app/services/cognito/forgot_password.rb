@@ -35,7 +35,7 @@ module Cognito
         username: username
       )
       log_successful_call
-    rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
+    rescue AWS_ERROR::ServiceError => e
       log_error e
     end
   end
