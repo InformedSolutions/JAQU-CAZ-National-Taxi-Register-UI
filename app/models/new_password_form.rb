@@ -5,7 +5,7 @@
 class NewPasswordForm
   # Submitted password
   attr_reader :password
-  # Submitted confirmation password
+  # Submitted password confirmation
   attr_reader :confirmation
   # Temporary password as a hex-encoded hash
   attr_reader :old_password_hash

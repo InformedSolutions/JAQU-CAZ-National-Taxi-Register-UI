@@ -5,7 +5,7 @@
 class ConfirmResetPasswordForm < BaseForm
   # Submitted password
   attr_reader :password
-  # Submitted confirmation password
+  # Submitted password confirmation
   attr_reader :confirmation
   # Submitted confirmation code
   attr_reader :code
