@@ -285,7 +285,7 @@ steps:
       LOCATION: browserstack
     commands:
       - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @NTR
+      - cucumber -t @NTR --retry 3
     when:
       event:
         exclude:
