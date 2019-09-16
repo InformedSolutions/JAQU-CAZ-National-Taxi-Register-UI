@@ -148,6 +148,8 @@ steps:
     commands:
       - cd JAQU-CAZ-IAC
       - cd terraform/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
       - tf init
       - tf workspace select dev
       - tf apply -auto-approve
