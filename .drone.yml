@@ -147,10 +147,7 @@ steps:
     image: hashicorp/terraform:0.12.3
     commands:
       - cd JAQU-CAZ-IAC
-      - git checkout feature/NTR-460/ntr-vpc-restructure
       - cd terraform/projects/ntr/layers/01.networking
-      - PATH=$PATH:../../../../bin/
-      - chmod +x ../../../../bin/tf
       - tf init
       - tf workspace select dev
       - tf apply -auto-approve
