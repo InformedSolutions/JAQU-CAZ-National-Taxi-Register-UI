@@ -148,7 +148,7 @@ steps:
     commands:
       - cd JAQU-CAZ-IAC
       - git checkout feature/NTR-460/ntr-vpc-restructure
-      - cd ../01.networking
+      - cd terraform/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
