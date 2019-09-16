@@ -146,6 +146,7 @@ steps:
   - name: deploy to dev
     image: hashicorp/terraform:0.12.3
     commands:
+      - apk update && apk add bash
       - cd JAQU-CAZ-IAC
       - cd terraform/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
