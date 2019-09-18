@@ -9,6 +9,7 @@ gem 'rails', '~> 6.0'
 
 gem 'activerecord-nulldb-adapter'
 gem 'aws-sdk-cognitoidentityprovider'
+gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
 gem 'bootsnap', require: false
 gem 'brakeman'
