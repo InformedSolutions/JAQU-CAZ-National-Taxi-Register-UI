@@ -29,5 +29,8 @@ module CsvUploader
 
     # https://mattbrictson.com/dynamic-rails-error-pages
     config.exceptions_app = routes
+
+    # https://github.com/aws/aws-sdk-rails
+    config.action_mailer.delivery_method = :aws_sdk
   end
 end
