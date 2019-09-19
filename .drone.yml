@@ -112,11 +112,11 @@ steps:
         from_secret: aws_secret_access_key
       GIT_PRIVATE_SSH:
         from_secret: github_private_key
-#    when:
-#      event:
-#        exclude:
-#        - pull_request
-#      branch: develop
+    when:
+      event:
+        exclude:
+        - pull_request
+      branch: develop
 
   # Push built image to ECR registry
   - name: publish image to ecr
