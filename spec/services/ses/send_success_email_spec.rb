@@ -17,13 +17,48 @@ RSpec.describe Ses::SendSuccessEmail do
       allow(UploadMailer).to receive(:success_upload).and_return(mailer)
     end
 
-    it 'returns true' do
-      expect(service_call).to be_truthy
-    end
+    it { is_expected.to be_truthy }
 
     it 'sends an email with proper params' do
       expect(UploadMailer).to receive(:success_upload).with(user, filename, time)
       service_call
+    end
+  end
+
+  context 'with invalid params' do
+    before { allow(UploadMailer).to receive(:success_upload) }
+
+    context 'when user email is missing' do
+      let(:email) { nil }
+
+      it { is_expected.to be_falsey }
+
+      it 'does not call UploadMailer' do
+        expect(UploadMailer).not_to receive(:success_upload)
+        service_call
+      end
+    end
+
+    context 'when filename is missing' do
+      let(:filename) { nil }
+
+      it { is_expected.to be_falsey }
+
+      it 'does not call UploadMailer' do
+        expect(UploadMailer).not_to receive(:success_upload)
+        service_call
+      end
+    end
+
+    context 'when submission time is missing' do
+      let(:time) { nil }
+
+      it { is_expected.to be_falsey }
+
+      it 'does not call UploadMailer' do
+        expect(UploadMailer).not_to receive(:success_upload)
+        service_call
+      end
     end
   end
 
@@ -34,8 +69,6 @@ RSpec.describe Ses::SendSuccessEmail do
       )
     end
 
-    it 'returns false' do
-      expect(service_call).to be_falsey
-    end
+    it { is_expected.to be_falsey }
   end
 end

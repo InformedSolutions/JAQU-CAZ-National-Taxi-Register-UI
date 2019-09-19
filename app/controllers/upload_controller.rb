@@ -57,7 +57,9 @@ class UploadController < ApplicationController
   def success
     return unless session[:job]
 
-    Ses::SendSuccessEmail.call(user: current_user, job_data: job_data)
+    unless Ses::SendSuccessEmail.call(user: current_user, job_data: job_data)
+      @warning = I18n.t('upload.delivery_error')
+    end
     session[:job] = nil
   end
 

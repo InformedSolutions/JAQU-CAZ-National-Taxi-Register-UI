@@ -36,6 +36,8 @@ module Ses
     # Returns true if sending email was successful, false if not. Rescues all the errors.
     #
     def call
+      return false unless validate_params
+
       send_email
       true
     rescue StandardError => e
@@ -45,11 +47,22 @@ module Ses
 
     private
 
+    def validate_params
+      return true if user.email.present? && filename.present? && submission_time.present?
+
+      Rails.logger.error "[#{self.class.name}] Params are invalid - #{display_params}"
+      false
+    end
+
     # Calls the mailer class
     def send_email
       log_action("Sending :success_upload email to #{user.email}")
       UploadMailer.success_upload(user, filename, submission_time).deliver
       log_action('Email sent successfully')
+    end
+
+    def display_params
+      "email: #{user.email}, filename: #{filename}, time: #{submission_time}"
     end
 
     # User instance
