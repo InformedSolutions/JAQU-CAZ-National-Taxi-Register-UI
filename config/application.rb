@@ -22,10 +22,13 @@ module CsvUploader
     config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << Rails.root.join('lib')
 
-    config.x.session_timeout_in_min = (ENV['SESSION_TIMEOUT'].presence || 15).to_i
-
-    feedback_url_default = 'https://www.surveymonkey.co.uk/r/2T8BX2D'
-    config.x.feedback_url = (ENV['FEEDBACK_URL'].presence || feedback_url_default)
+    # timeout the user session without activity.
+    config.x.session_timeout_in_min = ENV.fetch('SESSION_TIMEOUT', 15)
+    # link to feedback page.
+    config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.co.uk/r/2T8BX2D')
+    # email address for sending emails, eg 'from@example.com'
+    default_email = 'TaxiandPHVCentralised.Database@defra.gov.uk'
+    config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)
 
     config.time_zone = 'London'
     config.x.time_format = '%d %B %Y %H:%M:%S %Z'

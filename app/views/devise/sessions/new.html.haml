@@ -7,7 +7,8 @@
 
       %p
         If you do not have an account, please email us at
-        = mail_to 'TaxiandPHVCentralised.Database@defra.gov.uk', 'TaxiandPHVCentralised.Database@defra.gov.uk', class: 'govuk-link'
+        - service_email = Rails.configuration.x.service_email
+        = mail_to service_email, service_email, class: 'govuk-link'
 
       = form_for(resource, as: resource_name, url: session_path(resource_name), html: {novalidate: 'novalidate'}) do |f|
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
