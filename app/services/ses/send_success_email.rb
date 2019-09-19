@@ -15,7 +15,6 @@ module Ses
   #    SendSuccessEmail.call(user: user, job_data: job_data)
   #
   class SendSuccessEmail < BaseService
-
     ##
     # Initializer method for the class. Used by class level method {call}[rdoc-ref:BaseService::call]
     #
@@ -27,7 +26,6 @@ module Ses
     #   * +submission_time+ - string, time of the file submission as a string
     def initialize(user:, job_data:)
       @user = user
-      job_data = job_data.transform_keys(&:to_sym)
       @filename = job_data[:filename]
       @submission_time = job_data[:submission_time]
     end
