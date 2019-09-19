@@ -7,6 +7,7 @@ class UploadMailerPreview < ActionMailer::Preview
   def success_upload
     user = User.new
     user.email = 'test@example.com'
-    UploadMailer.success_upload(user)
+    time = Time.current.strftime(Rails.configuration.x.time_format)
+    UploadMailer.success_upload(user, 'CAZ-2020-01-08-AuthorityID-1.csv', time)
   end
 end
