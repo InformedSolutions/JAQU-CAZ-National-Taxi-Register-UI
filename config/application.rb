@@ -27,10 +27,15 @@ module CsvUploader
     feedback_url_default = 'https://www.surveymonkey.co.uk/r/2T8BX2D'
     config.x.feedback_url = (ENV['FEEDBACK_URL'].presence || feedback_url_default)
 
+    config.time_zone = 'London'
+    config.x.time_format = '%d %B %Y %H:%M:%S %Z'
+
     # https://mattbrictson.com/dynamic-rails-error-pages
     config.exceptions_app = routes
 
     # https://github.com/aws/aws-sdk-rails
     config.action_mailer.delivery_method = :aws_sdk
+    # https://stackoverflow.com/questions/49086693/how-do-i-remove-mail-html-content-from-rails-logs
+    config.action_mailer.logger = nil
   end
 end

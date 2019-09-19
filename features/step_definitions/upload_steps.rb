@@ -34,6 +34,14 @@ Then('I am redirected to the Success page') do
   expect(page).to have_current_path(success_upload_index_path)
 end
 
+Then('I receive a success upload email') do
+  expect(ActionMailer::Base.deliveries.size).to eq(1)
+end
+
+Then('I should not receive a success upload email again') do
+  expect(ActionMailer::Base.deliveries.size).to eq(1)
+end
+
 # Scenario: Upload a csv file and redirect to error page when api response not running or finished
 When('I press refresh page link when api response not running or finished') do
   allow(RegisterCheckerApi).to receive(:job_status)
