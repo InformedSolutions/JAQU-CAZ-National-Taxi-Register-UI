@@ -1,9 +1,31 @@
 # frozen_string_literal: true
 
 module Cognito
+  ##
+  # Class responsible for the second step of th password recovery process using
+  # {ConfirmForgotPassword}[https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_ConfirmForgotPassword.html].
+  # Sets provided new password in \Cognito.
+  #
+  # It requires Cognito::ForgotPassword to be called first
+  # as the user needs to submit the code sent in the previous step.
+  #
+  # ==== Usage
+  #
+  #    Cognito::ConfirmForgotPassword.call(
+  #       username: 'user@example.com',
+  #       code: '123456',
+  #       password: 'password',
+  #       password_confirmation: 'password'
+  #    )
+  #
   class ConfirmForgotPassword < CognitoBaseService
-    attr_reader :username, :password, :code, :password_confirmation
-
+    ##
+    # Initializer method for the service. Used by class level method {call}[rdoc-ref:BaseService::call]
+    #
+    # ==== Attributes
+    # * +username+ - string, username provided by the user in the previous step
+    # * +code+ - 6 digit string of numbers, code sent to user in the previous step
+    # * +password+ - new
     def initialize(username:, password:, code:, password_confirmation:)
       @username = username
       @password = password
@@ -18,6 +40,8 @@ module Cognito
     end
 
     private
+
+    attr_reader :username, :password, :code, :password_confirmation
 
     def validate_params
       form = ConfirmResetPasswordForm.new(
