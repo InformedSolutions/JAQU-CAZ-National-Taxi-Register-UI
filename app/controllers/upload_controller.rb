@@ -1,10 +1,24 @@
 # frozen_string_literal: true
 
 class UploadController < ApplicationController
+  # checks if a user is logged in
   before_action :authenticate_user!
+  # checks if a user has a 'FORCE_NEW_PASSWORD' status
   before_action :redirect_to_new_password_path
+  # checks if session +job+ is present
   before_action :check_job_data, only: %i[processing]
 
+  ##
+  # Upload csv file to AWS S3.
+  #
+  # ==== Path
+  #
+  #    :POST /upload/import
+  #
+  # ==== Params
+  # * +file+ - uploaded file
+  # * +current_user+ - an instance of the User class
+  #
   def import
     CsvUploadService.call(file: file, user: current_user)
     correlation_id = SecureRandom.uuid
@@ -18,6 +32,17 @@ class UploadController < ApplicationController
     redirect_to processing_upload_index_path
   end
 
+  ##
+  # Checking of job status.
+  #
+  # ==== Path
+  #
+  #    :GET /upload/import
+  #
+  # ==== Params
+  # * +job_name+ - UUID, eg '98faf123-d201-48cb-8fd5-4b30c1f80918'
+  # * +job_correlation_id+ - UUID, eg '98faf123-d201-48cb-8fd5-4b30c1f80918'
+  #
   def processing
     result = RegisterCheckerApi.job_status(job_name, job_correlation_id)
     return if result == 'RUNNING'
@@ -29,6 +54,13 @@ class UploadController < ApplicationController
     end
   end
 
+  ##
+  # Renders the upload page.
+  #
+  # ==== Path
+  #
+  #    :GET /upload/index
+  #
   def index
     if session[:job]
       @job_errors = RegisterCheckerApi.job_errors(job_name, job_correlation_id)
@@ -36,6 +68,12 @@ class UploadController < ApplicationController
     end
   end
 
+  # Renders the data rules page.
+  #
+  # ==== Path
+  #
+  #    :GET /upload/data_rules
+  #
   def data_rules
     # renders static page
   end
@@ -65,28 +103,34 @@ class UploadController < ApplicationController
 
   private
 
+  # Returns a string.
   def job_name
     job_data[:name]
   end
 
+  # Returns a string.
   def job_correlation_id
     job_data[:correlation_id]
   end
 
+  # Returns a hash.
   def job_data
     session[:job].transform_keys(&:to_sym)
   end
 
+  # Returns a string.
   def file
     params[:file]
   end
 
+  # Checks if user +aws_status+ equality to 'FORCE_NEW_PASSWORD'.
   def redirect_to_new_password_path
     if current_user.aws_status == 'FORCE_NEW_PASSWORD'
       redirect_to new_password_path
     end
   end
 
+  # Checks if session +job+ is present.
   def check_job_data
     if session[:job].nil?
       Rails.logger.error 'Job identifier is missing'
@@ -94,7 +138,7 @@ class UploadController < ApplicationController
     end
   end
 
-  # returns current time in a proper format
+  # Returns current time in a proper format.
   def submission_time
     Time.current.strftime(Rails.configuration.x.time_format)
   end
