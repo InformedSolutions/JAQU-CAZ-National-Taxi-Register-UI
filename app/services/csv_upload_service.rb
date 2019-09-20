@@ -8,16 +8,14 @@ class CsvUploadService < BaseService
   NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))-([a-zA-Z0-9]+)-\d+$/.freeze
   # error message.
   UPLOAD_ERROR_MSG = 'The selected file could not be uploaded – try again'
-  # Attributes used internally to save values.
-  attr_reader :file, :error, :user
 
   ##
   # Initializer method.
   #
   # ==== Attributes
   #
-  # * +file+ - object
-  # * +user+ - object
+  # * +file+ - uploaded file
+  # * +user+ - an instance of the User class
   # * +error+ - nil, default error message
   def initialize(file:, user:)
     @file = file
@@ -108,4 +106,7 @@ class CsvUploadService < BaseService
   def bucket_name
     ENV['S3_AWS_BUCKET']
   end
+
+  # Attributes used internally to save values.
+  attr_reader :file, :error, :user
 end
