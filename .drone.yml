@@ -251,7 +251,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_NTR: 'http://ntr-alb-dev-2119620688.eu-west-2.elb.amazonaws.com'
+      BASEURL_NTR: 'http://ntr-alb-dev-2119620688.eu-west-2.elb.amazonaws.com/'
       VALID_USERNAME: 'edmond.chhung@informed.com'
       VALID_PASSWORD: 'Edc123.,'
       BROWSER_SET: 'min'
@@ -263,7 +263,7 @@ steps:
       LOCATION: browserstack
     commands:
       - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @NTR
+      - cucumber -t @NTR --retry 3
     when:
       event:
         exclude:
@@ -281,7 +281,6 @@ trigger:
   event:
     - pull_request
     - push
-
 
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
 ---
