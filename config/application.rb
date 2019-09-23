@@ -26,6 +26,8 @@ module CsvUploader
     config.x.session_timeout_in_min = ENV.fetch('SESSION_TIMEOUT', 15).to_i
     # link to feedback page.
     config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.co.uk/r/2T8BX2D')
+    # name of service
+    config.x.service_name = 'Taxi and PHV Data Portal'
     # email address for sending emails, eg 'from@example.com'
     default_email = 'TaxiandPHVCentralised.Database@defra.gov.uk'
     config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)

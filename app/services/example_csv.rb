@@ -10,6 +10,7 @@
 #
 #     ExampleCsv.call(lines: 1, dir: 'my_new_dir')
 class ExampleCsv < BaseService
+  # Variables used internally by the service
   attr_reader :lines, :dir
 
   ##

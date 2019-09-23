@@ -3,8 +3,8 @@
 module Cognito
   ##
   # Base class for all the Cognito services. Inherits from BaseService.
+  #
   class CognitoBaseService < BaseService
-
     # Symbolizes base class for all Aws::CognitoIdentityProvider errors.
     AWS_ERROR = Aws::CognitoIdentityProvider::Errors
 

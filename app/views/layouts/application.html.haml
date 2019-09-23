@@ -3,7 +3,7 @@
   %head
     %meta{charset: 'utf-8'}
     %title
-      = content_for?(:title) ? yield(:title) : 'Taxi and PHV Data Portal'
+      = content_for?(:title) ? yield(:title) : service_name
     = csrf_meta_tags
     = csp_meta_tag
 

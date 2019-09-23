@@ -26,7 +26,7 @@ class PasswordsController < ApplicationController
   end
 
   ##
-  # Sets a new password.
+  # Sets a new password when user sign in for the first time.
   #
   # ==== Path
   #
@@ -133,7 +133,7 @@ class PasswordsController < ApplicationController
 
   private
 
-  # Updates user password on Cognito.
+  # Sets a new password when user sign in for the first time.
   def respond_to_auth
     Cognito::RespondToAuthChallenge.call(
       user: current_user, password: password, confirmation: password_confirmation

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 ##
-# Controller class for rendering custom error pages. HTML response is returned for all types of requests.
+# Controller class for rendering custom error pages.
+# HTML response is returned for all types of requests.
 #
 class ErrorsController < ApplicationController
   before_action :set_html_response_format

@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+##
+# Controller class for uploading a csv file.
+#
 class UploadController < ApplicationController
   # checks if a user is logged in
   before_action :authenticate_user!
