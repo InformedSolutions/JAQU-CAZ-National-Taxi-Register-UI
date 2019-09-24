@@ -6,9 +6,6 @@
 class CsvUploadService < BaseService
   # regular expression for validating filename.
   NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))-([a-zA-Z0-9]+)-\d+$/.freeze
-  # error message.
-  UPLOAD_ERROR_MSG = 'The selected file could not be uploaded – try again'
-
   ##
   # Initializer method.
   #

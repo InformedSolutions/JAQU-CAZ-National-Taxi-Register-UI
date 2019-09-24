@@ -43,7 +43,7 @@ module Cognito
       )
       return if form.valid?
 
-      Rails.logger.error "[#{self.class}] Invalid form params"
+      log_invalid_params(form.error_object[:base_message])
       raise NewPasswordException, form.error_object
     end
 
@@ -80,7 +80,7 @@ module Cognito
         session: user.aws_session,
         challenge_responses: { 'NEW_PASSWORD' => password, 'USERNAME' => user.username }
       )
-      log_action 'The call was successful'
+      log_successful_call
       result
     end
 

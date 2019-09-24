@@ -40,7 +40,7 @@ class UploadController < ApplicationController
   #
   # ==== Path
   #
-  #    :GET /upload/import
+  #    :GET /upload/processing
   #
   # ==== Params
   # * +job_name+ - UUID, eg '98faf123-d201-48cb-8fd5-4b30c1f80918'
