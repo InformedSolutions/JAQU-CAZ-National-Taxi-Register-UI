@@ -181,6 +181,24 @@ steps:
         - pull_request
       branch: develop
 
+  # Build docker image
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: http://ntr-alb-dev-253331897.eu-west-2.elb.amazonaws.com/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        exclude:
+        - pull_request
+      branch: develop
+
     # Build pa11y-ci image
   - name: build pa11y-ci image
     image: docker
@@ -210,25 +228,6 @@ steps:
         exclude:
         - pull_request
       # branch: develop
-
-
-  # Build docker image
-  - name: await ecs rollout
-    image: docker
-    environment:
-      build_id_url: http://ntr-alb-dev-253331897.eu-west-2.elb.amazonaws.com/build_id
-      build_id: ${DRONE_BUILD_NUMBER}
-    commands:
-      - apk add curl
-      - sh build_utils/check_build_number.sh
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    when:
-      event:
-        exclude:
-        - pull_request
-      branch: develop
 
   # Execute jMeter scripts via taurus
   - name: micro-performance tests
