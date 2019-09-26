@@ -246,7 +246,6 @@ steps:
         - pull_request
       branch: develop
 
-  
     # Build end to end tests docker image
   - name: build end to end test image
     image: docker:git
