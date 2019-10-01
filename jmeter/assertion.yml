@@ -1,5 +1,5 @@
 reporting:
 - module: passfail
   criteria:
-  - "fail>1 for 1s , continue as failed"
+  - "fail>1% , continue as failed"
 
