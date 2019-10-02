@@ -3,11 +3,13 @@
 %main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
     .govuk-grid-column-two-thirds
-      %h1.govuk-heading-l Validating submission...
+      %h1.govuk-heading-l We are checking your uploaded file
       %p
-        We are validating your CSV submission to National Taxi and PHV register.
-        Please do not leave this page. It will automatically refresh to present your submission status.
-
+        We are checking the information in your .CSV file you uploaded to the National Taxi and PHV
+        register.
       %p
-        If the page does not refresh automatically in 30 seconds
-        = link_to "click here.", processing_upload_index_path
+        Please wait for a message confirming that the upload has been successful (and don’t leave the
+        page or press the back button).
+      %p
+        If you don’t get a message after 30 seconds,
+        = link_to 'click here', processing_upload_index_path

@@ -6,8 +6,15 @@
 
   .govuk-grid-row
     .govuk-grid-column-two-thirds
-      %h1.govuk-heading-l Update your password
-      %p You should receive a confirmation code on your email address. Please enter the confirmation code and your new password below.
+      %h1.govuk-heading-l Reset your password
+      %p
+        We have sent a verification code to your email address. Enter your verification code and
+        your new password below.
+      %p
+        If you haven’t received the email, check your junk folder, or
+        = link_to 'click here', reset_passwords_path
+        to re-enter your
+        details.
       %p
         Your password should:
       %ul.govuk-list-govuk-list--bullet
@@ -20,7 +27,7 @@
       = form_for(User.new, url: change_passwords_path, method: :post, html: {autocomplete: 'off'}) do |f|
         =f.hidden_field(:username, value: @username)
         .govuk-form-group{class: ('govuk-form-group--error' if alert && alert.downcase.include?('code'))}
-          =f.label :confirmation_code, class: 'govuk-label'
+          =f.label :confirmation_code, 'Enter your verification code', class: 'govuk-label'
           %span#govuk-error-message.govuk-error-message
             - if alert && alert.downcase.include?('code')
               %span.govuk-visually-hidden Error:
@@ -28,7 +35,7 @@
           =f.text_field :confirmation_code, class: "govuk-input #{'govuk-input--error' if alert && alert.downcase.include?('code')}"
 
         .govuk-form-group{class: ('govuk-form-group--error' if alert && alert.downcase.include?('password'))}
-          =f.label :password, class: 'govuk-label'
+          =f.label :password, 'Enter your password', class: 'govuk-label'
           %span.govuk-error-message
             - if alert && alert.downcase.include?('password')
               %span.govuk-visually-hidden Error:
@@ -36,7 +43,7 @@
           =f.password_field :password, class: "govuk-input #{'govuk-input--error' if alert && alert.downcase.include?('password')}"
 
         .govuk-form-group{class: ('govuk-form-group--error' if alert && alert.downcase.include?('password'))}
-          =f.label :password_confirmation, class: 'govuk-label'
+          =f.label :password_confirmation, 'Confirm your password', class: 'govuk-label'
           %span.govuk-error-message
             - if alert && alert.downcase.include?('password')
               %span.govuk-visually-hidden Error:

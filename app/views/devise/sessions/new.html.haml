@@ -1,7 +1,7 @@
 %main.govuk-main-wrapper#main-content{role: 'main'}
   %fieldset.govuk-fieldset
     %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
-      %h1.govuk-heading-l Sign In
+      %h1.govuk-heading-l Sign in to your National Taxi Register account
       - if alert
         = render 'shared/errors'
 
@@ -12,7 +12,7 @@
 
       = form_for(resource, as: resource_name, url: session_path(resource_name), html: {novalidate: 'novalidate'}) do |f|
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
-          = f.label :username, 'Email', class: 'govuk-label'
+          = f.label :username, 'Enter your email address', class: 'govuk-label'
           %span#govuk-error-message.govuk-error-message
             - if alert
               %span.govuk-visually-hidden Error:
@@ -25,7 +25,7 @@
                           class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
 
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
-          = f.label :password, class: 'govuk-label'
+          = f.label :password, 'Enter your password', class: 'govuk-label'
           %span.govuk-error-message
             - if alert
               %span.govuk-visually-hidden Error:
@@ -37,4 +37,4 @@
         .govuk-form-group
           = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button'
           %p
-            = link_to 'Forgot your password?', reset_passwords_path, class: 'govuk-link', id: 'forgot-password'
+            = link_to 'Have you forgotten your password?', reset_passwords_path, class: 'govuk-link', id: 'forgot-password'

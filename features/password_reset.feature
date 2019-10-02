@@ -5,7 +5,7 @@ Feature: Password reset
 
   Scenario: Go to forgotten password page
     Given I am on the Sign in page
-    When I press "Forgot your password?" link
+    When I press "Have you forgotten your password?" link
     Then I should see "Enter your email to reset password"
 
   Scenario: Go to update password page

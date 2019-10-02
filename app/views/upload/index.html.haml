@@ -1,21 +1,45 @@
 %main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
     .govuk-grid-column-two-thirds
-      %h1.govuk-heading-l Taxi and PHV Data Upload
+      %h1.govuk-heading-l Welcome to your Taxi and PHV upload portal account
       - if @job_errors
         = render 'upload/job_errors'
       - elsif alert
         = render 'shared/errors'
       %p
-        Use this page to upload Taxi and PHV data.
-        Your upload must be a CSV file with information in a specific format.
-        For information on this format see the
-        %a{href: data_rules_upload_index_path} data rules
+        %b
+          You can use this service to upload and manage information about the taxis and PHVs in your
+          licensing authority
+      %p
+        %b
+          Upload your taxi and PHV data
+
+      %p
+        You’ll need to upload your data as a .CSV file (you can save spreadsheets in this format).
+
+      %br
+      %p
+        Your file name must follow this format:
+      %p
+        CAZ-2019-06-18-AuthorityID-424
+        %p
+          local authority licence ID
+        %p
+          number of rows in the file
+      %br
+      %p
+        It cannot contain empty rows or columns, spaces or a header row.
+
+      %p
+        Check your data is displayed correctly.
+
+      %p
+        Your data can only contain numbers, letters and commas.
 
       = form_tag(import_upload_index_path, multipart: true) do
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
           %label.govuk-label{for: "file-upload-1"}
-            Upload a file
+            %b Upload your CSV file
           - if alert
             %span#govuk-error-message.govuk-error-message
               %span.govuk-visually-hidden Error:

@@ -2,5 +2,5 @@
 
 # Scenario: See Data rules
 When('I press Data rules button') do
-  click_link 'data rules'
+  click_link 'Data rules'
 end
