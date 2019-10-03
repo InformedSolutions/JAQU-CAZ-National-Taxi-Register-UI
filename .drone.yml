@@ -99,6 +99,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
+      - git checkout feature/NTR-491/revert-codedeploy-changes
       - cd terraform/projects/ntr/layers/00.global
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -213,7 +214,7 @@ steps:
         exclude:
         - pull_request
       # branch: develop
-        
+
   # Trigger accessibility test
   - name: accessibility tests
     image: pa11y-ci
@@ -317,28 +318,28 @@ name: aws_access_key_id
 get:
   path: /secret/drone.global
   name: awsAccessKeyId
-  
+
 ---
 kind: secret
 name: aws_secret_access_key
 get:
   path: /secret/drone.global
   name: awsSecretAccessKey
-  
+
 ---
 kind: secret
 name: sonar_host
 get:
   path: /secret/drone.global
   name: sonarHost
-  
+
 ---
 kind: secret
 name: sonar_token
 get:
   path: /secret/drone.global
   name: sonarToken
-  
+
 ---
 kind: secret
 name: github_private_key
