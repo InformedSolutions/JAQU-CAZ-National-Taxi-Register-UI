@@ -248,7 +248,7 @@ steps:
     commands:
       - apk add --update bash python python-dev py-pip build-base
       - pip install awscli
-      - aws deploy create-deployment --application-name ntr-codedeploy-service-sit --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name ntr-codedeploy-service-dev --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/sit/appspec.yaml
+      - aws deploy create-deployment --application-name ntr-codedeploy-service-sit --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name ntr-codedeploy-service-sit --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/sit/appspec.yaml
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
