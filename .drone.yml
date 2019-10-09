@@ -26,6 +26,8 @@ trigger:
   event:
     - pull_request
     - push
+concurrency:
+  limit: 1
 
 steps:
 
