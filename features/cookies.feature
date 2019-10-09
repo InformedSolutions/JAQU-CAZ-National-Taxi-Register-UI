@@ -6,4 +6,4 @@ Feature: Cookies
   Scenario: User sees cookies page
     Given I am on the Sign in page
     When I press Cookies link
-    Then I should see "Details about cookies on Centralised Taxi and PHV Data Maintenance"
+    Then I should see "Details about cookies on Taxi and PHV Data Portal"
