@@ -454,7 +454,6 @@ steps:
       event:
         - push
 
-  # Invoke terraform scripts with tagged image number
   - name: plan terraform updates in sit
     image: hashicorp/terraform:0.12.3
     commands:
@@ -498,7 +497,6 @@ steps:
       event:
         - pull_request
 
-  # Invoke terraform scripts with tagged image number
   - name: deploy to sit
     image: hashicorp/terraform:0.12.3
     commands:
