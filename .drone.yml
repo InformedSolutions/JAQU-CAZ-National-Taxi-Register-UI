@@ -57,19 +57,6 @@ steps:
         path: /var/run/docker.sock
 
 
-  # Build docker image
-  - name: build
-    image: docker
-    commands:
-    - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    when:
-      branch:
-        - develop
-        - release/*
-
   # Trigger unit tests
   - name: unit tests
     image: test-national-taxi-register-frontend
