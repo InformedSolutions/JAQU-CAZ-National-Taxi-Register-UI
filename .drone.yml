@@ -35,13 +35,6 @@ volumes:
   host:
     path: /var/run/docker.sock
 
-services:
-  - name: zap
-    image: owasp/zap2docker-stable
-    command:
-      - "zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true"
-    ports:
-      - 8080
 
 steps:
 
