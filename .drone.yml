@@ -13,6 +13,13 @@ global-variables:
     GIT_PRIVATE_SSH:
       from_secret: github_private_key
 
+services:
+  - name: zap
+    image: owasp/zap2docker-stable
+    command: zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true
+    ports:
+      - 8080
+
   ################################################# End YAML Anchors ########################################################
 
 kind: pipeline
@@ -277,7 +284,7 @@ steps:
       event:
         exclude:
         - pull_request
-      branch: 
+      branch:
         - develop
 
     # Build pa11y-ci image
@@ -352,6 +359,7 @@ steps:
         - pull_request
       branch: develop
 
+
     # Run end to end tests
   - name: run end to end tests
     image: selenium-jaqu
@@ -380,7 +388,8 @@ steps:
         - pull_request
       branch: develop
 
-  ################################################# End Development Only #######################################################      
+
+  ################################################# End Development Only #######################################################
 
 
 
@@ -658,5 +667,5 @@ name: browserstack_username
 get:
   path: /secret/drone.global
   name: browserStackUsername
-  
+
   ################################################ End Secrets #########################################################
