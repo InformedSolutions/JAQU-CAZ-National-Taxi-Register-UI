@@ -10,7 +10,16 @@ concurrency:
 volumes:
 - name: docker_sock
   host:
-    path: /var/run/docker.sock 
+    path: /var/run/docker.sock
+
+services:
+  - name: zap
+    image: owasp/zap2docker-stable
+    command:
+      - "zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true"
+    ports:
+      - 8080
+ 
 
 steps:
 
@@ -84,7 +93,7 @@ concurrency:
 volumes:
 - name: docker_sock
   host:
-    path: /var/run/docker.sock 
+    path: /var/run/docker.sock
 
 steps:
 
@@ -318,7 +327,7 @@ steps:
     when:
       event:
         - push
-        
+
   # Execute jMeter scripts via taurus
   - name: micro-performance tests
     image: blazemeter/taurus
@@ -369,7 +378,7 @@ concurrency:
 volumes:
 - name: docker_sock
   host:
-    path: /var/run/docker.sock 
+    path: /var/run/docker.sock
 
 steps:
 
@@ -1043,6 +1052,5 @@ name: browserstack_username
 get:
   path: /secret/drone.global
   name: browserStackUsername
-  
+
   ################################################ End Secrets #########################################################
- 
