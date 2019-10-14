@@ -36,7 +36,7 @@ steps:
       - git checkout features/zap
       - docker build -t owasp-zap-testing Dockerfile.zap .
 
-  - name: build owasp zap testing image
+  - name: run owasp zap tests
     image: owasp-zap-testing
     pull: never
     environment:
@@ -129,7 +129,7 @@ services:
       
 steps:
 
-  - name: build owasp zap testing image test
+  - name: build owasp zap testing image (test)
     image: docker:git
     commands:
       - mkdir ~/.ssh
@@ -143,7 +143,7 @@ steps:
       - git checkout features/zap
       - docker build -t owasp-zap-testing Dockerfile.zap .
 
-  - name: build owasp zap testing image test
+  - name: run owasp zap tests test
     image: owasp-zap-testing
     pull: never
     environment:
