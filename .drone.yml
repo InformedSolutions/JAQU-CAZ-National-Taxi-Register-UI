@@ -162,7 +162,7 @@ steps:
       LOCATION: local
     commands:
       - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @ZAPNTR
+      - cucumber -t @ZAPNTR --retry 2
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
