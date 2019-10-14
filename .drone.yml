@@ -1,51 +1,100 @@
-  ################################################### YAML Anchors ########################################################
-
-  # Note that these are used when common environment variables are present in a step to reduce repetition - see terraform steps
-
-global-variables:
-  environment: &shared_terraform_credentials
-    TF_VAR_access_key:
-      from_secret: aws_access_key_id
-    TF_VAR_secret_key:
-      from_secret: aws_secret_access_key
-    TF_VAR_account_id:
-      from_secret: aws_account_id
-    GIT_PRIVATE_SSH:
-      from_secret: github_private_key
-
-  ################################################# End YAML Anchors ########################################################
-
+  #################################################### Nightly Steps ############################################################
 kind: pipeline
 type: docker
-name: ntr-web
+name: ntr-web-nightly
 trigger:
-  branch:
-    - develop
-    - release/*
-    - staging
-    - master
   event:
-    - pull_request
-    - push
+    - cron
 concurrency:
   limit: 1
-
 volumes:
 - name: docker_sock
   host:
     path: /var/run/docker.sock
 
-services:	
-  - name: zap	
-    image: owasp/zap2docker-stable	
-    command:	
-      - "zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true"	
-    ports:	
+steps:
+
+    ################################################### ZAP scan placeholder ############################################################
+    ################################################### ZAP scan placeholder ############################################################
+
+
+    # Build end to end tests docker image
+  - name: build end to end test image
+    image: docker:git
+    commands:
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
+      - cd JAQU-CAZ-QA-selenium
+      - docker build -t selenium-jaqu .
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+    # Run end to end tests
+  - name: run end to end tests
+    image: selenium-jaqu
+    pull: never
+    environment:
+      BS_USERNAME:
+        from_secret: browserstack_username
+      BS_AUTHKEY:
+        from_secret: browserstack_auth_key
+      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
+      VALID_USERNAME: 'tester@informed.com'
+      VALID_PASSWORD: 'Tester123..'
+      BROWSER_SET: 'mid'
+      SCREENSHOT_TYPE: 'base'
+      BUILD: NTR-UI-${DRONE_BUILD_NUMBER}
+      SPECTRE: false
+      LOCATION: browserstack
+    commands:
+      - cd JAQU-CAZ-QA-selenium
+      - cucumber -t @NTR --retry 3
+
+  ################################################# End Nightly Steps ############################################################
+
+---
+
+
+
+
+
+
+  #################################################### DEV Steps ############################################################
+
+kind: pipeline
+type: docker
+name: ntr-web-dev
+trigger:
+  branch:
+    - develop
+  event:
+    - pull_request
+    - push
+concurrency:
+  limit: 1
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+services:
+  - name: zap
+    image: owasp/zap2docker-stable
+    command:
+      - "zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true"
+    ports:
       - 8080
 
 steps:
-
-  ################################################# DEV/SIT Shared Steps ########################################################
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
@@ -69,10 +118,6 @@ steps:
       - yarn install
       - cp .env.example .env
       - rspec -f d
-    when:
-      branch:
-        - develop
-        - release/*
 
   # Execute integration/scenario tests
   - name: integration tests
@@ -83,10 +128,6 @@ steps:
         path: /var/run/docker.sock
     commands:
       - cucumber
-    when:
-      branch:
-        - develop
-        - release/*
 
   # Invoke static code analysis through Ruby libraries
   - name: static code analysis (Ruby)
@@ -98,10 +139,6 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-    when:
-      branch:
-        - develop
-        - release/*
 
   # Invoke security analysis through Ruby libraries
   - name: security tests (Ruby)
@@ -114,10 +151,23 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-    when:
-      branch:
-        - develop
-        - release/*
+
+  # Invoke sonar scan
+  - name: sonar scan
+    image: aosapps/drone-sonar-plugin
+    environment:
+      SONAR_HOST:
+        from_secret: sonar_host
+      SONAR_TOKEN:
+        from_secret: sonar_token
+      sonar.ruby.coverage.reportPaths: coverage/.resultset.json
+    commands:
+      - sonar-scanner
+        -Dsonar.projectKey=${DRONE_REPO}
+        -Dsonar.projectName=${DRONE_REPO}
+        -Dsonar.host.url=$SONAR_HOST
+        -Dsonar.login=$SONAR_TOKEN
+        -Dproject.settings=./sonar-project.properties
 
   # Invoke terraform scripts to ensure ecr is available for deploy step.
   - name: initialise ecr
@@ -139,16 +189,19 @@ steps:
       - tf workspace select default
       - tf apply -auto-approve
     environment:
-      <<: *shared_terraform_credentials
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
     when:
-      branch:
-        - develop
-        - release/*
       event:
-        exclude:
-        - pull_request
+        - push
 
-  # Push built image to ECR registry
+ # Push built image to ECR registry
   - name: publish image to ecr
     image: plugins/ecr
     settings:
@@ -166,37 +219,9 @@ steps:
       build_args:
         - secret_key_base=${DRONE_COMMIT}
     when:
-      branch:
-        - develop
-        - release/*
       event:
-        exclude:
-        - pull_request
+        - push
 
-  ################################################# End DEV/SIT Shared Steps #######################################################
-
-
-
-  ################################################### Development Only #######################################################
-
-  # Invoke sonar scan
-  - name: sonar scan
-    image: aosapps/drone-sonar-plugin
-    environment:
-      sonar_host:
-        from_secret: sonar_host
-      sonar_token:
-        from_secret: sonar_token
-      sonar.ruby.coverage.reportPaths: coverage/.resultset.json
-    commands:
-      - sonar-scanner
-        -Dsonar.projectKey=${DRONE_REPO}
-        -Dsonar.projectName=${DRONE_REPO}
-        -Dsonar.host.url=$sonar_host
-        -Dsonar.login=$sonar_token
-        -Dproject.settings=./sonar-project.properties
-    when:
-      branch: develop
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to dev
@@ -235,9 +260,7 @@ steps:
       environment: dev
     when:
       event:
-        exclude:
-        - pull_request
-      branch: develop
+        - push
 
   - name: codedeploy ui dev
     image: golang:alpine
@@ -253,9 +276,7 @@ steps:
       AWS_DEFAULT_REGION: eu-west-2
     when:
       event:
-        exclude:
-        - pull_request
-      branch: develop
+        - push
 
   - name: await ecs rollout
     image: docker
@@ -270,6 +291,297 @@ steps:
         path: /var/run/docker.sock
     when:
       event:
+        - push
+
+    # Build pa11y-ci image
+  - name: build pa11y-ci image
+    image: docker
+    commands:
+      - cd pa11y
+      - docker build -t pa11y-ci .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+  # Trigger accessibility test
+  - name: accessibility tests
+    image: pa11y-ci
+    pull: never
+    environment:
+      BASE_URL: https://dev-upload.taxiphvdata.co.uk
+    commands:
+      - mkdir screenshots
+      - /usr/local/bin/pa11y-ci -c pa11y/.pa11yci.conf.js
+    when:
+      event:
+        - push
+
+  # Execute jMeter scripts via taurus
+  - name: micro-performance tests
+    image: blazemeter/taurus
+    commands:
+      - gem install csv
+      - ruby jmeter/generate_taxi.rb
+      - mv CAZ-2020-01-08-100-1.csv jmeter
+      - bzt -o modules.jmeter.properties.hostname=dev-upload.taxiphvdata.co.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+
+  ################################################# End DEV Steps ############################################################
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  #################################################### SIT Steps ############################################################
+
+
+kind: pipeline
+type: docker
+name: ntr-web-sit
+trigger:
+  branch:
+    - release/*
+concurrency:
+  limit: 1
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+steps:
+
+  # Clean agent images and containers to prevent disk space overuse
+  - name: clean agent
+    image: docker
+    commands:
+    - docker system prune -f
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Build docker image
+  - name: build
+    image: docker
+    commands:
+    - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Trigger unit tests
+  - name: unit tests
+    image: test-national-taxi-register-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - bundle install
+      - yarn install
+      - cp .env.example .env
+      - rspec -f d
+
+  # Execute integration/scenario tests
+  - name: integration tests
+    image: test-national-taxi-register-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - cucumber
+
+  # Invoke static code analysis through Ruby libraries
+  - name: static code analysis (Ruby)
+    image: test-national-taxi-register-frontend
+    pull: never
+    commands:
+      - rubocop
+      - govuk-lint-sass app/javascript
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Invoke security analysis through Ruby libraries
+  - name: security tests (Ruby)
+    image: test-national-taxi-register-frontend
+    pull: never
+    commands:
+       - bundle audit check --update
+       - yarn audit
+       - brakeman
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+ # Push built image to ECR registry
+  - name: publish image to ecr
+    image: plugins/ecr
+    settings:
+      access_key:
+        from_secret: aws_access_key_id
+      secret_key:
+        from_secret: aws_secret_access_key
+      repo: 018330602464.dkr.ecr.eu-west-2.amazonaws.com/ntr-web
+      registry: 018330602464.dkr.ecr.eu-west-2.amazonaws.com
+      dockerfile: Dockerfile.build
+      region: eu-west-2
+      tags:
+        - release
+        - ${DRONE_BUILD_NUMBER}
+      build_args:
+        - secret_key_base=${DRONE_COMMIT}
+    when:
+      event:
+        - push
+
+  - name: plan terraform updates in sit
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - cd JAQU-CAZ-IAC
+      - git checkout master
+      - cd terraform/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select sit || tf workspace new sit
+      - tf plan
+      - cd ../02.backends
+      - tf init
+      - tf workspace select sit || tf workspace new sit
+      - tf plan
+      - cd ../04.web
+      - tf init
+      - tf workspace select sit || tf workspace new sit
+      - tf plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      environment: sit
+    when:
+      event:
+        - pull_request
+
+  - name: provisioning warning
+    image: docker:git
+    commands:
+      - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
+    when:
+      status:
+        - failure
+
+  - name: deploy to sit
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - cd JAQU-CAZ-IAC
+      - git checkout master
+      - cd terraform/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select sit || tf workspace new sit
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select sit || tf workspace new sit
+      - tf apply -auto-approve
+      - cd ../04.web
+      - tf init
+      - tf workspace select sit || tf workspace new sit
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      environment: sit
+    when:
+      event:
+        - push
+
+  - name: codedeploy ui sit
+    image: golang:alpine
+    commands:
+      - apk add --update bash python python-dev py-pip build-base
+      - pip install awscli
+      - aws deploy create-deployment --application-name ntr-codedeploy-service-sit --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name ntr-codedeploy-service-sit --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/sit/appspec.yaml
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: https://sit-upload.taxiphvdata.co.uk/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+<<<<<<< HEAD
         exclude:
         - pull_request
       branch:
@@ -289,38 +601,13 @@ steps:
         exclude:
         - pull_request
       branch: develop
+=======
+        - push
+>>>>>>> 49ce35b9130a700a3062fee0f52690783028ecac
 
-  # Trigger accessibility test
-  - name: accessibility tests
-    image: pa11y-ci
-    pull: never
-    environment:
-      BASE_URL: https://dev-upload.taxiphvdata.co.uk
-    commands:
-      - mkdir screenshots
-      - /usr/local/bin/pa11y-ci -c pa11y/.pa11yci.conf.js
-    when:
-      event:
-        exclude:
-        - pull_request
-      branch: develop
 
-  # Execute jMeter scripts via taurus
-  - name: micro-performance tests
-    image: blazemeter/taurus
-    commands:
-      - gem install csv
-      - ruby jmeter/generate_taxi.rb
-      - mv CAZ-2020-01-08-100-1.csv jmeter
-      - bzt -o modules.jmeter.properties.hostname=dev-upload.taxiphvdata.co.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    when:
-      event:
-        exclude:
-        - pull_request
-      branch: develop
+    ################################################### ZAP scan placeholder ############################################################
+    ################################################### ZAP scan placeholder ############################################################
 
     # Build end to end tests docker image
   - name: build end to end test image
@@ -343,9 +630,7 @@ steps:
         path: /var/run/docker.sock
     when:
       event:
-        exclude:
-        - pull_request
-      branch: develop
+        - push
 
 
     # Run end to end tests
@@ -357,13 +642,11 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
-      VALID_USERNAME: 'edmond.chhung@informed.com'
-      VALID_PASSWORD: 'Edc123.,'
+      BASEURL_NTR: 'https://sit-upload.taxiphvdata.co.uk'
+      VALID_USERNAME: 'tester@informed.com'
+      VALID_PASSWORD: 'Tester123..'
       BROWSER_SET: 'mid'
       SCREENSHOT_TYPE: 'base'
-      VCCS_USER: 'vccsservice'
-      VCCS_PASSWORD: 'Password001!'
       BUILD: NTR-UI-${DRONE_BUILD_NUMBER}
       SPECTRE: false
       LOCATION: browserstack
@@ -372,87 +655,103 @@ steps:
       - cucumber -t @NTR --retry 3
     when:
       event:
-        exclude:
-        - pull_request
-      branch: develop
+        - push
 
+  ################################################# End SIT Steps ############################################################
 
-  ################################################# End Development Only #######################################################
-
-
+---
 
 
 
 
-  ################################################# SIT Only #######################################################
 
-  # Invoke terraform scripts with tagged image number
-  - name: deploy to sit
+
+
+
+
+
+
+
+
+
+
+  #################################################### Pre-prod Steps ############################################################
+
+kind: pipeline
+type: docker
+name: ntr-web-preprod
+trigger:
+  branch:
+    - staging
+concurrency:
+  limit: 1
+
+steps:
+
+  - name: plan terraform updates in preprod
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - TASKDEF=`aws ecs describe-services --cluster ntr-ecs-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout master
       - cd terraform/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
-      - tf workspace select sit
-      - tf apply -auto-approve
+      - tf workspace select preprod || tf workspace new preprod
+      - tf plan
       - cd ../02.backends
       - tf init
-      - tf workspace select sit
-      - tf apply -auto-approve
+      - tf workspace select preprod || tf workspace new preprod
+      - tf plan
       - cd ../04.web
       - tf init
-      - tf workspace select sit
-      - tf apply -auto-approve
+      - tf workspace select preprod || tf workspace new preprod
+      - tf plan
     environment:
-      <<: *shared_terraform_credentials
-      TF_VAR_s3_aws_access_key_id:
+      TF_VAR_access_key:
         from_secret: aws_access_key_id
-      TF_VAR_s3_aws_secret_access_key:
+      TF_VAR_secret_key:
         from_secret: aws_secret_access_key
-      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: ${DRONE_COMMIT}
-      TF_VAR_google_analytics_id: UA-144774549-1
-      TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
-      environment: sit
-    when:
-      event:
-        exclude:
-        - pull_request
-      branch: release/*
-
-  - name: codedeploy ui sit
-    image: golang:alpine
-    commands:
-      - apk add --update bash python python-dev py-pip build-base
-      - pip install awscli
-      - aws deploy create-deployment --application-name ntr-codedeploy-service-sit --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name ntr-codedeploy-service-sit --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/sit/appspec.yaml
-    environment:
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      environment: preprod
     when:
       event:
-        exclude:
         - pull_request
-      branch: release/*
 
-
-  ############################################## End SIT Only #######################################################
-
-
-
-
-
-
-
-  ############################################# Pre-prod Only #######################################################
+  - name: provisioning warning
+    image: docker:git
+    commands:
+      - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
+    when:
+      status:
+        - failure
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to pre-prod
@@ -475,18 +774,25 @@ steps:
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
-      - tf workspace select preprod
+      - tf workspace select preprod || tf workspace new preprod
       - tf apply -auto-approve
       - cd ../02.backends
       - tf init
-      - tf workspace select preprod
+      - tf workspace select preprod || tf workspace new preprod
       - tf apply -auto-approve
       - cd ../04.web
       - tf init
-      - tf workspace select preprod
+      - tf workspace select preprod || tf workspace new preprod
       - tf apply -auto-approve
     environment:
-      <<: *shared_terraform_credentials
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
@@ -503,9 +809,7 @@ steps:
       environment: preprod
     when:
       event:
-        exclude:
-        - pull_request
-      branch: staging
+        - push
 
   - name: codedeploy ui pre-prod
     image: golang:alpine
@@ -521,44 +825,87 @@ steps:
       AWS_DEFAULT_REGION: eu-west-2
     when:
       event:
-        exclude:
-        - pull_request
-      branch: staging
+        - push
+
+  ################################################# End Preprod Steps ############################################################
+
+---
 
 
-  ########################################## End Pre-prod Only #######################################################
 
 
 
 
-  ############################################ Production Only #######################################################
 
-  # Invoke terraform scripts with tagged image number
-  - name: deploy to prod
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ################################################## Production Steps ############################################################
+
+kind: pipeline
+type: docker
+name: ntr-web-prod
+trigger:
+  branch:
+    - master
+concurrency:
+  limit: 1
+
+steps:
+
+  - name: plan terraform updates in prod
     image: hashicorp/terraform:0.12.3
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - TASKDEF=`aws ecs describe-services --cluster ntr-ecs-cluster-preprod --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - TASKDEF=`aws ecs describe-services --cluster ntr-ecs-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout master
       - cd terraform/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
-      - tf workspace select prod
-      - tf apply -auto-approve
+      - tf workspace select prod || tf workspace new prod
+      - tf plan
       - cd ../02.backends
       - tf init
-      - tf workspace select prod
-      - tf apply -auto-approve
+      - tf workspace select prod || tf workspace new prod
+      - tf plan
       - cd ../04.web
       - tf init
-      - tf workspace select prod
-      - tf apply -auto-approve
+      - tf workspace select prod || tf workspace new prod
+      - tf plan
     environment:
-      <<: *shared_terraform_credentials
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
@@ -575,9 +922,73 @@ steps:
       environment: prod
     when:
       event:
-        exclude:
         - pull_request
-      branch: master
+
+  - name: provisioning warning
+    image: docker:git
+    commands:
+      - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
+    when:
+      status:
+        - failure
+
+  # Invoke terraform scripts with tagged image number
+  - name: deploy to prod
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - TASKDEF=`aws ecs describe-services --cluster ntr-ecs-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout master
+      - cd terraform/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select prod || tf workspace new prod
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select prod || tf workspace new prod
+      - tf apply -auto-approve
+      - cd ../04.web
+      - tf init
+      - tf workspace select prod || tf workspace new prod
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      environment: prod
+    when:
+      event:
+        - push
 
   - name: codedeploy ui prod
     image: golang:alpine
@@ -593,12 +1004,12 @@ steps:
       AWS_DEFAULT_REGION: eu-west-2
     when:
       event:
-        exclude:
-        - pull_request
-      branch: master
+        - push
 
 
-  ########################################## End Production Only #######################################################
+  ################################################# End Prod Steps ############################################################
+
+
 
 
 
