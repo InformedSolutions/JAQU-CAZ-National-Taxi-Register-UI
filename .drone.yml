@@ -131,6 +131,9 @@ steps:
 
   - name: build owasp zap testing image (test)
     image: docker:git
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
     commands:
       - mkdir ~/.ssh
       - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
