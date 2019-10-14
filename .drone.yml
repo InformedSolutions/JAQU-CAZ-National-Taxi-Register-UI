@@ -142,6 +142,9 @@ steps:
       - cd JAQU-CAZ-QA-selenium
       - git checkout features/zap
       - docker build -t owasp-zap-testing Dockerfile.zap .
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
 
   - name: run owasp zap tests test
     image: owasp-zap-testing
