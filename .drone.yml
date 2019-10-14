@@ -141,7 +141,7 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
       - cd JAQU-CAZ-QA-selenium
       - git checkout feature/zap
-      - docker build -t owasp-zap-testing Dockerfile.zap .
+      - docker build -t owasp-zap-testing -f Dockerfile.zap .
     environment:
       GIT_PRIVATE_SSH:
         from_secret: github_private_key
