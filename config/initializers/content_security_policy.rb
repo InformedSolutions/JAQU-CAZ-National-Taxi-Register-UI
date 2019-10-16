@@ -14,7 +14,7 @@ if Rails.env.production?
     policy.img_src     :self, :https
     policy.object_src  :none
     policy.script_src  :self, :https, 'https://www.googletagmanager.com', 'https://www.google-analytics.com'
-    policy.style_src   :self, :https, 'unsafe-inline'
+    policy.style_src   :self, :https
     policy.connect_src :self, :https
   end
 end
