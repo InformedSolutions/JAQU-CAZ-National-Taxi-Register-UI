@@ -57,6 +57,14 @@ steps:
       - cd JAQU-CAZ-QA-selenium
       - cucumber -t @ZAPNTR
 
+  - name: security warning
+    image: docker:git
+    commands:
+      - echo "OWASP ZAP tests failed. Please check outputs in case of false positives."
+    when:
+      status:
+        - failure
+
     # Build end to end tests docker image
   - name: build end to end test image
     image: docker:git
