@@ -731,7 +731,7 @@ steps:
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - TASKDEF=`aws ecs describe-services --cluster ntr-ecs-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - TASKDEF=`aws ecs describe-services --cluster ntr-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
       - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
@@ -797,7 +797,7 @@ steps:
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - TASKDEF=`aws ecs describe-services --cluster ntr-ecs-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - TASKDEF=`aws ecs describe-services --cluster ntr-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
       - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
@@ -910,7 +910,7 @@ steps:
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - TASKDEF=`aws ecs describe-services --cluster ntr-ecs-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - TASKDEF=`aws ecs describe-services --cluster ntr-cluster-preprod --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
       - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
@@ -976,7 +976,7 @@ steps:
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - TASKDEF=`aws ecs describe-services --cluster ntr-ecs-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - TASKDEF=`aws ecs describe-services --cluster ntr-cluster-preprod --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
       - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
