@@ -10,13 +10,60 @@ concurrency:
 volumes:
 - name: docker_sock
   host:
-    path: /var/run/docker.sock 
+    path: /var/run/docker.sock
+
+services:
+  - name: zap
+    image: owasp/zap2docker-stable
+    commands:
+      - zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true
+    ports:
+      - 8080
 
 steps:
 
-    ################################################### ZAP scan placeholder ############################################################
-    ################################################### ZAP scan placeholder ############################################################
+  - name: build owasp zap testing image
+    image: docker:git
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
+      - cd JAQU-CAZ-QA-selenium
+      - git checkout feature/zap
+      - docker build -t owasp-zap-testing -f Dockerfile.zap .
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
 
+  - name: run owasp zap tests
+    image: owasp-zap-testing
+    pull: never
+    environment:
+      ZAP: true
+      ZAP_PROXY_URL: 'zap:8080'
+      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
+      VALID_USERNAME: 'tester@informed.com'
+      VALID_PASSWORD: 'Tester123..'
+      SCREENSHOT_TYPE: 'base'
+      LOCATION: local
+    commands:
+      - cd JAQU-CAZ-QA-selenium
+      - cucumber -t @ZAPNTR
+
+  - name: security warning
+    image: docker:git
+    commands:
+      - echo "OWASP ZAP tests failed. Please check outputs in case of false positives."
+    when:
+      status:
+        - failure
 
     # Build end to end tests docker image
   - name: build end to end test image
@@ -84,8 +131,10 @@ concurrency:
 volumes:
 - name: docker_sock
   host:
-    path: /var/run/docker.sock 
+    path: /var/run/docker.sock
 
+
+      
 steps:
 
   # Clean agent images and containers to prevent disk space overuse
@@ -318,7 +367,7 @@ steps:
     when:
       event:
         - push
-        
+
   # Execute jMeter scripts via taurus
   - name: micro-performance tests
     image: blazemeter/taurus
@@ -369,7 +418,7 @@ concurrency:
 volumes:
 - name: docker_sock
   host:
-    path: /var/run/docker.sock 
+    path: /var/run/docker.sock
 
 steps:
 
@@ -1055,6 +1104,5 @@ name: browserstack_username
 get:
   path: /secret/drone.global
   name: browserStackUsername
-  
+
   ################################################ End Secrets #########################################################
- 
