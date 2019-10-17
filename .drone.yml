@@ -22,7 +22,7 @@ services:
 
 steps:
 
-  - name: build owasp zap testing image
+  - name: build testing tools image
     image: docker:git
     volumes:
       - name: docker_sock
@@ -37,14 +37,15 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
       - cd JAQU-CAZ-QA-selenium
       - git checkout feature/zap
-      - docker build -t owasp-zap-testing -f Dockerfile.zap .
+      - docker build -t test-tools-image .
     environment:
       GIT_PRIVATE_SSH:
         from_secret: github_private_key
 
   - name: run owasp zap tests
-    image: owasp-zap-testing
+    image: test-tools-image
     pull: never
+    failure: ignore
     environment:
       ZAP: true
       ZAP_PROXY_URL: 'zap:8080'
@@ -65,29 +66,9 @@ steps:
       status:
         - failure
 
-    # Build end to end tests docker image
-  - name: build end to end test image
-    image: docker:git
-    commands:
-      - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - touch ~/.ssh/known_hosts
-      - chmod 600 ~/.ssh/known_hosts
-      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
-      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
-      - cd JAQU-CAZ-QA-selenium
-      - docker build -t selenium-jaqu .
-    environment:
-      GIT_PRIVATE_SSH:
-        from_secret: github_private_key
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-
     # Run end to end tests
   - name: run end to end tests
-    image: selenium-jaqu
+    image: test-tools-image
     pull: never
     environment:
       BS_USERNAME:
@@ -133,8 +114,6 @@ volumes:
   host:
     path: /var/run/docker.sock
 
-
-      
 steps:
 
   # Clean agent images and containers to prevent disk space overuse
@@ -1104,5 +1083,6 @@ name: browserstack_username
 get:
   path: /secret/drone.global
   name: browserStackUsername
-
+  
   ################################################ End Secrets #########################################################
+  
