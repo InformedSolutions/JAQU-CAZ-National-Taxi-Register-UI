@@ -34,7 +34,6 @@ Rails.application.routes.draw do
     end
   end
 
-
   get :health, to: 'application#health'
   get :build_id, to: 'application#build_id'
 
