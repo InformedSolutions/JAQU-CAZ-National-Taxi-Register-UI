@@ -1083,6 +1083,5 @@ name: browserstack_username
 get:
   path: /secret/drone.global
   name: browserStackUsername
-  
+
   ################################################ End Secrets #########################################################
-  
