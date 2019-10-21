@@ -1,0 +1,156 @@
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      %h1.govuk-heading-xl
+        Privacy policy
+      %strong.govuk-tag{style: 'margin-bottom: 30px;'}
+        DRAFT Content
+      %p
+        This privacy policy explains why we collect your personal data and what we do with it.
+        It also explains your rights and how to enforce them.
+      %h2.govuk-heading-l Who manages this service
+      %p
+        This service is managed by the Department for Environment, Food & Rural Affairs (Defra),
+        which is a government department.
+      %p
+        Defra is known as the data controller for data protection purposes.
+      %p
+        = link_to 'Defra’s personal information charter',
+                  'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
+                  target: '_blank'
+        explains how Defra processes personal data.
+      %p
+        Defra is responsible for deciding how your personal data is used and for protecting the personal data you provide.
+      %p
+        More information about how to use the service is in the terms and conditions.
+
+      %h2.govuk-heading-l Why we collect your personal data
+      %p
+        We collect your personal data to:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p process your enquiry about your vehicle
+        %li
+          %p meet legal requirements
+        %li
+          %p make improvements to this service
+      %p Staff handling your personal data work in the UK and your data is stored in the UK.
+
+      %h2.govuk-heading-l Types of personal data we collect
+      %p
+        The personal data we collect includes:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p your vehicle registration number
+        %li
+          %p any other personal information you provide in addition to your vehicle enquiry
+
+      %h2.govuk-heading-l Using your data
+      %p
+        We
+        = link_to 'use cookies', cookies_static_pages_path
+        to collect data that tells us about how you’re using this service, including:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p your computer, phone or tablet’s IP address
+        %li
+          %p the region or town where you are using your computer, phone or tablet
+        %li
+          %p the web browser you use
+
+      %h2.govuk-heading-l Sharing your data
+      %p
+        While processing your enquiry, another government department, agency or organisation might
+        be involved and we may share your data with them.
+      %p
+        If you contact us and ask for help with the service you are using, your personal data may
+        be shared with the Good Things Foundation. This is a company who we have partnered with to
+        offer face to face support.
+      %p
+        In some circumstances we may share your data for example, to prevent or detect crime, or to
+        produce anonymised statistics.
+      %p
+        We use Google Analytics to collect data about how a website is used. This anonymous data is
+        shared with Google. Find out about this in our terms and conditions.
+      %p
+        The vehicle information you submit will be shared with the Driver and Vehicle Licensing Agency (DVLA).
+
+      %h2.govuk-heading-l Storing and sharing your data internationally
+      %p
+        Sometimes we need to send your personal information outside of the UK. When we do this we
+        comply with data protection law.
+
+      %h2.govuk-heading-l Your rights relevant? Do we hold any personal data?
+      %p
+        You can ask:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p to see the personal data that we hold on you
+        %li
+          %p to have the personal data corrected
+        %li
+          %p
+            to have the personal data removed or deleted (this will depend on the circumstances,
+            for example if you decide not to continue your check)
+        %li
+          %p
+            that access to the personal data is restricted (for example, you can ask to have your
+            data stored for longer and not automatically deleted)
+
+      %p If you want to see the personal data that we hold on you, you can:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p
+            complete a form to 
+            = link_to 'make a subject access request',
+                      'https://www.gov.uk/government/organisations/ministry-of-justice/about/personal-information-charter',
+                      target: '_blank'
+            \ - your request goes to Defra as data controller
+        %li
+          %p
+            write to us: Disclosure Team, Post point 10.38, 102 Petty France, London, SW1H 9AJ
+
+      %p
+        You can ask for more information about:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p agreements we have on sharing information with other organisations
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p when we are allowed to pass on personal information without telling you
+        %li
+          %p our instructions to staff on how to collect, use or delete your personal information
+        %li
+          %p how we check that the information we hold is accurate and up-to-date
+
+      %p You can contact the Defra data protection officer by:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p
+            writing to us: Data Protection Manager for core-Defra
+            %br
+            Defra
+            %br
+            Information Rights Team
+            %br
+            1st Floor, NE Quarter
+            %br
+            Seacole Block
+            %br
+            2 Marsham Street
+            %br
+            London
+            %br
+            SW1P 4DF
+        %li
+          %p
+            emailing:
+            = mail_to 'data.protection@defra.gov.uk'
+
+      %h2.govuk-heading-l How to complain
+      %p
+        You can complain to the 
+        = link_to 'Information Commissioner’s Office',
+                  'https://ico.org.uk/global/contact-us',
+                  target: '_blank'
+        if you’re not satisfied with our response or believe we are not processing your personal data lawfully.

@@ -26,7 +26,14 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :cookies, only: :index
+  resources :static_pages, only: %i[] do
+    collection do
+      get :accessibility
+      get :cookies
+      get :privacy_policy
+    end
+  end
+
 
   get :health, to: 'application#health'
   get :build_id, to: 'application#build_id'
