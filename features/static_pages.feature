@@ -3,11 +3,11 @@ Feature: Static Pages
   As a Licensing Authority
   I want to see the static pages
 
-  Scenario: User sees accessibility page
-    Given I am on the Sign in page
-    When I press Accessibility link
-    Then I should see "Accessibility"
-    And I should see "Text Sizes"
+#  Scenario: User sees accessibility page
+#    Given I am on the Sign in page
+#    When I press Accessibility link
+#    Then I should see "Accessibility"
+#    And I should see "Text Sizes"
 
   Scenario: User sees cookies page
     Given I am on the Sign in page
