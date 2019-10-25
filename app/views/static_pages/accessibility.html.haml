@@ -1,0 +1,70 @@
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      %h1.govuk-heading-xl
+        Accessibility
+      %strong.govuk-tag.draft-label
+        DRAFT Content
+      %h2.govuk-heading-l Text Sizes
+      %p
+        All the text on the site is controlled by style sheet and is scalable by altering your
+        browser settings. To change the size of the text displayed in your browser:
+
+      %h2.govuk-heading-m In Internet Explorer 8:
+      %p
+        Go to View in the menu
+        %br
+        Select Text Size 
+        %br
+        Select the size of text you would like (smallest, small, medium, larger or largest)
+        %br
+        More guidance on IE8 can be found at:
+        = link_to 'www.microsoft.com',
+                  'https://www.microsoft.com',
+                  target: '_blank'
+
+      %h2.govuk-heading-m In Firefox:
+      %p
+        Go to 'View Menu'
+        %br
+        Select 'Text Size'
+        %br
+        And then select Increase or Decrease
+
+      %h2.govuk-heading-m In Safari:
+      %p
+        Choose 'Preferences'
+        %br
+        click on 'Appearance'
+        %br
+        go to 'Standard Font' and click 'Select'
+        %br
+        select the font size from the 'sizes' menu
+
+      %h2.govuk-heading-l Links
+      %p
+        There are no JavaScript pseudo-links. All links can be followed in any browser, even if
+        scripting is turned off. There are no links that open new windows without warning.
+
+      %h2.govuk-heading-l Images
+      %p
+        All content images used on the site have descriptive ALT attributes.
+        %p
+          The site makes extensive use of Cascading Style Sheets and most images are in the
+          'background' of the page and not registered by screen readers. This is worth noting when
+          using the 'disable image' feature of some browsers.
+
+      %h2.govuk-heading-l Standards compliance
+      %p
+        Gov.uk is committed to providing a website that is accessible to the widest possible
+        audience, regardless of technology or ability. We are actively working to increase the
+        accessibility and usability of our website and, in doing so, adhere to available standards
+        and guidelines.
+      %p
+        This service endeavours to conform to WCAG 2 AA from the World Wide Web Consortium (W3C)
+        Web Content Accessibility Guidelines 2.0.
+      %p
+        Whilst we strive to adhere to the accepted guidelines and standards for accessibility and
+        usability, it is not always possible to do so in all areas of the website. The secure areas
+        of the site cannot be accessed through the Opera Browser and other browsers that share its
+        User Agent (such as the text browser Lynx).

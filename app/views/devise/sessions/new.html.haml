@@ -7,7 +7,6 @@
 
       %p
         If you do not have an account, please email us at
-        - service_email = Rails.configuration.x.service_email
         = mail_to service_email, service_email, class: 'govuk-link'
 
       = form_for(resource, as: resource_name, url: session_path(resource_name), html: {novalidate: 'novalidate'}) do |f|

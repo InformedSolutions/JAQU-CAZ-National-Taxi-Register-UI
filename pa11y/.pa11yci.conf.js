@@ -15,15 +15,30 @@ var config = {
     urls: [
         '${BASE_URL}',
         '${BASE_URL}/cookies',
+        '${BASE_URL}/static_pages/accessibility',
+        '${BASE_URL}/static_pages/privacy_policy',
         {
             "url": '${BASE_URL}',
             "actions": [
-                "set field #user_username to edmond.chhung@informed.com",
-                "set field #user_password to Edc123.,",
+                "set field #user_username to tester@informed.com",
+                "set field #user_password to Tester123..",
                 "click element input[type=submit]",
                 "wait for element #file-upload-1 to be visible"
 
             ]
+        },
+        {
+            "url": '${BASE_URL}?data-rules',
+            "actions": [
+                "set field #user_username to tester@informed.com",
+                "set field #user_password to Tester123..",
+                "click element input[type=submit]",
+                "wait for element #file-upload-1 to be visible",
+                "click element #data-rules"
+            ]
+        },
+        {
+            "url": '${BASE_URL}/upload/success'
         }
     ]
 };
@@ -56,7 +71,7 @@ function replacePa11yBaseUrls(urls, defaults) {
 	console.log('\n')
 	console.log('Generated pa11y configuration:\n')
 	console.log(result)
-	
+
     return result
 };
 
