@@ -12,8 +12,8 @@ When('I press Cookies link') do
   end
 end
 
-When('I press Privacy policy link') do
+When('I press Privacy link') do
   within('footer.govuk-footer') do
-    click_link 'Privacy policy'
+    click_link 'Privacy'
   end
 end

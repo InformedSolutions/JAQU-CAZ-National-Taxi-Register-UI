@@ -17,6 +17,6 @@ Feature: Static Pages
 
   Scenario: User sees privacy policy page
     Given I am on the Sign in page
-    When I press Privacy policy link
-    Then I should see "Privacy policy"
-    And I should see "Who manages this service"
+    When I press Privacy link
+    Then I should see "Privacy Notice"
+    And I should see "Who is collecting the data?"

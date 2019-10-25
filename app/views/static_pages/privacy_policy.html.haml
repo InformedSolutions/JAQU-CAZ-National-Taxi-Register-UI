@@ -2,127 +2,16 @@
   .govuk-grid-row
     .govuk-grid-column-two-thirds
       %h1.govuk-heading-xl
-        Privacy policy
+        Privacy Notice
       %strong.govuk-tag.draft-label
         DRAFT Content
       %p
-        This privacy policy explains why we collect your personal data and what we do with it.
-        It also explains your rights and how to enforce them.
-      %h2.govuk-heading-l Who manages this service
-      %p
-        This service is managed by the Department for Environment, Food & Rural Affairs (Defra),
-        which is a government department.
-      %p
-        Defra is known as the data controller for data protection purposes.
-      %p
-        = link_to 'Defra’s personal information charter',
-                  'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
-                  target: '_blank'
-        explains how Defra processes personal data.
-      %p
-        Defra is responsible for deciding how your personal data is used and for protecting the personal data you provide.
-      %p
-        More information about how to use the service is in the terms and conditions.
+        Details of our Personal Information Charter can be found at:
+        - personal_info_link = 'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter'
+        = link_to personal_info_link, personal_info_link, target: '_blank'
 
-      %h2.govuk-heading-l Why we collect your personal data
-      %p
-        We collect your personal data to:
-      %ul.govuk-list-govuk-list--bullet
-        %li
-          %p process your enquiry about your vehicle
-        %li
-          %p meet legal requirements
-        %li
-          %p make improvements to this service
-      %p Staff handling your personal data work in the UK and your data is stored in the UK.
-
-      %h2.govuk-heading-l Types of personal data we collect
-      %p
-        The personal data we collect includes:
-      %ul.govuk-list-govuk-list--bullet
-        %li
-          %p your vehicle registration number
-        %li
-          %p any other personal information you provide in addition to your vehicle enquiry
-
-      %h2.govuk-heading-l Using your data
-      %p
-        We
-        = link_to 'use cookies', cookies_path
-        to collect data that tells us about how you’re using this service, including:
-      %ul.govuk-list-govuk-list--bullet
-        %li
-          %p your computer, phone or tablet’s IP address
-        %li
-          %p the region or town where you are using your computer, phone or tablet
-        %li
-          %p the web browser you use
-
-      %h2.govuk-heading-l Sharing your data
-      %p
-        While processing your enquiry, another government department, agency or organisation might
-        be involved and we may share your data with them.
-      %p
-        If you contact us and ask for help with the service you are using, your personal data may
-        be shared with the Good Things Foundation. This is a company who we have partnered with to
-        offer face to face support.
-      %p
-        In some circumstances we may share your data for example, to prevent or detect crime, or to
-        produce anonymised statistics.
-      %p
-        We use Google Analytics to collect data about how a website is used. This anonymous data is
-        shared with Google. Find out about this in our terms and conditions.
-      %p
-        The vehicle information you submit will be shared with the Driver and Vehicle Licensing Agency (DVLA).
-
-      %h2.govuk-heading-l Storing and sharing your data internationally
-      %p
-        Sometimes we need to send your personal information outside of the UK. When we do this we
-        comply with data protection law.
-
-      %h2.govuk-heading-l Your rights relevant? Do we hold any personal data?
-      %p
-        You can ask:
-      %ul.govuk-list-govuk-list--bullet
-        %li
-          %p to see the personal data that we hold on you
-        %li
-          %p to have the personal data corrected
-        %li
-          %p
-            to have the personal data removed or deleted (this will depend on the circumstances,
-            for example if you decide not to continue your check)
-        %li
-          %p
-            that access to the personal data is restricted (for example, you can ask to have your
-            data stored for longer and not automatically deleted)
-
-      %p If you want to see the personal data that we hold on you, you can:
-      %ul.govuk-list-govuk-list--bullet
-        %li
-          %p
-            complete a form to 
-            = link_to 'make a subject access request',
-                      'https://www.gov.uk/government/organisations/ministry-of-justice/about/personal-information-charter',
-                      target: '_blank'
-            \ - your request goes to Defra as data controller
-        %li
-          %p
-            write to us: Disclosure Team, Post point 10.38, 102 Petty France, London, SW1H 9AJ
-
-      %p
-        You can ask for more information about:
-      %ul.govuk-list-govuk-list--bullet
-        %li
-          %p agreements we have on sharing information with other organisations
-      %ul.govuk-list-govuk-list--bullet
-        %li
-          %p when we are allowed to pass on personal information without telling you
-        %li
-          %p our instructions to staff on how to collect, use or delete your personal information
-        %li
-          %p how we check that the information we hold is accurate and up-to-date
-
+      %h2.govuk-heading-m 1. Who is collecting the data?
+      %p The data will be collected by Defra.
       %p You can contact the Defra data protection officer by:
       %ul.govuk-list-govuk-list--bullet
         %li
@@ -133,24 +22,107 @@
             %br
             Information Rights Team
             %br
-            1st Floor, NE Quarter
+            Area 1E
             %br
-            Seacole Block
+            Nobel House
             %br
-            2 Marsham Street
+            17 Smith Square
             %br
             London
             %br
-            SW1P 4DF
+            SW1P 3JR
         %li
           %p
-            emailing:
+            Email:
             = mail_to 'data.protection@defra.gov.uk'
 
-      %h2.govuk-heading-l How to complain
+      %h2.govuk-heading-m 2. Purpose of the processing and the legal basis for the processing
       %p
-        You can complain to the 
-        = link_to 'Information Commissioner’s Office',
-                  'https://ico.org.uk/global/contact-us',
-                  target: '_blank'
-        if you’re not satisfied with our response or believe we are not processing your personal data lawfully.
+        The Department for Environment Food & Rural Affairs (Defra), which is a government
+        department, is collecting data from licensing authorities in England and Wales for all
+        vehicles licensed as a taxi or private hire vehicle. Under the Air Quality (Taxi and
+        Private Hire Vehicles Database) (England and Wales) Regulations 2019 (SI 2019 No. 885) it
+        is a legal obligation for licensing authorities to provide to Defra with the following data:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p Vehicle registration mark of the vehicle
+        %li
+          %p Date from which the vehicle’s licence has effect
+        %li
+          %p Date on which the vehicle’s licence is due to expire
+        %li
+          %p A statement as to whether the vehicle is a taxi or private hire vehicle
+        %li
+          %p
+            Other information the licensing authority holds in relation to the vehicle that may be
+            relevant for the purposes of ensuring the accurate identification of vehicles, having
+            had regard to any guidance issued by the Secretary of State. That is:
+          %ul.govuk-list-govuk-list--bullet
+            %li
+              %p Licence plate number
+            %li
+              %p An indication as to whether it is a wheelchair accessible vehicle.
+      %p
+        The Licensing Authorities will provide Defra with this information at least as frequently as
+        once a week. The information will be held securely by Defra on Amazon Web Services for up to
+        seven years.
+      %p
+        The processing of the information (under Article 6.1 (c) of the GDPR) is for the purpose of
+        ensuring that Clean Air Zone (CAZ) charging is applied correctly in adherence with the
+        = link_to 'CleanAir Zone Framework.',
+          'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/612592/clean-air-zone-framework.pdf',
+          target: '_blank'
+        Licensing authorities hold information on taxis and PHVs only within
+        their own area so are not able to clearly identify and charge a taxi/PHV entering or moving
+        around their charging CAZ which has been licensed by another authority (also known as ‘out
+        of area vehicles’). If local authorities cannot identify all out of area vehicles this would
+        undermine their ability to effectively operate CAZs where charging of these vehicles has
+        been determined to be necessary.
+      %h2.govuk-heading-m 3. Any recipient or categories of recipients of the personal data
+      %p
+        The Air Quality (Taxi and Private Hire Vehicles Database) (England and Wales) Regulations
+        2019 (2019 SI No. 885) allow the sharing of data with licensing authorities for the purposes
+        of enforcing measures which have been implemented in an air quality plan or for the purposes
+        of improving air quality.
+
+      %h2.govuk-heading-m 4. The right to withdraw consent at any time, where relevant
+      %p
+        See the Personal Information Charter
+      %p
+        = link_to personal_info_link, personal_info_link, target: '_blank'
+
+      %h2.govuk-heading-m 5. Retention period or criteria used to determine the retention period
+      %p
+        Your personal data will be kept by us for as long as is necessary up to seven years, in line
+        with the Memorandum of Understanding between Defra and licensing authorities.
+
+      %h2.govuk-heading-m
+        6. The existence of automated decision making, including profiling and
+        information about how decisions are made, the significance and the consequences.
+      %p
+        The information you provide is connected with individual decision making (making a decision
+        solely by automated means without any human involvement) through the Clean Air Zone vehicle
+        checker which determines whether a vehicle entering a charging zone is chargeable.
+
+      %h2.govuk-heading-m 7. Details of transfers to third country and safeguards
+      %p
+        The data you provide will not be transferred outside the United Kingdom.
+
+      %h2.govuk-heading-m 8. The existence of each of data subject’s rights.
+      %p
+        A list of your rights under the General Data Protection Regulation, the Data Protection Act
+        2018 (DPA 2018), is accessible at:
+      %p
+        - individual_rights_link = 'https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/individual-rights/'
+        = link_to individual_rights_link, individual_rights_link, target: '_blank'
+
+      %h2.govuk-heading-m
+        9. The right to lodge a complaint with a supervisory authority.
+        [How do I complain?]
+      %p The Personal Information Charter provides details of how to complain.
+      %p
+        = link_to personal_info_link, personal_info_link, target: '_blank'
+
+      %h2.govuk-heading-m Link to Personal Information Charter:
+      %p
+        = link_to personal_info_link, personal_info_link, target: '_blank'
