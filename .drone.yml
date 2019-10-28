@@ -347,7 +347,6 @@ steps:
     when:
       event:
         - push
-        - pull_request
 
   # Execute jMeter scripts via taurus
   - name: micro-performance tests
