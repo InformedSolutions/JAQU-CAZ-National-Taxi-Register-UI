@@ -4,9 +4,9 @@
       %h1.govuk-heading-xl
         Privacy Notice
       %p
-        Details of our Personal Information Charter can be found at:
-        - personal_info_link = 'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter'
-        = link_to personal_info_link, personal_info_link, target: '_blank'
+        = link_to 'Details of our Personal Information Charter',
+                  'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
+                  target: '_blank'
 
       %h2.govuk-heading-m 1. Who is collecting the data?
       %p The data will be collected by Defra.
@@ -67,9 +67,9 @@
       %p
         The processing of the information (under Article 6.1 (c) of the GDPR) is for the purpose of
         ensuring that Clean Air Zone (CAZ) charging is applied correctly in adherence with the
-        = link_to 'CleanAir Zone Framework.',
-          'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/612592/clean-air-zone-framework.pdf',
-          target: '_blank'
+        = link_to 'Clean Air Zone Framework.',
+                  'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/612592/clean-air-zone-framework.pdf',
+                  target: '_blank'
         Licensing authorities hold information on taxis and PHVs only within
         their own area so are not able to clearly identify and charge a taxi/PHV entering or moving
         around their charging CAZ which has been licensed by another authority (also known as ‘out
@@ -85,9 +85,10 @@
 
       %h2.govuk-heading-m 4. The right to withdraw consent at any time, where relevant
       %p
-        See the Personal Information Charter
-      %p
-        = link_to personal_info_link, personal_info_link, target: '_blank'
+        See the
+        = link_to 'Personal Information Charter',
+                  'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
+                  target: '_blank'
 
       %h2.govuk-heading-m 5. Retention period or criteria used to determine the retention period
       %p
@@ -108,19 +109,16 @@
 
       %h2.govuk-heading-m 8. The existence of each of data subject’s rights.
       %p
-        A list of your rights under the General Data Protection Regulation, the Data Protection Act
-        2018 (DPA 2018), is accessible at:
-      %p
-        - individual_rights_link = 'https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/individual-rights/'
-        = link_to individual_rights_link, individual_rights_link, target: '_blank'
+        You rights under the
+        = link_to 'General Data Protection Regulation, the Data Protection Act2018 (DPA 2018)',
+                  'https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/individual-rights/',
+                  target: '_blank'
 
       %h2.govuk-heading-m
         9. The right to lodge a complaint with a supervisory authority.
         [How do I complain?]
-      %p The Personal Information Charter provides details of how to complain.
       %p
-        = link_to personal_info_link, personal_info_link, target: '_blank'
-
-      %h2.govuk-heading-m Link to Personal Information Charter:
-      %p
-        = link_to personal_info_link, personal_info_link, target: '_blank'
+        The Personal Information Charter provides details of
+        = link_to 'how to complain',
+                  'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
+                  target: '_blank'
