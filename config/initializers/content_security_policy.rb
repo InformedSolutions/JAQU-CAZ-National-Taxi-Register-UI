@@ -10,7 +10,7 @@
 if Rails.env.production?
   Rails.application.config.content_security_policy do |policy|
     policy.default_src      :none
-    policy.font_src         :self, :https
+    policy.font_src         :self, :https, :data
     policy.img_src          :self, :https
     policy.object_src       :none
     policy.script_src       :self, :https, 'https://www.googletagmanager.com', 'https://www.google-analytics.com'
