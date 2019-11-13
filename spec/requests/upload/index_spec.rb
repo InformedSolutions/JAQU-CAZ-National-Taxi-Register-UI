@@ -8,7 +8,7 @@ describe 'UploadController - GET #index', type: :request do
   let(:file_path) do
     File.join(
       'spec',
-      'fixtures', 'files', 'csv', 'CAZ-2020-01-08-AuthorityID-1.csv'
+      'fixtures', 'files', 'csv', 'CAZ-2020-01-08-AuthorityID.csv'
     )
   end
 

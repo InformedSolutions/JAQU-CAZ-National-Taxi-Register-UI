@@ -39,9 +39,9 @@ class ExampleCsv < BaseService
 
   private
 
-  # Returns a string, proper filename, eg. 'tmp/example_files_test/CAZ-2019-09-19-ABCDE-5.csv'
+  # Returns a string, proper filename, eg. 'tmp/example_files_test/CAZ-2019-09-19-ABCDE.csv'
   def file_name
-    "#{dir}/CAZ-#{Date.current.iso8601}-ABCDE-#{lines}.csv"
+    "#{dir}/CAZ-#{Date.current.iso8601}-ABCDE.csv"
   end
 
   # Returns a string, random vrn in the proper format, eg. 'NWF218'

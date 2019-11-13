@@ -12,6 +12,6 @@ RSpec.describe ExampleCsv do
 
   it 'creates CSV file' do
     service_call
-    expect(File).to exist("#{dir}/CAZ-#{Date.current.iso8601}-ABCDE-#{lines}.csv")
+    expect(File).to exist("#{dir}/CAZ-#{Date.current.iso8601}-ABCDE.csv")
   end
 end

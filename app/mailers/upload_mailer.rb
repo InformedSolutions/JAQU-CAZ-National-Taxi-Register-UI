@@ -17,7 +17,7 @@ class UploadMailer < ApplicationMailer
   #
   #    user = User.new
   #    user.email = 'test@example.com'
-  #    filename = 'CAZ-2020-01-08-Leeds-1.csv'
+  #    filename = 'CAZ-2020-01-08-Leeds.csv'
   #    time = Time.current.strftime(Rails.configuration.x.time_format)
   #    UploadMailer.success_upload(user, filename, time).deliver
   #
