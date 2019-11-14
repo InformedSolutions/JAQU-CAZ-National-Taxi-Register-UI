@@ -1,7 +1,7 @@
 $govuk-global-styles: true;
 $govuk-assets-path: '/packs/media/';
 
-@import "~govuk-frontend/govuk/all";
+@import '~govuk-frontend/govuk/all';
 
 html {
   background-color: govuk-colour($colour: 'light-grey');

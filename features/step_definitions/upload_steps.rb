@@ -47,7 +47,7 @@ When('I press refresh page link when api response not running or finished') do
   allow(RegisterCheckerApi).to receive(:job_status)
     .with(job_name, correlation_id).and_return('FAILURE')
   allow(RegisterCheckerApi).to receive(:job_errors)
-    .with(job_name, correlation_id).and_return(['error'])
+    .with(job_name, correlation_id).and_return(%w[error])
   click_link 'click here.'
 end
 
