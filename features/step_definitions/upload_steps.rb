@@ -13,13 +13,13 @@ When('I upload a valid csv file') do
   allow(SecureRandom).to receive(:uuid).and_return(correlation_id)
   allow(CsvUploadService).to receive(:call).and_return(true)
   allow(RegisterCheckerApi).to receive(:register_job)
-    .with('CAZ-2020-01-08-AuthorityID-1.csv', correlation_id)
+    .with('CAZ-2020-01-08-AuthorityID.csv', correlation_id)
     .and_return(job_name)
 
   allow(RegisterCheckerApi).to receive(:job_status)
     .with(job_name, correlation_id).and_return('RUNNING')
 
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-1.csv'))
+  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID.csv'))
   click_button 'Upload'
 end
 
@@ -47,23 +47,23 @@ When('I press refresh page link when api response not running or finished') do
   allow(RegisterCheckerApi).to receive(:job_status)
     .with(job_name, correlation_id).and_return('FAILURE')
   allow(RegisterCheckerApi).to receive(:job_errors)
-    .with(job_name, correlation_id).and_return(['error'])
+    .with(job_name, correlation_id).and_return(%w[error])
   click_link 'click here.'
 end
 
 #  Scenario: Upload a csv file whose name is not compliant with the naming rules
 When('I upload a csv file whose name format is invalid #1') do
-  attach_file(:file, empty_csv_file('сAZ-2020-01-08-AuthorityID-4321.csv'))
+  attach_file(:file, empty_csv_file('сAZ-2020-01-08-AuthorityID.csv'))
   click_button 'Upload'
 end
 
 When('I upload a csv file whose name format is invalid #2') do
-  attach_file(:file, empty_csv_file('CAZ-01-08-2020-AuthorityID-4321.csv'))
+  attach_file(:file, empty_csv_file('CAZ-01-08-2020-AuthorityID.csv'))
   click_button 'Upload'
 end
 
 When('I upload a csv file whose name format is invalid #3') do
-  attach_file(:file, empty_csv_file('CAZ-2020-01--4321.csv'))
+  attach_file(:file, empty_csv_file('CAZ-2020-01-.csv'))
   click_button 'Upload'
 end
 
@@ -73,18 +73,18 @@ When('I upload a csv file whose name format is invalid #4') do
 end
 
 When('I upload a csv file whose name format is invalid #5') do
-  attach_file(:file, empty_csv_file('CAZ-2020-01-08-Auth_orityID-4321.csv'))
+  attach_file(:file, empty_csv_file('CAZ-2020-01-08-Auth_orityID.csv'))
   click_button 'Upload'
 end
 
 When('I upload a csv file whose name format is invalid #6') do
-  attach_file(:file, empty_csv_file('cCAZ-2020-01-08-AuthorityID-4321.CSV'))
+  attach_file(:file, empty_csv_file('cCAZ-2020-01-08-AuthorityID.CSV'))
   click_button 'Upload'
 end
 
 # Scenario: Upload a csv file format that is not .csv or .CSV
 When('I upload a csv file whose format that is not .csv or .CSV') do
-  attach_file(:file, empty_csv_file('CAZ-2020-01-08-AuthorityID-4321.xlsx'))
+  attach_file(:file, empty_csv_file('CAZ-2020-01-08-AuthorityID.xlsx'))
   click_button 'Upload'
 end
 
@@ -92,7 +92,7 @@ end
 When('I upload a csv file during error on S3') do
   allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(false)
 
-  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID-1.csv'))
+  attach_file(:file, csv_file('CAZ-2020-01-08-AuthorityID.csv'))
   click_button 'Upload'
 end
 

@@ -8,7 +8,7 @@ describe 'UploadController - POST #import' do
   let(:file_path) do
     File.join(
       'spec',
-      'fixtures', 'files', 'csv', 'CAZ-2020-01-08-AuthorityID-1.csv'
+      'fixtures', 'files', 'csv', 'CAZ-2020-01-08-AuthorityID.csv'
     )
   end
   let(:csv_file) { fixture_file_upload(file_path) }
@@ -40,7 +40,7 @@ describe 'UploadController - POST #import' do
   context 'with invalid params' do
     let(:file_path) do
       File.join('spec',
-                'fixtures', 'files', 'csv', 'empty', 'сAZ-2020-01-08-AuthorityID-4321.csv')
+                'fixtures', 'files', 'csv', 'empty', 'сAZ-2020-01-08-AuthorityID.csv')
     end
 
     it 'returns error' do

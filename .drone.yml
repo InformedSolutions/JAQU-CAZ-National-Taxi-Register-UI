@@ -36,7 +36,6 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
       - cd JAQU-CAZ-QA-selenium
-      - git checkout feature/zap
       - docker build -t test-tools-image .
     environment:
       GIT_PRIVATE_SSH:
@@ -48,7 +47,7 @@ steps:
     failure: ignore
     environment:
       ZAP: true
-      ZAP_PROXY_URL: 'zap:8080'
+      ZAP_PROXY_URL: 'zap'
       BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
@@ -163,7 +162,7 @@ steps:
     pull: never
     commands:
       - rubocop
-      - govuk-lint-sass app/javascript
+      - scss-lint app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -294,15 +293,22 @@ steps:
   - name: codedeploy ui dev
     image: golang:alpine
     commands:
-      - apk add --update bash python python-dev py-pip build-base
+      - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - aws deploy create-deployment --application-name ntr-codedeploy-service-dev --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name ntr-codedeploy-service-dev --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/dev/appspec.yaml
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: ntr-codedeploy-service-dev
+      DEPLOYMENT_GROUP: ntr-codedeploy-service-dev
+      PROJECT: ntr
+      DEPLOY_ENVIRONMENT: dev
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
     when:
       event:
         - push
@@ -354,7 +360,7 @@ steps:
     commands:
       - gem install csv
       - ruby jmeter/generate_taxi.rb
-      - mv CAZ-2020-01-08-100-1.csv jmeter
+      - mv CAZ-2020-01-08-100.csv jmeter
       - bzt -o modules.jmeter.properties.hostname=dev-upload.taxiphvdata.co.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
     volumes:
       - name: docker_sock
@@ -449,7 +455,7 @@ steps:
     pull: never
     commands:
       - rubocop
-      - govuk-lint-sass app/javascript
+      - scss-lint app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -598,15 +604,22 @@ steps:
   - name: codedeploy ui sit
     image: golang:alpine
     commands:
-      - apk add --update bash python python-dev py-pip build-base
+      - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - aws deploy create-deployment --application-name ntr-codedeploy-service-sit --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name ntr-codedeploy-service-sit --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/sit/appspec.yaml
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/$DEPLOY_ENVIRONMENT/appspec.yaml
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: ntr-codedeploy-service-sit
+      DEPLOYMENT_GROUP: ntr-codedeploy-service-sit
+      PROJECT: ntr
+      DEPLOY_ENVIRONMENT: sit
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
     when:
       event:
         - push
@@ -627,7 +640,6 @@ steps:
         - push
 
 
-    ################################################### ZAP scan placeholder ############################################################
     ################################################### ZAP scan placeholder ############################################################
 
     # Build end to end tests docker image
@@ -836,15 +848,45 @@ steps:
   - name: codedeploy ui pre-prod
     image: golang:alpine
     commands:
-      - apk add --update bash python python-dev py-pip build-base
+      - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - aws deploy create-deployment --application-name ntr-codedeploy-service-preprod --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name ntr-codedeploy-service-preprod --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/preprod/appspec.yaml
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/$DEPLOY_ENVIRONMENT/appspec.yaml
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: ntr-codedeploy-service-preprod
+      DEPLOYMENT_GROUP: ntr-codedeploy-service-preprod
+      PROJECT: ntr
+      DEPLOY_ENVIRONMENT: preprod
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: https://preprod-upload.taxiphvdata.co.uk/build_id
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - TASKDEF=`aws ecs describe-services --cluster ntr-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
     when:
       event:
         - push
@@ -1017,15 +1059,45 @@ steps:
   - name: codedeploy ui prod
     image: golang:alpine
     commands:
-      - apk add --update bash python python-dev py-pip build-base
+      - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - aws deploy create-deployment --application-name ntr-codedeploy-service-prod --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name ntr-codedeploy-service-prod --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/prod/appspec.yaml
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=ntr/$DEPLOY_ENVIRONMENT/appspec.yaml
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: ntr-codedeploy-service-prod
+      DEPLOYMENT_GROUP: ntr-codedeploy-service-prod
+      PROJECT: ntr
+      DEPLOY_ENVIRONMENT: prod
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: https://upload.taxiphvdata.co.uk/build_id
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - TASKDEF=`aws ecs describe-services --cluster ntr-cluster-sit --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
     when:
       event:
         - push

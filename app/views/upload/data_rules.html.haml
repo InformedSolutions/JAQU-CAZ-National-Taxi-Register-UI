@@ -7,7 +7,7 @@
       %p
         The file must be named according to the following format:
       %p
-        CAZ-yyyy-mm-dd-XXXX-#.csv
+        CAZ-yyyy-mm-dd-XXXX.csv
       %p
         where:
         %ul.govuk-list-govuk-list--bullet
@@ -15,10 +15,8 @@
             %p yyyy-mm-dd represents the date the file was generated
           %li
             %p XXXX is the agreed identifier for your Licensing Authority
-          %li
-            %p # is the  total number of records included in the file
       %p
-        For example, CAZ-2019-06-18-AuthorityID-4242.csv
+        For example, CAZ-2019-06-18-AuthorityID.csv
       %h2.govuk-heading-m Data rules
       %ul.govuk-list-govuk-list--bullet
         %li
@@ -34,15 +32,22 @@
         %li
           %p A field containing a comma or double quote must be quoted in double quotes ("...")
         %li
-          %p Double quotes that form part of a field must be escaped with a double quote (i.e. a single " in a field becomes "")
+          %p
+            Double quotes that form part of a field must be escaped with a double quote
+            (i.e. a single " in a field becomes "") with the exception of values provided in the
+            Taxi/PHV column
         %li
           %p No spaces should be used between field values and separating commas
         %li
-          %p No padding should be applied to fields, unless leading or trailing space is a legitimate part of the field's value
+          %p
+            No padding should be applied to fields, unless leading or trailing space is a
+            legitimate part of the field's value
         %li
           %p Each record is separated by a newline (ASCII carriage return)
         %li
           %p Optional fields with no values with be separated by a comma
+        %li
+          %p Start and End date format must be either ISO (YYYY-MM-DD) or DD/MM/YYYY
       %h2.govuk-heading-s
         Accepted characters
       %p Only the following characters may be included in the CSV file:

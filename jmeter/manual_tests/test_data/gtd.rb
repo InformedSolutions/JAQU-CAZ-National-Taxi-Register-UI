@@ -16,13 +16,13 @@ $vccs_web_password = ENV['VCCS_WEB_PASSWORD']
 $VERBOSE = nil
 
 @@JOB_NAME= ''
-@@NTR_CSV_FILE_NAME = 'CAZ-2020-01-08-100-5.csv'
+@@NTR_CSV_FILE_NAME = 'CAZ-2020-01-08-100.csv'
 @@NTR_API_FILE_NAME = 'api_data.txt'
 @@RETRO_FILE_NAME = 'CAZ-2020-01-08-1.csv' 
 @@MOD_GREEN_FILE_NAME = 'CAZ-2020-01-30-7.csv'
 @@MOD_WHITE_FILE_NAME = 'CAZ-2020-01-30-6.csv'
-@@NTR_API_UPLOAD_FILE_LOCATION = 'test-files/ntr/main/CAZ-2000-01-08-100-1.csv'
-@@NTR_API_UPLOAD_FILE_NAME = 'CAZ-2000-01-08-100-1.csv'
+@@NTR_API_UPLOAD_FILE_LOCATION = 'test-files/ntr/main/CAZ-2000-01-08-100.csv'
+@@NTR_API_UPLOAD_FILE_NAME = 'CAZ-2000-01-08-100.csv'
 @@BUCKET='jaqu-ntr-csv-bucket-dev'
 @@JOB_URL=nil
 @@COGNITO_ID=nil
@@ -87,7 +87,7 @@ end
 def generate_ntr_csv(invalidItems, validItems)
     puts 'Generating ntr csv with ' + invalidItems.to_s + ' invalid items and ' + validItems.to_s + ' valid items.'
     if defined?(@@FILE_NAME) == nil
-        @@FILE_NAME = 'CAZ-2020-01-08-100-5.csv'
+        @@FILE_NAME = 'CAZ-2020-01-08-100.csv'
     end
     puts 'creating file ' + @@FILE_NAME
     CSV.open(@@FILE_NAME, "wb") do |csv|

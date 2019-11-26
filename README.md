@@ -13,7 +13,7 @@ rails rerdoc        # Rebuild RDoc HTML files
 To run the documentation open `doc/app/index.html` in browser.
 
 ### Dependencies
-* Ruby 2.6.3
+* Ruby 2.6.5
 * Ruby on Rails 6.0
 * [GOV.UK Frontend](https://github.com/alphagov/govuk-frontend)
 * Other packages listed in Gemfile and package.json files.
@@ -34,9 +34,9 @@ A Ruby static code analyzer and formatter.
 rubocop
 ```
 
-Configures various linters to comply with GOV.UK's style guides.
+Configurable tool for writing clean, consistent SCSS.
 ```
-govuk-lint-sass app/javascript
+scss-lint app/javascript
 ```
 
 ### SonarQube inspection

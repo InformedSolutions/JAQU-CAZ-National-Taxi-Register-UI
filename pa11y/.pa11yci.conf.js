@@ -15,8 +15,8 @@ var config = {
     urls: [
         '${BASE_URL}',
         '${BASE_URL}/cookies',
-        '${BASE_URL}/static_pages/accessibility',
-        '${BASE_URL}/static_pages/privacy_policy',
+        '${BASE_URL}/accessibility',
+        '${BASE_URL}/privacy_policy',
         {
             "url": '${BASE_URL}',
             "actions": [

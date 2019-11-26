@@ -4,7 +4,7 @@ require "csv"
 $VERBOSE = nil
 
 
-@@FILE_NAME= 'CAZ-2020-01-08-100-1.csv'
+@@FILE_NAME= 'CAZ-2020-01-08-100.csv'
 @@NUM_OF_ROWS=10000
 
 def create_csv(num_of_rows=@@NUM_OF_ROWS)
