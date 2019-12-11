@@ -54,3 +54,4 @@ en:
       invalid_name: 'The selected file must be named correctly'
   upload:
     delivery_error: 'There was an error sending your confirmation email. Your data has still been saved.'
+  ip_error: "Your IP address doesn't match. Please log in again."
