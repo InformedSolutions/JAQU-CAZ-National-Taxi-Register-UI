@@ -61,6 +61,6 @@ class ApplicationController < ActionController::Base
 
     Rails.logger.warn "User with ip #{request.remote_ip} tried to access the page as #{current_user.email}"
     sign_out current_user
-    redirect_to new_user_session_path, alert: I18n.t('ip_error')
+    redirect_to new_user_session_path
   end
 end

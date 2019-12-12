@@ -64,4 +64,4 @@ Feature: Upload
     Given I am on the Upload page
     Then I change my IP
       And I upload a valid csv file
-    Then I should see "Your IP address doesn't match"
+    Then I should be on the login page
