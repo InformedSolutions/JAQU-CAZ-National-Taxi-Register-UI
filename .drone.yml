@@ -677,7 +677,7 @@ steps:
       BASEURL_NTR: 'https://sit-upload.taxiphvdata.co.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
-      BROWSER_SET: 'mid'
+      BROWSER_SET: 'min'
       SCREENSHOT_TYPE: 'base'
       BUILD: NTR-UI-${DRONE_BUILD_NUMBER}
       SPECTRE: false
