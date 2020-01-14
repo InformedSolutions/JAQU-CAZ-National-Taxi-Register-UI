@@ -173,7 +173,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn audit
+       - yarn audit --level moderate
        - brakeman
     volumes:
       - name: docker_sock
@@ -466,7 +466,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn audit
+       - yarn audit --level moderate
        - brakeman
     volumes:
       - name: docker_sock
