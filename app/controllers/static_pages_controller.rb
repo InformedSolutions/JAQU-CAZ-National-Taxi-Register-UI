@@ -5,17 +5,17 @@
 #
 class StaticPagesController < ApplicationController
   ##
-  # Renders the static accessibility page
+  # Renders the accessibility statement page
   #
   # ==== Path
-  #    GET /accessibility
+  #    GET /accessibility_statement
   #
-  def accessibility
+  def accessibility_statement
     # renders static page
   end
 
   ##
-  # Renders the static cookies page
+  # Renders the cookies page
   #
   # ==== Path
   #    GET /cookies
@@ -25,7 +25,7 @@ class StaticPagesController < ApplicationController
   end
 
   ##
-  # Renders the static privacy notice page
+  # Renders the privacy notice page
   #
   # ==== Path
   #    GET /privacy_notice

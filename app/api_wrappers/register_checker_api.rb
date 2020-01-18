@@ -8,7 +8,8 @@
 #
 # All methods are on the class level, so there is no initializer method.
 class RegisterCheckerApi < BaseApi
-  base_uri ENV['TAXI_PHV_REGISTER_API_URL'] + '/v1/scheme-management/register-csv-from-s3'
+  API_URL = ENV.fetch('TAXI_PHV_REGISTER_API_URL', 'localhost:3001').freeze
+  base_uri API_URL + '/v1/scheme-management/register-csv-from-s3'
 
   class << self
     ##

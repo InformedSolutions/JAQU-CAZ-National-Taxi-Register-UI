@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.5'
 
-gem 'rails', '~> 6.0.2'
+gem 'rails', '~> 6.0.2.1'
 
 gem 'activerecord-nulldb-adapter'
 gem 'aws-sdk-cognitoidentityprovider'
@@ -19,7 +19,7 @@ gem 'haml'
 gem 'httparty'
 gem 'logstash-logger'
 gem 'puma'
-gem 'rubocop-govuk'
+gem 'rubocop-rails'
 gem 'sass-rails'
 gem 'sdoc', require: false
 gem 'webpacker'

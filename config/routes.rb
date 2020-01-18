@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     end
   end
 
-  get :accessibility, to: 'static_pages#accessibility'
+  get :accessibility_statement, to: 'static_pages#accessibility_statement'
   get :cookies, to: 'static_pages#cookies'
   get :privacy_notice, to: 'static_pages#privacy_notice'
 
