@@ -119,6 +119,8 @@
         Support links
       %ul.govuk-list-govuk-list--bullet
         %li
-          %p Cookies
+          %p
+            = link_to 'Cookies', cookies_path, class: 'govuk-link', id: 'cookies-link'
         %li
-          %p Privacy
+          %p
+            = link_to 'Privacy', privacy_notice_path, class: 'govuk-link', id: 'privacy-link'
