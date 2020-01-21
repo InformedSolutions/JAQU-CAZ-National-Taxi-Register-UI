@@ -3,8 +3,8 @@
 require 'rails_helper'
 
 describe StaticPagesController, type: :request do
-  describe 'GET #accessibility' do
-    subject(:http_request) { get accessibility_path }
+  describe 'GET #accessibility_statement' do
+    subject(:http_request) { get accessibility_statement_path }
 
     it_behaves_like 'a static page'
   end

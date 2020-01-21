@@ -1,3 +1,4 @@
+- content_for(:title, 'Privacy Notice')
 = link_to 'Return to the homepage', root_path, class: 'govuk-back-link'
 
 %main.govuk-main-wrapper#main-content{role: 'main'}
@@ -6,9 +7,9 @@
       %h1.govuk-heading-xl
         Privacy Notice
       %p
-        = link_to 'Details of our Personal Information Charter',
-                  'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
-                  target: '_blank'
+        = external_link_to('Details of our Personal Information Charter',
+                           'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
+                           id: 'personal-information-charter-url')
 
       %h2.govuk-heading-m 1. Who is collecting the data?
       %p The data will be collected by Defra.
@@ -64,14 +65,13 @@
               %p An indication as to whether it is a wheelchair accessible vehicle.
       %p
         The Licensing Authorities will provide Defra with this information at least as frequently as
-        once a week. The information will be held securely by Defra on Amazon Web Services for up to
-        seven years.
+        once a week.
       %p
         The processing of the information (under Article 6.1 (c) of the GDPR) is for the purpose of
         ensuring that Clean Air Zone (CAZ) charging is applied correctly in adherence with the
-        = link_to 'Clean Air Zone Framework.',
-                  'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/612592/clean-air-zone-framework.pdf',
-                  target: '_blank'
+        = external_link_to('Clean Air Zone Framework.',
+                           'https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/612592/clean-air-zone-framework.pdf',
+                           id: 'caz-framework-url')
         Licensing authorities hold information on taxis and PHVs only within
         their own area so are not able to clearly identify and charge a taxi/PHV entering or moving
         around their charging CAZ which has been licensed by another authority (also known as ‘out
@@ -81,46 +81,44 @@
       %h2.govuk-heading-m 3. Any recipient or categories of recipients of the personal data
       %p
         The Air Quality (Taxi and Private Hire Vehicles Database) (England and Wales) Regulations
-        2019 (2019 SI No. 885) allow the sharing of data with licensing authorities for the purposes
-        of enforcing measures which have been implemented in an air quality plan or for the purposes
-        of improving air quality.
-
-      %h2.govuk-heading-m 4. The right to withdraw consent at any time, where relevant
+        2019 (2019 SI No. 885) allow the sharing of data received with licensing authorities for the
+        purposes of enforcing measures which have been implemented in an air quality plan or for the
+        purposes of improving air quality.
       %p
-        See the
-        = link_to 'Personal Information Charter',
-                  'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
-                  target: '_blank'
+        Defra may, under contracts or similar agreements, use third party organisations to process
+        your personal data in connection with the purpose described at ‘2’ above.
+        These organisations will not be able to use your data for any other purpose and will be
+        required to meet the requirements of data protection legislation and government’s security
+        standards.
 
-      %h2.govuk-heading-m 5. Retention period or criteria used to determine the retention period
+      %h2.govuk-heading-m 4. Retention period or criteria used to determine the retention period
       %p
-        Your personal data will be kept by us for as long as is necessary up to seven years, in line
-        with the Memorandum of Understanding between Defra and licensing authorities.
+        Your personal data will be kept by Defra for as long as is necessary up to seven years,
+        in line with the Memorandum of Understanding between Defra and licensing authorities.
 
-      %h2.govuk-heading-m
-        6. The existence of automated decision making, including profiling and
-        information about how decisions are made, the significance and the consequences.
-      %p
-        The information you provide is connected with individual decision making (making a decision
-        solely by automated means without any human involvement) through the Clean Air Zone vehicle
-        checker which determines whether a vehicle entering a charging zone is chargeable.
-
-      %h2.govuk-heading-m 7. Details of transfers to third country and safeguards
+      %h2.govuk-heading-m 5. Details of transfers to third country and safeguards
       %p
         The data you provide will not be transferred outside the United Kingdom.
 
-      %h2.govuk-heading-m 8. The existence of each of data subject’s rights.
+      %h2.govuk-heading-m 6. The existence of each of data subject’s rights.
       %p
-        You rights under the
-        = link_to 'General Data Protection Regulation, the Data Protection Act2018 (DPA 2018)',
-                  'https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/individual-rights/',
-                  target: '_blank'
+        Your rights under the
+        = external_link_to('General Data Protection Regulation and the Data Protection Act2018 (DPA 2018)',
+                           'https://ico.org.uk/for-organisations/guide-to-the-general-data-protection-regulation-gdpr/individual-rights/',
+                           id: 'individual-rights-url')
 
       %h2.govuk-heading-m
-        9. The right to lodge a complaint with a supervisory authority.
-        [How do I complain?]
+        7. The right to lodge a complaint with a supervisory authority.
       %p
         The Personal Information Charter provides details of
-        = link_to 'how to complain',
-                  'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
-                  target: '_blank'
+        = external_link_to('how to complain',
+                           'https://www.gov.uk/government/organisations/department-for-environment-food-rural-affairs/about/personal-information-charter',
+                           id: 'personal-information-charter-url')
+
+      %h2.govuk-heading-m
+        Support links
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p Cookies
+        %li
+          %p Privacy
