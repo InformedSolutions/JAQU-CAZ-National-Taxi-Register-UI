@@ -28,7 +28,7 @@ Rails.application.routes.draw do
 
   get :accessibility, to: 'static_pages#accessibility'
   get :cookies, to: 'static_pages#cookies'
-  get :privacy_policy, to: 'static_pages#privacy_policy'
+  get :privacy_notice, to: 'static_pages#privacy_notice'
 
   get :health, to: 'application#health'
   get :build_id, to: 'application#build_id'

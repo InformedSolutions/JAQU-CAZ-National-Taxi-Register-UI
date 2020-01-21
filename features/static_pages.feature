@@ -15,7 +15,7 @@ Feature: Static Pages
     Then I should see "Cookies"
       And I should see "A cookie is a small piece of data"
 
-  Scenario: User sees privacy policy page
+  Scenario: User sees privacy notice page
     Given I am on the Sign in page
     When I press Privacy link
     Then I should see "Privacy Notice"

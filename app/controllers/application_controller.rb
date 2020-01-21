@@ -47,4 +47,20 @@ class ApplicationController < ActionController::Base
   def after_sign_out_path_for(_resource_or_scope)
     user_session_path
   end
+
+  # Adds checking IP to default Devise :authenticate_user!
+  def authenticate_user!
+    super
+    check_ip!
+  end
+
+  # Checks if request's remote IP matches the one set for the user during login
+  # If not, it logs out user and redirects to the login page
+  def check_ip!
+    return if current_user.login_ip == request.remote_ip
+
+    Rails.logger.warn "User with ip #{request.remote_ip} tried to access the page as #{current_user.email}"
+    sign_out current_user
+    redirect_to new_user_session_path
+  end
 end

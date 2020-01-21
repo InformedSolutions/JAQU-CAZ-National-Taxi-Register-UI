@@ -11,8 +11,9 @@ describe 'UploadController - GET #index', type: :request do
       'fixtures', 'files', 'csv', 'CAZ-2020-01-08-AuthorityID.csv'
     )
   end
+  let(:user) { new_user }
 
-  before { sign_in new_user }
+  before { sign_in user }
 
   it 'returns a success response' do
     http_request
@@ -36,6 +37,20 @@ describe 'UploadController - GET #index', type: :request do
     it 'clears job from session' do
       http_request
       expect(session[:job]).to be_nil
+    end
+  end
+
+  context 'when user login IP does not match request IP' do
+    let(:user) { new_user(login_ip: '0.0.0.0') }
+
+    it 'returns a redirect to login page' do
+      http_request
+      expect(response).to redirect_to(new_user_session_path)
+    end
+
+    it 'logs out the user' do
+      http_request
+      expect(controller.current_user).to be_nil
     end
   end
 end

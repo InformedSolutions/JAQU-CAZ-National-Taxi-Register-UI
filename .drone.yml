@@ -173,7 +173,8 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn audit
+       # Exclude node-sass till https://github.com/sass/node-sass/issues/2816 is fixed
+       - yarn run improved-yarn-audit --exclude 961
        - brakeman
     volumes:
       - name: docker_sock
@@ -466,7 +467,8 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn audit
+       # Exclude node-sass till https://github.com/sass/node-sass/issues/2816 is fixed
+       - yarn run improved-yarn-audit --exclude 961
        - brakeman
     volumes:
       - name: docker_sock
@@ -505,6 +507,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
+      - git checkout sit
       - cd terraform/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -563,6 +566,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
+      - git checkout sit
       - cd terraform/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -677,7 +681,7 @@ steps:
       BASEURL_NTR: 'https://sit-upload.taxiphvdata.co.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
-      BROWSER_SET: 'mid'
+      BROWSER_SET: 'min'
       SCREENSHOT_TYPE: 'base'
       BUILD: NTR-UI-${DRONE_BUILD_NUMBER}
       SPECTRE: false
@@ -735,7 +739,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout master
+      - git checkout preprod
       - cd terraform/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -802,7 +806,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout master
+      - git checkout preprod
       - cd terraform/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf

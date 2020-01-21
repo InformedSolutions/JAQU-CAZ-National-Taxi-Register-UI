@@ -25,12 +25,12 @@ class StaticPagesController < ApplicationController
   end
 
   ##
-  # Renders the static privacy policy page
+  # Renders the static privacy notice page
   #
   # ==== Path
-  #    GET /privacy_policy
+  #    GET /privacy_notice
   #
-  def privacy_policy
+  def privacy_notice
     # renders static page
   end
 end

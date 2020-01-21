@@ -3,10 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe Cognito::AuthUser do
-  subject(:service_call) { described_class.call(username: username, password: password) }
+  subject(:service_call) do
+    described_class.call(username: username, password: password, login_ip: remote_ip)
+  end
 
   let(:username) { 'wojtek' }
   let(:password) { 'password' }
+  let(:remote_ip) { '1.2.3.4' }
 
   context 'with successful call' do
     before do
@@ -28,11 +31,13 @@ RSpec.describe Cognito::AuthUser do
       let(:token) { SecureRandom.uuid }
 
       before do
-        allow(Cognito::GetUser).to receive(:call).with(access_token: token).and_return(User.new)
+        allow(Cognito::GetUser).to receive(:call).and_return(User.new)
       end
 
       it 'calls Cognito::GetUser' do
-        expect(Cognito::GetUser).to receive(:call).with(access_token: token, username: username)
+        expect(Cognito::GetUser)
+          .to receive(:call)
+          .with(access_token: token, username: username, user: an_instance_of(User))
         service_call
       end
     end
@@ -69,6 +74,10 @@ RSpec.describe Cognito::AuthUser do
 
       it 'sets hashed password' do
         expect(service_call.hashed_password).to eq(Digest::MD5.hexdigest(password))
+      end
+
+      it 'sets login_ip' do
+        expect(service_call.login_ip).to eq(remote_ip)
       end
     end
   end
