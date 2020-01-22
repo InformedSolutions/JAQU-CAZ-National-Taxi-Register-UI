@@ -29,10 +29,10 @@ describe 'User singing in', type: :request do
     context 'when incorrect credentials given' do
       before do
         allow(Cognito::AuthUser).to receive(:call).and_return(false)
+        http_request
       end
 
       it 'shows `The username or password you entered is incorrect` message' do
-        http_request
         expect(response.body).to include(I18n.t('devise.failure.invalid'))
       end
     end

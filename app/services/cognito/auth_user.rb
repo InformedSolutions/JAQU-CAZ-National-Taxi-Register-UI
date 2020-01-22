@@ -27,7 +27,7 @@ module Cognito
     # * +login_ip+ = IP address, IP of the login request
     #
     def initialize(username:, password:, login_ip:)
-      @username = username
+      @username = username&.downcase
       @password = password
       @user = User.new(login_ip: login_ip)
     end
