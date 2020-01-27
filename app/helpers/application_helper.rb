@@ -27,7 +27,7 @@ module ApplicationHelper
     html_options.symbolize_keys!.reverse_merge!(
       target: '_blank',
       class: 'govuk-link',
-      rel: 'noopener',
+      rel: 'noopener noreferrer',
       'area-label': "#{html_options[:'area-label'] || text} - #{I18n.t('content.external_link')}"
     )
     link_to text, url, html_options
