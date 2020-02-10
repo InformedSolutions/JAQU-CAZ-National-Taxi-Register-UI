@@ -47,7 +47,7 @@ module Cognito
     def cognito_call
       log_action "Forgot password call by a user: #{username}"
       COGNITO_CLIENT.forgot_password(
-        client_id: ENV['AWS_COGNITO_CLIENT_ID'],
+        client_id: ENV.fetch('AWS_COGNITO_CLIENT_ID', 'AWS_COGNITO_CLIENT_ID'),
         username: username
       )
       log_successful_call

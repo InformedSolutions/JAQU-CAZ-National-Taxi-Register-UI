@@ -76,7 +76,7 @@ module Cognito
       log_action "Respond to auth call by a user: #{user.username}"
       result = COGNITO_CLIENT.respond_to_auth_challenge(
         challenge_name: 'NEW_PASSWORD_REQUIRED',
-        client_id: ENV['AWS_COGNITO_CLIENT_ID'],
+        client_id: ENV.fetch('AWS_COGNITO_CLIENT_ID', 'AWS_COGNITO_CLIENT_ID'),
         session: user.aws_session,
         challenge_responses: { 'NEW_PASSWORD' => password, 'USERNAME' => user.username }
       )

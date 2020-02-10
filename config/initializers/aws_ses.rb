@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 creds = Aws::Credentials.new(
-  ENV.fetch('SES_ACCESS_KEY_ID', 'example_key'),
-  ENV.fetch('SES_SECRET_ACCESS_KEY', 'example_secret')
+  ENV.fetch('SES_ACCESS_KEY_ID', 'SES_ACCESS_KEY_ID'),
+  ENV.fetch('SES_SECRET_ACCESS_KEY', 'SES_SECRET_ACCESS_KEY')
 )
 
 # default to Ireland, as SES is not supported in London
