@@ -28,7 +28,7 @@ module Cognito
     # * +password_confirmation+ - string, password confirmation submitted by the user
     # * +code+ - 6 digit string of numbers, code sent to user
     def initialize(username:, password:, code:, password_confirmation:)
-      @username = username
+      @username = username&.downcase
       @password = password
       @password_confirmation = password_confirmation
       @code = code
@@ -84,7 +84,7 @@ module Cognito
     def confirm_forgot_password
       log_action "Confirming forgot password by a user: #{username}"
       COGNITO_CLIENT.confirm_forgot_password(
-        client_id: ENV['AWS_COGNITO_CLIENT_ID'],
+        client_id: ENV.fetch('AWS_COGNITO_CLIENT_ID', 'AWS_COGNITO_CLIENT_ID'),
         username: username,
         password: password,
         confirmation_code: code

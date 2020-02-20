@@ -34,6 +34,6 @@
                               class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
 
         .govuk-form-group
-          = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button'
+          = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button', id: 'sign_in_button'
           %p
             = link_to 'Forgot your password?', reset_passwords_path, class: 'govuk-link', id: 'forgot-password'
