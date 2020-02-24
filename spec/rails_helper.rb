@@ -16,7 +16,7 @@ Aws.config.update(stub_responses: true)
 RSpec.configure do |config|
   config.include RequestSpecHelper, type: :request
   config.include InjectSession, type: :request
-  config.include MockUser
+  config.include UserFactory
 
   config.before(:each) do
     @remote_ip = '1.2.3.4'

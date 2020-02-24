@@ -7,7 +7,7 @@ describe 'PasswordsController - GET #success', type: :request do
 
   context 'when user is logged in' do
     before do
-      sign_in new_user
+      sign_in create_user
       http_request
     end
 

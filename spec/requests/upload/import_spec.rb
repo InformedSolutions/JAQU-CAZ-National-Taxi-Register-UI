@@ -13,7 +13,7 @@ describe 'UploadController - POST #import' do
   end
   let(:csv_file) { fixture_file_upload(file_path) }
 
-  before(:each) { sign_in new_user }
+  before(:each) { sign_in create_user }
 
   context 'with valid params' do
     let(:job_name) { 'name' }

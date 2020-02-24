@@ -62,7 +62,7 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.0)
     aws-eventstream (1.0.3)
-    aws-partitions (1.274.0)
+    aws-partitions (1.275.0)
     aws-sdk-cognitoidentityprovider (1.32.0)
       aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
@@ -166,7 +166,7 @@ GEM
       haml (>= 4.0, < 6)
       nokogiri (>= 1.6.0)
       ruby_parser (~> 3.5)
-    httparty (0.17.3)
+    httparty (0.18.0)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
     i18n (1.8.2)
@@ -258,7 +258,7 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     rdoc (6.2.1)
-    regexp_parser (1.6.0)
+    regexp_parser (1.7.0)
     responders (3.0.0)
       actionpack (>= 5.0)
       railties (>= 5.0)
@@ -301,16 +301,6 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    sass-rails (6.0.0)
-      sassc-rails (~> 2.1, >= 2.1.1)
-    sassc (2.2.1)
-      ffi (~> 1.9)
-    sassc-rails (2.1.2)
-      railties (>= 4.0.0)
-      sassc (>= 2.0)
-      sprockets (> 3.0)
-      sprockets-rails
-      tilt
     scss_lint (0.59.0)
       sass (~> 3.5, >= 3.5.5)
     scss_lint-govuk (0.2.0)
@@ -400,7 +390,6 @@ DEPENDENCIES
   rails-controller-testing
   rspec-rails (~> 4.0.0.beta)
   rubocop-rails
-  sass-rails
   scss_lint-govuk
   sdoc
   selenium-webdriver

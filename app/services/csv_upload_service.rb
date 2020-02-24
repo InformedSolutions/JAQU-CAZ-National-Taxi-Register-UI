@@ -94,7 +94,12 @@ class CsvUploadService < BaseService
   # Returns a boolean.
   def aws_call
     s3_object = AMAZON_S3_CLIENT.bucket(bucket_name).object(file.original_filename)
-    s3_object.upload_file(file, metadata: { 'uploader-id': user.sub, content_type: 'text/csv' })
+    s3_object.upload_file(file, metadata: metadata)
+  end
+
+  # Returns hash with metadata
+  def metadata
+    { 'uploader-id': user.sub, 'email': user.username, content_type: 'text/csv' }
   end
 
   # AWS S3 Bucket Name.
