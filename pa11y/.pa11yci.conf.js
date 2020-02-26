@@ -12,14 +12,20 @@ var config = {
         }
     },
     urls: [
-        '${BASE_URL}',
+        '${BASE_URL}?home_page',
+        {
+            "url": "${BASE_URL}?cookie_control",
+            "actions": [
+                "wait for element #ccc-close to be visible",
+                "click element #ccc-close"
+            ]
+        },
         '${BASE_URL}/cookies',
         '${BASE_URL}/accessibility_statement',
         '${BASE_URL}/privacy_notice',
         {
             "url": '${BASE_URL}?upload_page',
             "actions": [
-                "click element #ccc-close",
                 "set field #user_username to tester@informed.com",
                 "set field #user_password to Tester123..",
                 "click element #sign_in_button",
@@ -29,7 +35,6 @@ var config = {
         {
             "url": '${BASE_URL}?data_rules',
             "actions": [
-                "click element #ccc-close",
                 "set field #user_username to tester@informed.com",
                 "set field #user_password to Tester123..",
                 "click element #sign_in_button",
