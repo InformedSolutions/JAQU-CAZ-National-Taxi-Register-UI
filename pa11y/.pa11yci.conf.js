@@ -20,26 +20,28 @@ var config = {
                 "click element #ccc-close"
             ]
         },
+        {
+            "url": "${BASE_URL}?sign_in",
+            "actions": [
+                "set field #user_username to tester@informed.com",
+                "set field #user_password to Tester123..",
+                "click element #sign_in_button",
+            ]
+        },
         '${BASE_URL}/cookies',
         '${BASE_URL}/accessibility_statement',
         '${BASE_URL}/privacy_notice',
         {
             "url": '${BASE_URL}?upload_page',
             "actions": [
-                "set field #user_username to tester@informed.com",
-                "set field #user_password to Tester123..",
-                "click element #sign_in_button",
                 "wait for element #file-upload-1 to be visible"
             ]
         },
         {
             "url": '${BASE_URL}?data_rules',
             "actions": [
-                "set field #user_username to tester@informed.com",
-                "set field #user_password to Tester123..",
-                "click element #sign_in_button",
-                "wait for element #file-upload-1 to be visible",
-                "click element #data-rules"
+                "click element #data-rules",
+                "wait for path to be /upload/data_rules"
             ]
         },
         {
