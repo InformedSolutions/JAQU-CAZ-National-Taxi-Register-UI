@@ -34,6 +34,8 @@ group :development, :test do
 end
 
 group :development do
+  gem 'better_errors'
+  gem 'binding_of_caller'
   gem 'listen'
   gem 'spring'
   gem 'spring-watcher-listen'
@@ -43,6 +45,7 @@ end
 group :test do
   gem 'capybara'
   gem 'cucumber-rails', require: false
+  gem 'rack_session_access'
   gem 'rails-controller-testing'
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'

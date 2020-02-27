@@ -24,4 +24,12 @@ en:
   upload:
     delivery_error: 'There was an error sending your confirmation email. Your data has still been saved.'
     content:
+  labels:
+    vrn: Enter a Vehicle Registration Number (VRN)
+    vrn_example: For example, CU57ABC
   external_link: Opens in new window - External website
+  vrn_form:
+    vrn_missing: Enter the registration number of the vehicle
+    vrn_too_long: The registration number of the vehicle is too long
+    vrn_too_short: The registration number of the vehicle is too short
+    invalid_format: Enter the number plate of the vehicle in a valid format

@@ -1,0 +1,36 @@
+- title_and_header = 'Enter the registration details of the vehicle you want to search'
+- content_for(:title, title_and_header)
+
+= link_to 'Back', @back_button_url, class: 'govuk-back-link'
+
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+
+      - if @errors.present?
+        .govuk-error-summary{'aria-labelledby': 'error-summary-title',
+                             'data-module': 'govuk-error-summary',
+                             role: 'alert',
+                             tabindex: '-1'}
+          %h2#error-summary-title.govuk-error-summary__title
+            There is a problem
+          .govuk-error-summary__body
+            %ul.govuk-list.govuk-error-summary__list
+              %li
+                = link_to(@errors.first, '#vrn-error')
+
+      %h1.govuk-heading-l
+        = title_and_header
+
+      = form_tag search_vehicles_path, method: :post do
+        %fieldset.govuk-fieldset
+          %legend.govuk-fieldset__legend.govuk-fieldset__legend--m
+          - if @errors
+            = render 'vehicles/vrn_input/errored', message: @errors.first
+          - else
+            = render 'vehicles/vrn_input/normal'
+
+          = submit_tag 'Search',
+                        class: 'govuk-button',
+                        'data-module': 'govuk-button',
+                        id: 'search_button'

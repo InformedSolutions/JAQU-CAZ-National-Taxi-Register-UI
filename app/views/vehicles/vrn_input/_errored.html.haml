@@ -1,0 +1,14 @@
+.govuk-form-group{class: 'govuk-form-group--error'}
+  %label#vrn-label.govuk-label{for: 'vrn'}
+    = I18n.t('labels.vrn')
+    %p= I18n.t('labels.vrn_example')
+  %span#vrn-error.govuk-error-message
+    %span.govuk-visually-hidden Error:
+    = message
+  %input#vrn.govuk-input.vrn-input{'aria-labelledby': 'vrn-label',
+                                   'aria-describedby': 'vrn-error',
+                                    name: 'vrn',
+                                    type: 'text',
+                                    class: 'govuk-input--error',
+                                    maxlength: 15,
+                                    value: params[:vrn]}

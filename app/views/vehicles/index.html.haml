@@ -1,0 +1,30 @@
+- title_and_header = "You searched for #{@vrn_details.registration_number}"
+- content_for(:title, title_and_header)
+
+= link_to 'Back', @back_button_url, class: 'govuk-back-link'
+
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      %h1.govuk-heading-l
+        = title_and_header
+
+      %p
+        The following details were found relating to your search
+
+      %table.govuk-table
+        %tbody.govuk-table__body
+          %tr.govuk-table__row
+            %td.govuk-table__cell{scope: 'row'}
+            %td.govuk-table__cell
+          %tr.govuk-table__row
+            %td.govuk-table__cell{scope: 'row'} Taxi or PHV
+            %th.govuk-table__cell{id: 'taxi_or_phv'}= @vrn_details.taxi_private_hire_vehicle
+          %tr.govuk-table__row
+            %td.govuk-table__cell{scope: 'row'} Wheelchair accessible
+            %th.govuk-table__cell{id: 'wheelchair_accessible'}= @vrn_details.wheelchair_accessible
+          %tr.govuk-table__row
+            %td.govuk-table__cell{scope: 'row'} Licensing Authorities
+            %th.govuk-table__cell{id: 'licensing_authorities'}= @vrn_details.licensing_authorities
+
+      = link_to 'New Search', search_vehicles_path, class: 'govuk-button', id: 'new_search_button'

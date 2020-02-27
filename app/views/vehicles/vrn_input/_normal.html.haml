@@ -1,0 +1,10 @@
+.govuk-form-group
+  %label#vrn-label.govuk-label{for: 'vrn'}
+    = I18n.t('labels.vrn')
+    %p= I18n.t('labels.vrn_example')
+  %input#vrn.govuk-input.vrn-input{'aria-labelledby': 'vrn-label',
+                                   'aria-describedby': 'vrn',
+                                    name: 'vrn',
+                                    type: 'text',
+                                    maxlength: 15,
+                                    value: params[:vrn]}

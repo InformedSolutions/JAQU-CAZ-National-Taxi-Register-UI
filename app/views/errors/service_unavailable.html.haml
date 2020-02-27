@@ -1,12 +1,11 @@
-- title_and_header = 'Sorry, there is a problem with the service'
+- title_and_header = 'Sorry, the service is unavailable'
 - content_for(:title, title_and_header)
 
 = link_to 'Back', @back_button_url, class: 'govuk-back-link'
 
-%main#main-content.govuk-main-wrapper.govuk-main-wrapper--l{role: 'main'}
+%main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
     .govuk-grid-column-two-thirds
       %h1.govuk-heading-xl
         = title_and_header
-      %p.govuk-body
-        Try again later.
+      %p Try again later.
