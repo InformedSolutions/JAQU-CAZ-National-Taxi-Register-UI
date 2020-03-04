@@ -84,7 +84,7 @@ steps:
       LOCATION: browserstack
     commands:
       - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @NTR --retry 3
+      - cucumber -t @NTR --guess --retry 3
 
   ################################################# End Nightly Steps ############################################################
 
@@ -956,7 +956,7 @@ steps:
       LOCATION: browserstack
     commands:
       - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @NTR --retry 3
+      - cucumber -t @NTR --guess --retry 3
     when:
       event:
         - push
