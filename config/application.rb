@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'boot'
-require_relative 'log_format'
+
 require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
@@ -34,15 +34,7 @@ module CsvUploader
 
     # https://github.com/aws/aws-sdk-rails
     config.action_mailer.delivery_method = :aws_sdk
-
     # https://stackoverflow.com/questions/49086693/how-do-i-remove-mail-html-content-from-rails-logs
     config.action_mailer.logger = nil
-
-    # Use custom logging formatter so that IP addresses are removed.
-    config.logger = LogStashLogger.new(type: :stdout, formatter: Formatter)
-
-    # Use the lowest log level to ensure availability of diagnostic information
-    # when problems arise.
-    config.log_level = :debug
   end
 end
