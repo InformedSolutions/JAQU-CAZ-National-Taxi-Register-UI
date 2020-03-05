@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'config/log_format'
+require './log_format'
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
