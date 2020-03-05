@@ -17,7 +17,6 @@ gem 'bundler-audit'
 gem 'devise'
 gem 'haml'
 gem 'httparty'
-gem 'logstash-logger'
 gem 'puma'
 gem 'rubocop-rails'
 gem 'sdoc', require: false
