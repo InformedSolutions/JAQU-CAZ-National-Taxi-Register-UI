@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require './log_format'
-
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
@@ -106,7 +104,10 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
 
   # Use custom logging formatter so that IP any other PII can be removed.
-  config.log_formatter = FilteredFormatter.new
+  config.log_formatter = CustomLogger.new
+  logger               = ActiveSupport::Logger.new(STDOUT)
+  logger.formatter     = config.log_formatter
+  config.logger        = ActiveSupport::TaggedLogging.new(logger)
 
   # Do not dump schema after migrations.
   # config.active_record.dump_schema_after_migration = false
