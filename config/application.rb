@@ -36,9 +36,5 @@ module CsvUploader
 
     # https://stackoverflow.com/questions/49086693/how-do-i-remove-mail-html-content-from-rails-logs
     config.action_mailer.logger = nil
-
-    # Use the lowest log level to ensure availability of diagnostic information
-    # when problems arise.
-    config.log_level = :debug
   end
 end
