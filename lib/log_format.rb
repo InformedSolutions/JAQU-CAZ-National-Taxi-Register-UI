@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
-require 'logger'
-
-# Modified Formatter class to remove IPs from logging - CAZSM9
-class FilteredFormatter < ::Logger::Formatter
+# Modified Formatter class to remove IPs from logging
+class CustomLogger < ::Logger::Formatter
   # https://www.oreilly.com/library/view/regular-expressions-cookbook/9780596802837/ch07s16.html
   IP_REGEX = /\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b/.freeze
   FILTERED_STRING = '[REDACTED]'
