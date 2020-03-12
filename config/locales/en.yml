@@ -25,11 +25,26 @@ en:
     delivery_error: 'There was an error sending your confirmation email. Your data has still been saved.'
     content:
   labels:
-    vrn: Enter a Vehicle Registration Number (VRN)
+    vrn: Number plate
     vrn_example: For example, CU57ABC
   external_link: Opens in new window - External website
-  vrn_form:
-    vrn_missing: Enter the registration number of the vehicle
-    vrn_too_long: The registration number of the vehicle is too long
-    vrn_too_short: The registration number of the vehicle is too short
+  search_vrn_form:
+    errors:
+      dates:
+        missing:
+          search_type: Choose a search type
+          all: '%{parameter} must include a day, month and year'
+          day: '%{parameter} must include a day'
+          month: '%{parameter} must include a month'
+          year: '%{parameter} must include a year'
+          day_month: '%{parameter} must include a day and month'
+          day_year: '%{parameter} must include a day and year'
+          month_year: '%{parameter} must include a month and year'
+        invalid:
+          start_date_format: Enter a real start date
+          end_date_format: Enter a real end date
+          start_date_in_past: Start date must be in the past
+    vrn_missing: Enter the number plate of the vehicle
+    vrn_too_long: The number plate of the vehicle is too long
+    vrn_too_short: The number plate of the vehicle is too short
     invalid_format: Enter the number plate of the vehicle in a valid format

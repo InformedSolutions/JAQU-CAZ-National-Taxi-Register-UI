@@ -1,14 +1,15 @@
-.govuk-form-group{class: 'govuk-form-group--error'}
-  %label#vrn-label.govuk-label{for: 'vrn'}
-    = I18n.t('labels.vrn')
-    %p= I18n.t('labels.vrn_example')
-  %span#vrn-error.govuk-error-message
-    %span.govuk-visually-hidden Error:
-    = message
-  %input#vrn.govuk-input.vrn-input{'aria-labelledby': 'vrn-label',
-                                   'aria-describedby': 'vrn-error',
-                                    name: 'vrn',
-                                    type: 'text',
-                                    class: 'govuk-input--error',
-                                    maxlength: 15,
-                                    value: params[:vrn]}
+.govuk-form-group{class: ('govuk-form-group--error' if errors[:vrn].present?)}
+  = form.label :vrn, I18n.t('labels.vrn'), class: 'govuk-label govuk-label--m', id: 'vrn_label', for: 'vrn'
+  %p= I18n.t('labels.vrn_example')
+  %span#vrn_error.govuk-error-message
+    - if errors[:vrn].present?
+      %span.govuk-visually-hidden Error:
+      = errors[:vrn].join(', ')
+  = form.text_field :vrn,
+                    class: "govuk-input #{'govuk-input--error' if errors[:vrn].present?} vrn-input",
+                    id: 'vrn',
+                    value: params.dig(:search, :vrn),
+                    'aria-labelledby': 'vrn_label',
+                    'aria-describedby': 'vrn',
+                    type: 'text',
+                    maxlength: 15

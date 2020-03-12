@@ -1,4 +1,4 @@
-- title_and_header = 'Enter the registration details of the vehicle you want to search'
+- title_and_header = 'Taxi register search'
 - content_for(:title, title_and_header)
 
 = link_to 'Back', @back_button_url, class: 'govuk-back-link'
@@ -17,20 +17,17 @@
           .govuk-error-summary__body
             %ul.govuk-list.govuk-error-summary__list
               %li
-                = link_to(@errors.first, '#vrn-error')
+                - remove_duplicated_messages(@errors.slice(:vrn, :historic, :start_date, :end_date)).each_with_index do |error, index|
+                  %li.custom-csv-error
+                    = link_to(error.first, "##{error.second}_error", id: "#{error.second}-#{index}")
 
-      %h1.govuk-heading-l
+      %h1.govuk-heading-xl
         = title_and_header
 
-      = form_tag search_vehicles_path, method: :post do
-        %fieldset.govuk-fieldset
-          %legend.govuk-fieldset__legend.govuk-fieldset__legend--m
-          - if @errors
-            = render 'vehicles/vrn_input/errored', message: @errors.first
-          - else
-            = render 'vehicles/vrn_input/normal'
-
-          = submit_tag 'Search',
-                        class: 'govuk-button',
-                        'data-module': 'govuk-button',
-                        id: 'search_button'
+      = form_for('search', url: search_vehicles_path, method: :post) do |form|
+        = render 'vehicles/vrn_input', form: form
+        = render 'vehicles/date_range', form: form
+        %p= submit_tag 'Continue',
+                    class: 'govuk-button',
+                    'data-module': 'govuk-button',
+                    id: 'search_button'

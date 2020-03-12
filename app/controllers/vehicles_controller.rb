@@ -20,7 +20,7 @@ class VehiclesController < ApplicationController
   #    :GET /vehicles/search
   #
   def search
-    @errors = nil
+    @errors = {}
   end
 
   ##
@@ -33,13 +33,13 @@ class VehiclesController < ApplicationController
   #    :POST /vehicles/submit_search
   #
   def submit_search
-    form = VrnForm.new(params[:vrn])
+    form = SearchVrnForm.new(search_params)
     unless form.valid?
-      @errors = form.errors.messages[:vrn]
+      @errors = form.errors.messages
       return render :search
     end
 
-    session[:vrn] = parsed_vrn(params[:vrn])
+    session[:vrn] = parsed_vrn(search_params['vrn'])
     redirect_to vehicles_path
   end
 
@@ -86,5 +86,19 @@ class VehiclesController < ApplicationController
   # Gets VRN from session. Returns string, eg 'CU1234'
   def vrn
     session[:vrn]
+  end
+
+  # Returns the list of permitted params
+  def search_params
+    params.require(:search).permit(
+      :vrn,
+      :historic,
+      :start_date_day,
+      :start_date_month,
+      :start_date_year,
+      :end_date_day,
+      :end_date_month,
+      :end_date_year
+    )
   end
 end

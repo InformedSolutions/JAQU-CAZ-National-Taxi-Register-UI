@@ -11,6 +11,33 @@ When('I enter a vrn') do
   fill_vrn
 end
 
+When('I enter a vrn and choose Search for historical results') do
+  fill_vrn
+  choose('Search for historical results')
+end
+
+When('I enter a vrn and invalid date format') do
+  fill_vrn
+  choose('Search for historical results')
+  fill_in('search_start_date_day', with: 44)
+  fill_in('search_start_date_month', with: 44)
+  fill_in('search_start_date_year', with: 4444)
+  fill_in('search_end_date_day', with: 13)
+  fill_in('search_end_date_month', with: 13)
+  fill_in('search_end_date_year', with: 2013)
+end
+
+When('I enter a vrn and enter start date in the future') do
+  fill_vrn
+  choose('Search for historical results')
+  fill_in('search_start_date_day', with: Time.zone.tomorrow.day.to_s)
+  fill_in('search_start_date_month', with: Time.zone.tomorrow.month.to_s)
+  fill_in('search_start_date_year', with: Time.zone.tomorrow.year.to_s)
+  fill_in('search_end_date_day', with: Time.zone.now.day.to_s)
+  fill_in('search_end_date_month', with: Time.zone.now.month.to_s)
+  fill_in('search_end_date_year', with: Time.zone.now.year.to_s)
+end
+
 When('I enter an invalid vrn format') do
   fill_vrn('****&&&%%%%')
 end
@@ -32,6 +59,7 @@ private
 
 def fill_vrn(vrn_value = vrn)
   fill_in('vrn', with: vrn_value)
+  choose('Search for current information')
 end
 
 def vrn
