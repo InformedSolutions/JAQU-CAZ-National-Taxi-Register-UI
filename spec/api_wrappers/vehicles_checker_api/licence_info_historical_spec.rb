@@ -3,26 +3,53 @@
 require 'rails_helper'
 
 RSpec.describe 'VehiclesCheckerApi.licence_info' do
-  subject(:call) { VehiclesCheckerApi.licence_info(vrn) }
+  subject(:call) { VehiclesCheckerApi.licence_info_historical(vrn: vrn, page: page) }
 
   let(:vrn) { 'CU57ABC' }
+  let(:page) { 2 }
 
-  context 'when call returns 200' do
+  skip context 'when call returns 200' do
     before do
-      vrn_details = file_fixture('responses/licence_info_response.json').read
-      stub_request(:get, /CU57ABC/).to_return(status: 200, body: vrn_details)
+      vrn_history = read_unparsed_response('licence_info_historical_response.json')
+      stub_request(:get, /CU57ABC/).to_return(status: 200, body: vrn_history)
+    end
+
+    it 'calls API with proper query data' do
+      call
+      expect(WebMock).to have_requested(
+        :get,
+        %r{#{vrn}/licence-info-historical\?pageNumber=#{page - 1}&pageSize=10}
+      )
     end
 
     it 'returns proper fields' do
-      expect(call.keys).to contain_exactly(
-        'active',
-        'wheelchairAccessible',
-        'licensingAuthoritiesNames'
+      expect(call['1'].keys).to contain_exactly(
+        'perPage',
+        'page',
+        'pageCount',
+        'totalChangesCount',
+        'changes'
       )
+    end
+
+    it 'returns proper `changes` fields' do
+      expect(call['1']['changes'].first.keys).to contain_exactly(
+        'modifyDate',
+        'action',
+        'licensingAuthorityName',
+        'plateNumber',
+        'licenceStartDate',
+        'licenceEndDate',
+        'wheelchairAccessible'
+      )
+    end
+
+    it 'returns changes list' do
+      expect(call['1']['changes']).to be_a(Array)
     end
   end
 
-  context 'when call returns 500' do
+  skip context 'when call returns 500' do
     before do
       stub_request(:get, /CU57ABC/).to_return(
         status: 500,
@@ -35,7 +62,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
     end
   end
 
-  context 'when call returns 400' do
+  skip context 'when call returns 400' do
     before do
       stub_request(:get, /CU57ABC/).to_return(
         status: 400,
@@ -48,7 +75,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
     end
   end
 
-  context 'when call returns 404' do
+  skip context 'when call returns 404' do
     before do
       stub_request(:get, /CU57ABC/).to_return(
         status: 404,
@@ -61,7 +88,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
     end
   end
 
-  context 'when call returns 422' do
+  skip context 'when call returns 422' do
     before do
       stub_request(:get, /CU57ABC/).to_return(
         status: 422,

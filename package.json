@@ -2,6 +2,7 @@
   "name": "jaqu-caz-ntr-ui",
   "private": true,
   "dependencies": {
+    "@ministryofjustice/frontend": "^0.0.17-alpha",
     "@rails/actioncable": "^6.0.2",
     "@rails/activestorage": "^6.0.2",
     "@rails/ujs": "^6.0.2",

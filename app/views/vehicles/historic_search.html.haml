@@ -1,0 +1,45 @@
+- if @vrn_details.total_changes_count_zero?
+  - title_and_header = "There is no historical data for #{@vrn}"
+- else
+  - title_and_header = "Results for #{@vrn}"
+
+- content_for(:title, title_and_header)
+= link_to 'Back', @back_button_url, class: 'govuk-back-link'
+
+%main.govuk-main-wrapper.govuk-main-wrapper--auto-spacing#main-content{role: 'main'}
+  .govuk-grid-row
+    .govuk-grid-column-full
+      %h1.govuk-heading-l
+        = title_and_header
+
+      %table.govuk-table
+        %thead.govuk-table__head
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'col'} Data Upload Date
+            %th.govuk-table__header{scope: 'col'} Action
+            %th.govuk-table__header{scope: 'col'} Licensing Authority
+            %th.govuk-table__header{scope: 'col'} Plate Number
+            %th.govuk-table__header{scope: 'col'} License Start Date
+            %th.govuk-table__header{scope: 'col'} License End Date
+            %th.govuk-table__header{scope: 'col'} WAV
+        - unless @vrn_details.changes_empty?
+          %tbody.govuk-table__body
+            - @pagination.vrn_changes_list.each do |change|
+              %tr.govuk-table__row
+                %td.govuk-table__cell{scope: 'row'}
+                  = change.data_upload_date
+                %td.govuk-table__cell{scope: 'row'}
+                  = change.action
+                %td.govuk-table__cell{scope: 'row'}
+                  = change.licensing_authority
+                %td.govuk-table__cell{scope: 'row'}
+                  = change.plate_number
+                %td.govuk-table__cell{scope: 'row'}
+                  = change.licence_start_date
+                %td.govuk-table__cell{scope: 'row'}
+                  = change.licence_end_date
+                %td.govuk-table__cell{scope: 'row'}
+                  = change.wheelchair_accessible
+      = render 'pagination'
+
+      %p= link_to 'Search for another vehicle', search_vehicles_path, id: 'search_another_vehicle'

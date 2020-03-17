@@ -38,5 +38,59 @@ class VehiclesCheckerApi < BaseApi
       log_call('Getting vehicle details')
       request(:get, "/#{vrn}/licence-info")
     end
+
+    ##
+    # Calls +/v1/vehicles/:vrn/licence-info-historical+ endpoint with +GET+ method
+    # and returns paginated list of vehicle's information
+    #
+    # ==== Attributes
+    #
+    # * +vrn+ - Vehicle registration number, eg. 'CU12345'
+    # * +page+ - requested page of the results
+    # * +per_page+ - number of vehicles per page, defaults to 10
+    #
+    # ==== Result
+    #
+    # Returned vehicles details will have the following fields:
+    # * +page+ - number of available pages
+    # * +pageCount+ - number of available pages
+    # * +perPage+ - number of available pages
+    # * +totalChangesCount+ - integer, the total number of changes associated with this vehicle
+    # * +changes+ - array of objects, history of changes for current vrn
+    #   * +modifyDate+ - string, date format
+    #   * +action+ - string, status of current VRM for a specific date range
+    #   * +licensingAuthorityName+ - array of strings, containing the licensing authority names
+    #   * +plateNumber+ - string, A vehicle registration plate
+    #   * +licenceStartDate+ - string, date format
+    #   * +licenceEndDate+ - string, date format
+    #   * +wheelchairAccessible+ -  boolean, wheelchair accessible by any active operating licence
+    #
+    # rubocop:disable Lint/UnusedMethodArgument:
+    def licence_info_historical(vrn:, page:, per_page: 10)
+      log_call("Getting the historical details for page: #{page}")
+
+      mocked_vrn_history(page)
+
+      # query = { 'pageNumber' => page - 1, 'pageSize' => per_page }
+      # request(:get, "/#{vrn}/licence-info-historical", query: query)
+    end
+    # rubocop:enable Lint/UnusedMethodArgument:
+
+    private
+
+    def mocked_vrn_history(page = 1)
+      if page == 1
+        read_response_file('licence_info_historical_response.json')['1']
+      elsif page == 2
+        read_response_file('licence_info_historical_response.json')['2']
+      else
+        { 'perPage' => 10, 'page' => page, 'pageCount' => 2, 'totalChangesCount' => 12,
+          'changes' => [] }
+      end
+    end
+
+    def read_response_file(filename)
+      JSON.parse(File.read("spec/fixtures/files/responses/#{filename}"))
+    end
   end
 end

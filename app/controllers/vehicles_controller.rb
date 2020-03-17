@@ -9,9 +9,9 @@ class VehiclesController < ApplicationController
   # checks if a user is logged in
   before_action :authenticate_user!
   # checks if VRN is present in the session
-  before_action :check_vrn, only: %i[index]
+  before_action :check_vrn, only: %i[index historic_search]
   # assign back button path
-  before_action :assign_back_button_url, only: %i[index search not_found]
+  before_action :assign_back_button_url, only: %i[index search not_found historic_search]
 
   ##
   # Renders the search page
@@ -39,8 +39,8 @@ class VehiclesController < ApplicationController
       return render :search
     end
 
-    session[:vrn] = parsed_vrn(search_params['vrn'])
-    redirect_to vehicles_path
+    session[:vrn] = parsed_vrn(form.vrn)
+    determinate_results_page(form.historic)
   end
 
   ##
@@ -51,6 +51,19 @@ class VehiclesController < ApplicationController
   #
   def index
     @vrn_details = VrnDetails.new(vrn)
+  end
+
+  ##
+  # Renders the historical results page
+  #
+  # ==== Path
+  #    :GET /vehicles/historic_search
+  #
+  def historic_search
+    page = (params[:page] || 1).to_i
+    @vrn_details = HistoricalVrnDetails.new(vrn, page)
+    @vrn = vrn
+    @pagination = @vrn_details.pagination
   end
 
   ##
@@ -100,5 +113,14 @@ class VehiclesController < ApplicationController
       :end_date_month,
       :end_date_year
     )
+  end
+
+  # Returns redirect to the results page depending on the +historic+ value
+  def determinate_results_page(historic)
+    if historic == 'true'
+      redirect_to historic_search_vehicles_path
+    else
+      redirect_to vehicles_path
+    end
   end
 end

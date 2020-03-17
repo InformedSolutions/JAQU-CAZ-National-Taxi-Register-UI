@@ -10,6 +10,7 @@ Rails.application.routes.draw do
     collection do
       get :search
       post :search, to: 'vehicles#submit_search'
+      get :historic_search
       get :not_found
     end
   end
