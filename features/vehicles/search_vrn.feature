@@ -41,4 +41,4 @@ Feature: Search a VRN
     Then I should see 'Enter a real start date'
     When I enter a vrn and enter start date in the future
       And I press 'Continue' button
-    Then I should see 'Start date must be in the past'
+    Then I should see 'Start date must be earlier than end date'

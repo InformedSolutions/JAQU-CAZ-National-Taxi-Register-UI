@@ -43,7 +43,7 @@ en:
         invalid:
           start_date_format: Enter a real start date
           end_date_format: Enter a real end date
-          start_date_in_past: Start date must be in the past
+          start_date: Start date must be earlier than end date
     vrn_missing: Enter the number plate of the vehicle
     vrn_too_long: The number plate of the vehicle is too long
     vrn_too_short: The number plate of the vehicle is too short

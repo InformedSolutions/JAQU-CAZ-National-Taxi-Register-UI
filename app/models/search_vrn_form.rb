@@ -140,6 +140,7 @@ class SearchVrnForm < MultipleAttributesBaseForm
   def validate_start_date_format
     start_date = "#{start_date_year}-#{start_date_month}-#{start_date_day}"
     self.start_date = Date.parse(start_date)
+    raise ArgumentError unless start_date_year.to_i.positive?
   rescue ArgumentError
     add_errors_to_start_date
     errors.add(
@@ -153,6 +154,7 @@ class SearchVrnForm < MultipleAttributesBaseForm
   def validate_end_date_format
     end_date = "#{end_date_year}-#{end_date_month}-#{end_date_day}"
     self.end_date = Date.parse(end_date)
+    raise ArgumentError unless end_date_year.to_i.positive?
   rescue ArgumentError
     add_errors_to_end_date
     errors.add(
@@ -169,7 +171,7 @@ class SearchVrnForm < MultipleAttributesBaseForm
       errors.add(
         :start_date,
         :invalid,
-        message: I18n.t('search_vrn_form.errors.dates.invalid.start_date_in_past')
+        message: I18n.t('search_vrn_form.errors.dates.invalid.start_date')
       )
     end
   end

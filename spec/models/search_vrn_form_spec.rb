@@ -112,18 +112,26 @@ RSpec.describe SearchVrnForm, type: :model do
                         'Start date must include a month and year'
       end
 
-      context 'when the start date not in the past' do
+      context 'when year is in an invalid format' do
+        let(:start_date_year) { '-2020' }
+
+        it_behaves_like 'an invalid attribute input',
+                        :start_date,
+                        'Enter a real start date'
+      end
+
+      context 'when the start date not earlier than end date' do
         context 'show errors' do
-          let(:start_date_day) { Time.zone.tomorrow.day.to_s }
-          let(:start_date_month) { Time.zone.tomorrow.month.to_s }
-          let(:start_date_year) { Time.zone.tomorrow.year.to_s }
-          let(:end_date_day) { Time.zone.now.day.to_s }
-          let(:end_date_month) { Time.zone.now.month.to_s }
-          let(:end_date_year) { Time.zone.now.year.to_s }
+          let(:start_date_day) { Date.tomorrow.day.to_s }
+          let(:start_date_month) { Date.tomorrow.month.to_s }
+          let(:start_date_year) { Date.tomorrow.year.to_s }
+          let(:end_date_day) { Date.current.day.to_s }
+          let(:end_date_month) { Date.current.month.to_s }
+          let(:end_date_year) { Date.current.year.to_s }
 
           it_behaves_like 'an invalid attribute input',
                           :start_date,
-                          'Start date must be in the past'
+                          'Start date must be earlier than end date'
         end
       end
     end
@@ -172,6 +180,14 @@ RSpec.describe SearchVrnForm, type: :model do
         it_behaves_like 'an invalid attribute input',
                         :end_date,
                         'End date must include a month and year'
+      end
+
+      context 'when year is in an invalid format' do
+        let(:end_date_year) { '-2020' }
+
+        it_behaves_like 'an invalid attribute input',
+                        :end_date,
+                        'Enter a real end date'
       end
     end
   end
