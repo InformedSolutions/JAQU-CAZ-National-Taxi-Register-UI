@@ -29,9 +29,7 @@ class HistoricalVrnDetails
   # Returns a paginated vrn history with all changes.
   # Includes data about page and total pages count.
   def pagination
-    @pagination ||= begin
-                 PaginatedVrnHistory.new(vehicles_checker_api)
-               end
+    @pagination ||= PaginatedVrnHistory.new(vehicles_checker_api)
   end
 
   private
