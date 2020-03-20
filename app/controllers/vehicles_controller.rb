@@ -33,13 +33,13 @@ class VehiclesController < ApplicationController
   #    :POST /vehicles/submit_search
   #
   def submit_search
-    form = SearchVrnForm.new(search_params)
+    form = SearchVrnForm.new(adjusted_search_params)
     unless form.valid?
       @errors = form.errors.messages
       return render :search
     end
 
-    session[:vrn] = parsed_vrn(form.vrn)
+    session[:vrn] = form.vrn
     determinate_results_page(form.historic)
   end
 
@@ -78,11 +78,6 @@ class VehiclesController < ApplicationController
 
   private
 
-  # Returns uppercased VRN from the query params without any space, eg. 'CU1234'
-  def parsed_vrn(params_vrn)
-    @parsed_vrn ||= params_vrn.upcase&.delete(' ')
-  end
-
   # Redirects to {vehicle not found}[rdoc-ref:VehiclesController.not_found]
   def vrn_not_found
     redirect_to not_found_vehicles_path
@@ -101,18 +96,14 @@ class VehiclesController < ApplicationController
     session[:vrn]
   end
 
-  # Returns the list of permitted params
-  def search_params
-    params.require(:search).permit(
-      :vrn,
-      :historic,
-      :start_date_day,
-      :start_date_month,
-      :start_date_year,
-      :end_date_day,
-      :end_date_month,
-      :end_date_year
+  # Returns the list of permitted params and uppercased +vrn+ without any space, eg. 'CU1234'
+  def adjusted_search_params
+    strong_params = params.require(:search).permit(
+      :vrn, :historic, :start_date_day, :start_date_month, :start_date_year, :end_date_day,
+      :end_date_month, :end_date_year
     )
+    strong_params['vrn'] = strong_params['vrn']&.upcase&.delete(' ')
+    strong_params
   end
 
   # Returns redirect to the results page depending on the +historic+ value

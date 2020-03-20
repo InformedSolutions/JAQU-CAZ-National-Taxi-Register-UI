@@ -8,7 +8,7 @@ Feature: Search a VRN
     When I press 'Continue' button
     Then I should see 'Enter the number plate of the vehicle'
       And I should see 'Choose a search type'
-    When I enter a vrn
+    When I enter a vrn 'CU57ABC '
       And I press 'Continue' button
     Then I should see "You searched for CU57ABC"
 
