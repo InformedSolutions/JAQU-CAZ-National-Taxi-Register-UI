@@ -48,6 +48,8 @@ class VehiclesCheckerApi < BaseApi
     # * +vrn+ - Vehicle registration number, eg. 'CU12345'
     # * +page+ - requested page of the results
     # * +per_page+ - number of vehicles per page, defaults to 10
+    # * +start_date+ - string, date format, eg '2010-01-01'
+    # * +end_date+ - string, date format, eg '2020-03-24'
     #
     # ==== Result
     #
@@ -65,32 +67,25 @@ class VehiclesCheckerApi < BaseApi
     #   * +licenceEndDate+ - string, date format
     #   * +wheelchairAccessible+ -  boolean, wheelchair accessible by any active operating licence
     #
-    # rubocop:disable Lint/UnusedMethodArgument:
-    def licence_info_historical(vrn:, page:, per_page: 10)
-      log_call("Getting the historical details for page: #{page}")
+    def licence_info_historical(vrn:, page:, per_page: 10, start_date:, end_date:)
+      log_call("Getting the historical details for page: #{page}, start_date: #{start_date}"\
+               " and end_date: #{end_date}")
 
-      mocked_vrn_history(page)
+      query = {
+        'pageNumber' => calculate_page_number(page),
+        'pageSize' => per_page,
+        'startDate' => start_date,
+        'endDate' => end_date
+      }
 
-      # query = { 'pageNumber' => page - 1, 'pageSize' => per_page }
-      # request(:get, "/#{vrn}/licence-info-historical", query: query)
+      request(:get, "/#{vrn}/licence-info-historical", query: query)
     end
-    # rubocop:enable Lint/UnusedMethodArgument:
 
     private
 
-    def mocked_vrn_history(page = 1)
-      if page == 1
-        read_response_file('licence_info_historical_response.json')['1']
-      elsif page == 2
-        read_response_file('licence_info_historical_response.json')['2']
-      else
-        { 'perPage' => 10, 'page' => page, 'pageCount' => 2, 'totalChangesCount' => 12,
-          'changes' => [] }
-      end
-    end
-
-    def read_response_file(filename)
-      JSON.parse(File.read("spec/fixtures/files/responses/#{filename}"))
+    def calculate_page_number(page)
+      result = page - 1
+      result.negative? ? 0 : result
     end
   end
 end

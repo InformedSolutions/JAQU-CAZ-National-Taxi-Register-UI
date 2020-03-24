@@ -11,9 +11,13 @@ class HistoricalVrnDetails
   #
   # * +vrn+ - string, eg. 'CU57ABC'
   # * +page+ - string, used to paginate the changes list for vehicle
-  def initialize(vrn, page)
+  # * +start_date+ - string, date format, eg '2010-01-01'
+  # * +end_date+ - string, date format, eg '2020-03-24'
+  def initialize(vrn, page, start_date, end_date)
     @vrn = vrn.upcase.gsub(/\s+/, '')
     @page = page.to_i
+    @start_date = start_date
+    @end_date = end_date
   end
 
   # Checks if there are any entries in the +changes+ array
@@ -34,12 +38,14 @@ class HistoricalVrnDetails
 
   private
 
-  attr_reader :vrn, :page
+  attr_reader :vrn, :page, :start_date, :end_date
 
   def vehicles_checker_api
     @vehicles_checker_api ||= VehiclesCheckerApi.licence_info_historical(
       vrn: vrn,
-      page: page
+      page: page,
+      start_date: start_date,
+      end_date: end_date
     )
   end
 end

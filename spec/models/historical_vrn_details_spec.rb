@@ -3,10 +3,12 @@
 require 'rails_helper'
 
 describe HistoricalVrnDetails, type: :model do
-  subject { described_class.new(vrn, page) }
+  subject { described_class.new(vrn, page, start_date, end_date) }
 
   let(:vrn) { 'CU57ABC' }
   let(:page) { 1 }
+  let(:start_date) { '2010-01-01' }
+  let(:end_date) { '2020-03-24' }
   let(:vrn_history) { read_response_file('licence_info_historical_response.json')[page.to_s] }
 
   before do
@@ -21,7 +23,7 @@ describe HistoricalVrnDetails, type: :model do
     it 'calls `VehiclesCheckerApi.licence_info_historical` with proper params' do
       expect(VehiclesCheckerApi)
         .to receive(:licence_info_historical)
-        .with(vrn: vrn, page: page)
+        .with(vrn: vrn, page: page, start_date: start_date, end_date: end_date)
       changes
     end
 
@@ -52,7 +54,7 @@ describe HistoricalVrnDetails, type: :model do
     it 'calls `AccountsApi.licence_info_historical` with proper params' do
       expect(VehiclesCheckerApi)
         .to receive(:licence_info_historical)
-        .with(vrn: vrn, page: 1)
+        .with(vrn: vrn, page: 1, start_date: start_date, end_date: end_date)
       subject.changes_empty?
     end
 
@@ -75,7 +77,7 @@ describe HistoricalVrnDetails, type: :model do
     it 'calls `AccountsApi.licence_info_historical` with proper params' do
       expect(VehiclesCheckerApi)
         .to receive(:licence_info_historical)
-        .with(vrn: vrn, page: 1)
+        .with(vrn: vrn, page: 1, start_date: start_date, end_date: end_date)
       subject.total_changes_count_zero?
     end
 

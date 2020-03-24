@@ -397,7 +397,7 @@ DEPENDENCIES
   rack_session_access
   rails (~> 6.0.2.2)
   rails-controller-testing
-  rspec-rails (~> 4.0.0.beta)
+  rspec-rails (~> 4.0.0.rc1)
   rubocop-rails
   scss_lint-govuk
   sdoc

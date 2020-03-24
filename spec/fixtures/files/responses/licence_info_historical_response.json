@@ -75,7 +75,7 @@
         "plateNumber": "CU12345",
         "licenceStartDate": "2015-04-09",
         "licenceEndDate": "2025-03-10",
-        "wheelchairAccessible": false
+        "wheelchairAccessible": null
       },
       {
         "modifyDate": "2020-03-09",

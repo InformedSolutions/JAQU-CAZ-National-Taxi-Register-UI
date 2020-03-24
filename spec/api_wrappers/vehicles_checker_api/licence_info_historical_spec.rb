@@ -3,12 +3,21 @@
 require 'rails_helper'
 
 RSpec.describe 'VehiclesCheckerApi.licence_info' do
-  subject(:call) { VehiclesCheckerApi.licence_info_historical(vrn: vrn, page: page) }
+  subject(:call) do
+    VehiclesCheckerApi.licence_info_historical(
+      vrn: vrn,
+      page: page,
+      start_date: start_date,
+      end_date: end_date
+    )
+  end
 
   let(:vrn) { 'CU57ABC' }
   let(:page) { 2 }
+  let(:start_date) { '2010-01-01' }
+  let(:end_date) { '2020-03-24' }
 
-  skip context 'when call returns 200' do
+  context 'when call returns 200' do
     before do
       vrn_history = read_unparsed_response('licence_info_historical_response.json')
       stub_request(:get, /CU57ABC/).to_return(status: 200, body: vrn_history)
@@ -18,7 +27,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
       call
       expect(WebMock).to have_requested(
         :get,
-        %r{#{vrn}/licence-info-historical\?pageNumber=#{page - 1}&pageSize=10}
+        /endDate=#{end_date}&pageNumber=#{page - 1}&pageSize=10&startDate=#{start_date}/
       )
     end
 
@@ -49,7 +58,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
     end
   end
 
-  skip context 'when call returns 500' do
+  context 'when call returns 500' do
     before do
       stub_request(:get, /CU57ABC/).to_return(
         status: 500,
@@ -62,7 +71,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
     end
   end
 
-  skip context 'when call returns 400' do
+  context 'when call returns 400' do
     before do
       stub_request(:get, /CU57ABC/).to_return(
         status: 400,
@@ -75,7 +84,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
     end
   end
 
-  skip context 'when call returns 404' do
+  context 'when call returns 404' do
     before do
       stub_request(:get, /CU57ABC/).to_return(
         status: 404,
@@ -88,7 +97,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
     end
   end
 
-  skip context 'when call returns 422' do
+  context 'when call returns 422' do
     before do
       stub_request(:get, /CU57ABC/).to_return(
         status: 422,

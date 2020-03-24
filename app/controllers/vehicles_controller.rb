@@ -40,7 +40,7 @@ class VehiclesController < ApplicationController
     end
 
     session[:vrn] = form.vrn
-    determinate_results_page(form.historic)
+    determinate_results_page(form)
   end
 
   ##
@@ -61,7 +61,7 @@ class VehiclesController < ApplicationController
   #
   def historic_search
     page = (params[:page] || 1).to_i
-    @vrn_details = HistoricalVrnDetails.new(vrn, page)
+    @vrn_details = HistoricalVrnDetails.new(vrn, page, start_date, end_date)
     @vrn = vrn
     @pagination = @vrn_details.pagination
   end
@@ -96,6 +96,16 @@ class VehiclesController < ApplicationController
     session[:vrn]
   end
 
+  # Gets Start Date from session. Returns string, eg '2010-01-01'
+  def start_date
+    session[:start_date]
+  end
+
+  # Gets End Date from session. Returns string, eg '2020-03-24'
+  def end_date
+    session[:end_date]
+  end
+
   # Returns the list of permitted params and uppercased +vrn+ without any space, eg. 'CU1234'
   def adjusted_search_params
     strong_params = params.require(:search).permit(
@@ -107,8 +117,10 @@ class VehiclesController < ApplicationController
   end
 
   # Returns redirect to the results page depending on the +historic+ value
-  def determinate_results_page(historic)
-    if historic == 'true'
+  def determinate_results_page(form)
+    if form.historic == 'true'
+      session[:start_date] = form.start_date
+      session[:end_date] = form.end_date
       redirect_to historic_search_vehicles_path
     else
       redirect_to vehicles_path

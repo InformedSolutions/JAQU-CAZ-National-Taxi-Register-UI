@@ -53,7 +53,7 @@ class VrnHistory
   # Check 'wheelchairAccessible' value.
   #
   # Returns a string 'Yes' if value is true
-  # Returns a string 'No' if value is false
+  # Returns a string 'No' if value is false or nil
   def wheelchair_accessible
     data['wheelchairAccessible'] ? 'Yes' : 'No'
   end
