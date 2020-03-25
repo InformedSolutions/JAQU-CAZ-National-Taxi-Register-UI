@@ -26,8 +26,10 @@ class VrnHistory
   end
 
   # returns string, e.g. 'Updated'
+  # returns `Added` if value is 'Created'
   def action
-    data['action']
+    value = data['action'].capitalize
+    value == 'Created' ? 'Added' : value
   end
 
   # returns string, e.g. 'Leeds'

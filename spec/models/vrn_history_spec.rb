@@ -17,7 +17,7 @@ describe VrnHistory, type: :model do
     }
   end
 
-  let(:action) { 'Created' }
+  let(:action) { 'created' }
   let(:licensing_authority) { 'Leeds' }
   let(:plate_number) { 'CU12345' }
   let(:wheelchair_accessible) { true }
@@ -25,6 +25,22 @@ describe VrnHistory, type: :model do
   describe '.data_upload_date' do
     it 'returns a proper value' do
       expect(subject.data_upload_date).to eq('01/03/2020')
+    end
+  end
+
+  describe '.action' do
+    context 'when value is `created`' do
+      it 'returns a proper value' do
+        expect(subject.action).to eq('Added')
+      end
+    end
+
+    context 'when value is not `created`' do
+      let(:action) { 'updated' }
+
+      it 'returns a proper value' do
+        expect(subject.action).to eq('Updated')
+      end
     end
   end
 
