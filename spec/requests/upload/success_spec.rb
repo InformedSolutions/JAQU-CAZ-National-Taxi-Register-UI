@@ -5,7 +5,7 @@ require 'rails_helper'
 describe 'UploadController - GET #success', type: :request do
   subject(:http_request) { get success_upload_index_path }
 
-  let(:user) { new_user(email: 'test@example.com') }
+  let(:user) { create_user }
 
   before { sign_in user }
 

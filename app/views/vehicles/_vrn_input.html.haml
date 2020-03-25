@@ -1,0 +1,6 @@
+%fieldset.govuk-fieldset
+  %legend.govuk-fieldset__legend.govuk-fieldset__legend--m
+  - if @errors.present?
+    = render 'vehicles/vrn_input/errored', form: form, errors: @errors
+  - else
+    = render 'vehicles/vrn_input/normal', form: form

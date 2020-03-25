@@ -1,0 +1,122 @@
+.govuk-form-group{class: ('govuk-form-group--error' if @errors&.except(:vrn).present?)}
+  %fieldset.govuk-fieldset
+    %legend.govuk-fieldset__legend.govuk-fieldset__legend--m
+      %h1.govuk-fieldset__heading
+        What would you like to do?
+
+    - if @errors[:historic].present?
+      %span#historic_error.govuk-error-message
+        %span.govuk-visually-hidden Error:
+        = @errors[:historic].join(', ')
+
+    .govuk-radios.govuk-radios--conditional{'data-module': 'govuk-radios'}
+      .govuk-radios__item
+        = form.radio_button(:historic,
+                            false,
+                            class: 'govuk-radios__input',
+                            id: 'historical_off',
+                            'data-aria-controls': 'conditional-historic-conditional',
+                            checked: params.dig(:search, :historic) == 'false')
+        = form.label(:historic,
+                     'Search for current information',
+                     class: 'govuk-label govuk-radios__label',
+                     for: 'historical_off')
+
+      .govuk-radios__item
+        = form.radio_button(:historic,
+                            true,
+                            class: 'govuk-radios__input',
+                            'data-aria-controls': 'conditional-historical',
+                            id: 'historical_on',
+                            checked: params.dig(:search, :historic) == 'true')
+        = form.label(:historic,
+                     'Search for historical results',
+                     class: 'govuk-label govuk-radios__label',
+                     for: 'historical_on')
+
+      #conditional-historical.govuk-radios__conditional
+        .govuk-form-group{class: ('govuk-form-group govuk-form-group--error' if @errors[:start_date].present?)}
+          %fieldset.govuk-fieldset{'aria-describedby': 'start_date_hint', role: 'group'}
+            %legend.govuk-fieldset__legend.govuk-fieldset__legend--m
+              Start date
+            %span#start_date_hint.govuk-hint
+              For example, 31 3 1980
+
+            - if @errors[:start_date].present?
+              %span#start_date_error.govuk-error-message
+                %span.govuk-visually-hidden Error:
+                = @errors[:start_date].join(', ')
+
+            .govuk-date-input
+              .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:start_date_day].present?}start_date_day"}
+                .govuk-form-group
+                  = form.label :start_date_day, 'Day', class: 'govuk-label govuk-date-input__label'
+                  = form.text_field :start_date_day,
+                                    class: "govuk-input govuk-date-input__input govuk-input--width-2 #{'govuk-input--error' if @errors[:start_date_day].present?}",
+                                    inputmode: 'numeric',
+                                    pattern: '[0-9]',
+                                    type: 'number',
+                                    value: params.dig(:search, :start_date_day)
+
+              .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:start_date_month].present?}start_date_month"}
+                .govuk-form-group
+                  = form.label :start_date_month, 'Month', class: 'govuk-label govuk-date-input__label'
+                  = form.text_field :start_date_month,
+                                    class: "govuk-input govuk-date-input__input govuk-input--width-2 #{'govuk-input--error' if @errors[:start_date_month].present?}",
+                                    inputmode: 'numeric',
+                                    pattern: '[0-9]',
+                                    type: 'number',
+                                    value: params.dig(:search, :start_date_month)
+
+              .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:start_date_year].present?}start_date_year"}
+                .govuk-form-group
+                  = form.label :start_date_year, 'Year', class: 'govuk-label govuk-date-input__label'
+                  = form.text_field :start_date_year,
+                                    class: "govuk-input govuk-date-input__input govuk-input--width-4 #{'govuk-input--error' if @errors[:start_date_year].present?}",
+                                    inputmode: 'numeric',
+                                    pattern: '[0-9]',
+                                    type: 'number',
+                                    value: params.dig(:search, :start_date_year)
+
+        .govuk-form-group
+          %fieldset.govuk-fieldset{'aria-describedby': 'end_date_hint', role: 'group'}
+            %legend.govuk-fieldset__legend.govuk-fieldset__legend--m
+              End date
+            %span#end_date_hint.govuk-hint
+              For example, 31 3 1980
+
+            - if @errors[:end_date].present?
+              %span#end_date_error.govuk-error-message
+                %span.govuk-visually-hidden Error:
+                = @errors[:end_date].join(', ')
+
+            .govuk-date-input
+              .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:end_date_day].present?}end_date_day"}
+                .govuk-form-group
+                  = form.label :end_date_day, 'Day', class: 'govuk-label govuk-date-input__label'
+                  = form.text_field :end_date_day,
+                                    class: "govuk-input govuk-date-input__input govuk-input--width-2 #{'govuk-input--error' if @errors[:end_date_day].present?}",
+                                    inputmode: 'numeric',
+                                    pattern: '[0-9]',
+                                    type: 'number',
+                                    value: params.dig(:search, :end_date_day)
+
+              .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:end_date_month].present?}end_date_month"}
+                .govuk-form-group
+                  = form.label :end_date_month, 'Month', class: 'govuk-label govuk-date-input__label'
+                  = form.text_field :end_date_month,
+                                    class: "govuk-input govuk-date-input__input govuk-input--width-2 #{'govuk-input--error' if @errors[:end_date_month].present?}",
+                                    inputmode: 'numeric',
+                                    pattern: '[0-9]',
+                                    type: 'number',
+                                    value: params.dig(:search, :end_date_month)
+
+              .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:end_date_year].present?}end_date_year"}
+                .govuk-form-group
+                  = form.label :end_date_year, 'Year', class: 'govuk-label govuk-date-input__label'
+                  = form.text_field :end_date_year,
+                                    class: "govuk-input govuk-date-input__input govuk-input--width-4 #{'govuk-input--error' if @errors[:end_date_year].present?}",
+                                    inputmode: 'numeric',
+                                    pattern: '[0-9]',
+                                    type: 'number',
+                                    value: params.dig(:search, :end_date_year)
