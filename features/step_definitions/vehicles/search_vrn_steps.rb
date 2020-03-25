@@ -19,13 +19,15 @@ end
 When('I enter a vrn and valid dates format') do
   mock_vrn_history
   fill_vrn
+  fill_dates
   choose('Search for historical results')
-  fill_in('search_start_date_day', with: 10)
-  fill_in('search_start_date_month', with: 3)
-  fill_in('search_start_date_year', with: 2020)
-  fill_in('search_end_date_day', with: 14)
-  fill_in('search_end_date_month', with: 3)
-  fill_in('search_end_date_year', with: 2020)
+end
+
+When('I enter a vrn without history and valid dates format') do
+  mock_vrn_history(1, true, true)
+  fill_vrn
+  fill_dates
+  choose('Search for historical results')
 end
 
 When('I enter a vrn and invalid dates format') do
@@ -100,6 +102,15 @@ def fill_vrn(vrn_value = vrn)
   choose('Search for current information')
 end
 
+def fill_dates
+  fill_in('search_start_date_day', with: 10)
+  fill_in('search_start_date_month', with: 3)
+  fill_in('search_start_date_year', with: 2020)
+  fill_in('search_end_date_day', with: 14)
+  fill_in('search_end_date_month', with: 3)
+  fill_in('search_end_date_year', with: 2020)
+end
+
 def vrn
   'CU57ABC'
 end
@@ -108,15 +119,17 @@ def api
   VehiclesCheckerApi
 end
 
-def mock_vrn_history(page = 1)
-  allow(HistoricalVrnDetails).to receive(:new).and_return(create_history(page))
+def mock_vrn_history(page = 1, total_changes_count_zero = false, changes_empty = false)
+  allow(HistoricalVrnDetails).to receive(:new).and_return(
+    create_history(page, total_changes_count_zero, changes_empty)
+  )
 end
 
-def create_history(page)
+def create_history(page, total_changes_count_zero, changes_empty)
   instance_double(HistoricalVrnDetails,
                   pagination: paginated_history(page),
-                  total_changes_count_zero?: false,
-                  changes_empty?: false)
+                  total_changes_count_zero?: total_changes_count_zero,
+                  changes_empty?: changes_empty)
 end
 
 def mocked_changes

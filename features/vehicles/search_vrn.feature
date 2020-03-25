@@ -47,14 +47,21 @@ Feature: Search a VRN
       And I press 'Continue' button
     Then I should see 'Results for CU57ABC'
 
-   Scenario:Pagination on the historical results page
-    Given I am on the Historical results page
-    Then I should see active "1" pagination button
-      And I should see inactive "2" pagination button
-      And I should see inactive "next" pagination button
-      And I should not see "previous" pagination button
-    When I press 2 pagination button
-    Then I should see active "2" pagination button
-      And I should see inactive "1" pagination button
-      And I should see inactive "previous" pagination button
-      And I should not see "next" pagination button
+  Scenario: Pagination on the historical results page
+  Given I am on the Historical results page
+  Then I should see active "1" pagination button
+    And I should see inactive "2" pagination button
+    And I should see inactive "next" pagination button
+    And I should not see "previous" pagination button
+  When I press 2 pagination button
+  Then I should see active "2" pagination button
+    And I should see inactive "1" pagination button
+    And I should see inactive "previous" pagination button
+    And I should not see "next" pagination button
+
+  Scenario: Historical Search when no results found
+    Given I am on the Search VRN page
+    Then I enter a vrn without history and valid dates format
+      And I press 'Continue' button
+    Then I should see 'There is no historical data for CU57ABC'
+      And I should not see "Date modified"
