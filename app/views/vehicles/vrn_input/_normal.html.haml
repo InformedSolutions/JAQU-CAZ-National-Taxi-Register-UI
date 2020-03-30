@@ -1,0 +1,10 @@
+.govuk-form-group
+  = form.label :vrn, I18n.t('labels.vrn'), class: 'govuk-label govuk-label--m', id: 'vrn_label', for: 'vrn'
+  %p= I18n.t('labels.vrn_example')
+  = form.text_field :vrn,
+                    class: 'govuk-input vrn-input',
+                    id: 'vrn',
+                    'aria-labelledby': 'vrn_label',
+                    'aria-describedby': 'vrn',
+                    type: 'text',
+                    maxlength: 15

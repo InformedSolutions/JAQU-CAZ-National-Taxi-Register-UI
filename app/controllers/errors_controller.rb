@@ -7,6 +7,13 @@
 class ErrorsController < ApplicationController
   before_action :set_html_response_format
 
+  # assign back button path
+  before_action :assign_back_button_url, only: %i[
+    not_found
+    internal_server_error
+    service_unavailable
+  ]
+
   ##
   # Renders 404 error page.
   #
@@ -21,6 +28,14 @@ class ErrorsController < ApplicationController
   # The view is based on {this pattern}[https://design-system.service.gov.uk/patterns/problem-with-the-service-pages/] from Design System.
   def internal_server_error
     render(status: :internal_server_error)
+  end
+
+  ##
+  # Renders 503 error page
+  #
+  # The view is based on {this pattern}[https://design-system.service.gov.uk/patterns/service-unavailable-pages/] from Design System.
+  def service_unavailable
+    render(status: :service_unavailable)
   end
 
   private

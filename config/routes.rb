@@ -6,6 +6,14 @@ Rails.application.routes.draw do
   authenticated(:user) { root 'upload#index', as: :authenticated_root }
   devise_scope(:user) { root to: 'devise/sessions#new' }
 
+  resources :vehicles, only: %i[index] do
+    collection do
+      get :search
+      post :search, to: 'vehicles#submit_search'
+      get :not_found
+    end
+  end
+
   resources :upload, only: %i[] do
     collection do
       post :import
@@ -37,4 +45,5 @@ Rails.application.routes.draw do
   # There is no 422 error page in design systems
   match '/422', to: 'errors#internal_server_error', via: :all
   match '/500', to: 'errors#internal_server_error', via: :all
+  match '/503', to: 'errors#service_unavailable', via: :all
 end

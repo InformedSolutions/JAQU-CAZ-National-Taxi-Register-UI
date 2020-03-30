@@ -10,7 +10,7 @@ describe 'PasswordsController - POST #create', type: :request do
   before { sign_in user }
 
   context 'when user aws_status is OK' do
-    let(:user) { new_user(aws_status: 'OK') }
+    let(:user) { create_user }
 
     it 'returns a redirect to root_path' do
       http_request
@@ -19,7 +19,7 @@ describe 'PasswordsController - POST #create', type: :request do
   end
 
   context 'when user aws_session is missing' do
-    let(:user) { new_user(aws_status: 'FORCE_NEW_PASSWORD') }
+    let(:user) { create_user(aws_status: 'FORCE_NEW_PASSWORD', aws_session: nil) }
 
     it 'returns a redirect to new_user_session_path' do
       http_request
@@ -29,7 +29,7 @@ describe 'PasswordsController - POST #create', type: :request do
 
   context 'with aws status and session' do
     let(:user) do
-      new_user(aws_status: 'FORCE_NEW_PASSWORD', aws_session: SecureRandom.uuid)
+      create_user(aws_status: 'FORCE_NEW_PASSWORD', aws_session: SecureRandom.uuid)
     end
 
     context 'when params are empty or not equal' do

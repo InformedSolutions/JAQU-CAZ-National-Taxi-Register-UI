@@ -6,6 +6,13 @@
 class ApplicationController < ActionController::Base
   # protects applications against CSRF
   protect_from_forgery prepend: true
+  # rescues from API errors
+  rescue_from Errno::ECONNREFUSED,
+              SocketError,
+              BaseApi::Error500Exception,
+              BaseApi::Error422Exception,
+              BaseApi::Error400Exception,
+              with: :redirect_to_server_unavailable
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
 
@@ -62,5 +69,18 @@ class ApplicationController < ActionController::Base
     Rails.logger.warn "User with ip #{request.remote_ip} tried to access the page as #{current_user.email}"
     sign_out current_user
     redirect_to new_user_session_path
+  end
+
+  # Function used as a rescue from API errors.
+  # Logs the exception and redirects to ErrorsController#service_unavailable
+  def redirect_to_server_unavailable(exception)
+    Rails.logger.error "#{exception.class}: #{exception}"
+
+    render template: 'errors/service_unavailable', status: :service_unavailable
+  end
+
+  # Assign back button url
+  def assign_back_button_url
+    @back_button_url = request.referer || root_path
   end
 end

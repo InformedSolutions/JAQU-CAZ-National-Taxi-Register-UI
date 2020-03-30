@@ -11,7 +11,7 @@ describe 'UploadController - GET #index', type: :request do
       'fixtures', 'files', 'csv', 'CAZ-2020-01-08-AuthorityID.csv'
     )
   end
-  let(:user) { new_user }
+  let(:user) { create_user }
 
   before { sign_in user }
 
@@ -41,7 +41,7 @@ describe 'UploadController - GET #index', type: :request do
   end
 
   context 'when user login IP does not match request IP' do
-    let(:user) { new_user(login_ip: '0.0.0.0') }
+    let(:user) { create_user(login_ip: '0.0.0.0') }
 
     it 'returns a redirect to login page' do
       http_request

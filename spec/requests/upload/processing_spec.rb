@@ -10,7 +10,7 @@ describe 'UploadController - GET #processing', type: :request do
   let(:job_name) { 'name' }
   let(:job_data) { { name: job_name, correlation_id: correlation_id } }
 
-  before { sign_in new_user }
+  before { sign_in create_user }
 
   context 'with valid job data' do
     before do

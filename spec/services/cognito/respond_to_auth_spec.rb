@@ -11,15 +11,13 @@ RSpec.describe Cognito::RespondToAuthChallenge do
   let(:password_confirmation) { password }
 
   let(:user) do
-    new_user(
-      username: 'wojtek',
-      aws_session: SecureRandom.uuid,
+    create_user(
       hashed_password: Digest::MD5.hexdigest('temporary_password')
     )
   end
 
   let(:cognito_user) do
-    new_user(username: 'wojciech')
+    create_user
   end
 
   let(:auth_response) do

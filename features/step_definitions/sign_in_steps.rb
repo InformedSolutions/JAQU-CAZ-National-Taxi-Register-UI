@@ -81,7 +81,3 @@ When('I enter invalid email format') do
 
   click_button 'Continue'
 end
-
-Then('I should be on the login page') do
-  expect(page).to have_current_path(new_user_session_path)
-end
