@@ -75,6 +75,16 @@ RSpec.describe SearchVrnForm, type: :model do
     end
 
     context 'with invalid start dates' do
+      context 'when day, month and year are missing' do
+        let(:start_date_day) { '' }
+        let(:start_date_month) { '' }
+        let(:start_date_year) { '' }
+
+        it_behaves_like 'an invalid attribute input',
+                        :start_date,
+                        'Start date must include a day, month and year'
+      end
+
       context 'when day is missing' do
         let(:start_date_day) { '' }
 
