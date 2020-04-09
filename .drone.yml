@@ -1028,7 +1028,7 @@ steps:
       dockerfile: Dockerfile.build
       region: eu-west-2
       tags:
-	    - release
+        - release
         - hotfix
         - ${DRONE_BUILD_NUMBER}
       build_args:
