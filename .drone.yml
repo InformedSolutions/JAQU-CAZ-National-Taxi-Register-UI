@@ -940,7 +940,7 @@ type: docker
 name: ntr-web-uat
 trigger:
   branch:
-    - release-candidate/*
+    - uat/*
 concurrency:
   limit: 1
 volumes:
