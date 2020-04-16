@@ -43,10 +43,10 @@ class AwsCredentialsApi < BaseApi
     end
 
     def log_response(response)
-      Rails.logger.info "AccessKeyId: #{response['AccessKeyId'].first(4)}"
+      Rails.logger.info "AccessKeyId: #{response['AccessKeyId'].last(4)}"
       Rails.logger.info "Expiration: #{response['Expiration']}"
-      Rails.logger.info "SecretAccessKey: #{response['SecretAccessKey'].first(4)}"
-      Rails.logger.info "Token: #{response['Token'].first(4)}"
+      Rails.logger.info "SecretAccessKey: #{response['SecretAccessKey'].last(4)}"
+      Rails.logger.info "Token: #{response['Token'].last(4)}"
     end
   end
 end
