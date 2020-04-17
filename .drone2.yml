@@ -241,7 +241,7 @@ steps:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
       - mkdir ~/.aws
-      - echo -e "[profile target_acc]\nrole_arn = ${AWS_ACCOUNT_ROLE}\ncredential_source = Environment\nrole_session_name = AWS ACCOUNT" > ~/.aws/config
+      - echo -e "[profile target_acc]\nrole_arn = ${AWS_ACCOUNT_ROLE}\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
       - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
       - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
       - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
