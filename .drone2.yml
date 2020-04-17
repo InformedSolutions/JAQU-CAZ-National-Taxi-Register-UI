@@ -162,6 +162,11 @@ steps:
         from_secret: jaqu_master_aws_secret_access_key
       TF_VAR_account_id:
         from_secret: jaqu_lower_aws_account_id
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_lower_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_lower_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
     when:
