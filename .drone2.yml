@@ -147,7 +147,7 @@ steps:
       - tf apply -auto-approve
       - cd ../../../build-tools/layers/03.deployment
       - tf init
-      - tf workspace select dev || tf workspace new dev
+      - tf workspace select default
       - tf apply -auto-approve
 
 
