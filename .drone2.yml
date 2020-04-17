@@ -17,6 +17,17 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
+  - name: secret test
+    image: alpine:latest
+    commands:
+      - echo ${JAQU_NEXUS_URL}
+    environment:
+      JAQU_NEXUS_URL:
+        from_secret: jaqu_lower_nexus_url
+      JAQU_NEXUS_USER:
+        from_secret: jaqu_lower_nexus_username
+      JAQU_NEXUS_PASSWORD:
+        from_secret: jaqu_lower_nexus_password
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
@@ -104,7 +115,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -136,8 +147,9 @@ steps:
       - tf apply -auto-approve
       - cd ../../../build-tools/03.deployment
       - tf init
-      - tf workspace select dev
+      - tf workspace select dev || tf workspace new dev
       - tf apply -auto-approve
+
 
     environment:
       TF_VAR_access_key:
@@ -189,15 +201,15 @@ steps:
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
-      - tf workspace select dev
+      - tf workspace select dev || tf workspace new dev
       - tf apply -auto-approve
       - cd ../02.backends
       - tf init
-      - tf workspace select dev
+      - tf workspace select dev || tf workspace new dev
       - tf apply -auto-approve
       - cd ../04.web
       - tf init
-      - tf workspace select dev
+      - tf workspace select dev || tf workspace new dev
       - tf apply -auto-approve
     environment:
       TF_VAR_access_key:
@@ -228,9 +240,11 @@ steps:
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
-      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = ${AWS_ACCOUNT_ROLE}\ncredential_source = Environment\nrole_session_name = AWS ACCOUNT" > ~/.aws/config
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
       - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
-      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
     environment:
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_lower_aws_access_key_id
