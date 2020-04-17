@@ -92,22 +92,22 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # # Invoke sonar scan
-  # - name: sonar scan
-  #   image: aosapps/drone-sonar-plugin
-  #   environment:
-  #     SONAR_HOST:
-  #       from_secret: jaqu_lower_sonar_host
-  #     SONAR_TOKEN:
-  #       from_secret: jaqu_lower_sonar_token
-  #     sonar.ruby.coverage.reportPaths: coverage/.resultset.json
-  #   commands:
-  #     - sonar-scanner
-  #       -Dsonar.projectKey=${DRONE_REPO}
-  #       -Dsonar.projectName=${DRONE_REPO}
-  #       -Dsonar.host.url=$SONAR_HOST
-  #       -Dsonar.login=$SONAR_TOKEN
-  #       -Dproject.settings=./sonar-project.properties
+  # Invoke sonar scan
+  - name: sonar scan
+    image: aosapps/drone-sonar-plugin
+    environment:
+      SONAR_HOST:
+        from_secret: jaqu_lower_sonar_host
+      SONAR_TOKEN:
+        from_secret: jaqu_lower_sonar_token
+      sonar.ruby.coverage.reportPaths: coverage/.resultset.json
+    commands:
+      - sonar-scanner
+        -Dsonar.projectKey=${DRONE_REPO}
+        -Dsonar.projectName=${DRONE_REPO}
+        -Dsonar.host.url=$SONAR_HOST
+        -Dsonar.login=$SONAR_TOKEN
+        -Dproject.settings=./sonar-project.properties
 
   # Invoke terraform scripts to ensure ecr is available for deploy step.
   - name: initialise jaqu-lower account-config and ECR
