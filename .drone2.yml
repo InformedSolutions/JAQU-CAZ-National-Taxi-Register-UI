@@ -224,6 +224,11 @@ steps:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
         from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_lower_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_lower_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
@@ -241,7 +246,7 @@ steps:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
       - mkdir ~/.aws
-      - echo -e "[profile target_acc]\nrole_arn = ${AWS_ACCOUNT_ROLE}\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - echo -e "[profile target_acc]\nrole_arn = $AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
       - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
       - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
       - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
@@ -253,6 +258,7 @@ steps:
       AWS_DEFAULT_REGION: eu-west-2
       APPLICATION_NAME: ntr-codedeploy-service-dev
       DEPLOYMENT_GROUP: ntr-codedeploy-service-dev
+      AWS_ACCOUNT_ROLE: arn:aws:iam::311075478274:role/jaqu-lowerServiceRole
       PROJECT: ntr
       DEPLOY_ENVIRONMENT: dev
       LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
