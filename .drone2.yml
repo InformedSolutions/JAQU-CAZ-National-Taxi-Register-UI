@@ -5,7 +5,7 @@ type: docker
 name: ntr-web-dev2
 trigger:
   branch:
-    - iac_restructure_baseline
+    - iac-restructure-baseline
   event:
     - pull_request
     - push
