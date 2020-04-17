@@ -123,7 +123,7 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout iac_restructure_baseline
-      - cd terraform/projects/account-config/layers/01.iam
+      - cd terraform-iac/projects/account-config/layers/01.iam
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
@@ -201,8 +201,7 @@ steps:
     commands:
       - apk update && apk add bash
       - cd JAQU-CAZ-IAC
-      -
-      - cd terraform/projects/ntr/layers/01.networking
+      - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
