@@ -80,9 +80,6 @@ class UploadController < ApplicationController
   #    :GET /upload/data_rules
   #
   def data_rules
-    # temporary code to check returned credentials in time.
-    AwsCredentialsApi.fetch_credentials if ENV['AWS_CONTAINER_CREDENTIALS_RELATIVE_URI']
-
     # renders static page
   end
 
