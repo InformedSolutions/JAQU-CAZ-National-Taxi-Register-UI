@@ -178,9 +178,9 @@ steps:
     image: plugins/ecr
     settings:
       access_key:
-        from_secret: jaqu_lower_aws_access_key_id
+        from_secret: jaqu_lower_service_aws_access_key_id
       secret_key:
-        from_secret: jaqu_lower_aws_secret_access_key
+        from_secret: jaqu_lower_service_aws_secret_access_key
       repo: 311075478274.dkr.ecr.eu-west-2.amazonaws.com/ntr-web
       registry: 311075478274.dkr.ecr.eu-west-2.amazonaws.com
       dockerfile: Dockerfile.build
@@ -347,6 +347,21 @@ name: jaqu_lower_aws_secret_access_key
 get:
   path: /build-tools/drone
   name: awsSecretAccessKey
+
+
+---
+kind: secret
+name: jaqu_lower_service_aws_access_key_id
+get:
+  path: /build-tools/drone
+  name: awsServiceAccessKeyId
+
+---
+kind: secret
+name: jaqu_lower_service_aws_secret_access_key
+get:
+  path: /build-tools/drone
+  name: awsServiceSecretAccessKey
 
 ---
 kind: secret
