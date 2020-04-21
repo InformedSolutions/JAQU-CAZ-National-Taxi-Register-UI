@@ -181,7 +181,7 @@ steps:
         from_secret: jaqu_lower_service_aws_access_key_id
       secret_key:
         from_secret: jaqu_lower_service_aws_secret_access_key
-      repo: 311075478274.dkr.ecr.eu-west-2.amazonaws.com/ntr-web
+      repo: 311075478274.dkr.ecr.eu-west-2.amazonaws.com/ntr-repo
       registry: 311075478274.dkr.ecr.eu-west-2.amazonaws.com
       dockerfile: Dockerfile.build
       region: eu-west-2
