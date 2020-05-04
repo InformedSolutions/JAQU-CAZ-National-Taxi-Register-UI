@@ -154,6 +154,21 @@ RSpec.describe SearchVrnForm, type: :model do
                           'Start date must be earlier than end date'
         end
       end
+
+      context 'when the start date and end date the same' do
+        context 'show errors' do
+          let(:start_date_day) { Date.yesterday.day.to_s }
+          let(:start_date_month) { Date.yesterday.month.to_s }
+          let(:start_date_year) { Date.yesterday.year.to_s }
+          let(:end_date_day) { Date.yesterday.day.to_s }
+          let(:end_date_month) { Date.yesterday.month.to_s }
+          let(:end_date_year) { Date.yesterday.year.to_s }
+
+          it_behaves_like 'an invalid attribute input',
+                          :start_date,
+                          'Start date must be earlier than end date'
+        end
+      end
     end
 
     context 'with invalid end dates' do
