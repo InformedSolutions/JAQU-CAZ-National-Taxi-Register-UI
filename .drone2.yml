@@ -123,43 +123,16 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout iac_restructure_baseline
-      - cd terraform-iac/projects/account-config/layers/01.iam
-      - PATH=$PATH:../../../../bin/
-      - chmod +x ../../../../bin/tf
+      - cd terraform-iac/projects/build-tools/layers/03.deployment
       - tf init
       - tf workspace select default
       - tf apply -auto-approve
-      - cd ../02.networking
-      - tf init
-      - tf workspace select default
-      - tf apply -auto-approve
-      - cd ../03.security-groups
-      - tf init
-      - tf workspace select default
-      - tf apply -auto-approve
-      - cd ../04.secrets
-      - tf init
-      - tf workspace select default
-      - tf apply -auto-approve
-      - cd ../05.s3
-      - tf init
-      - tf workspace select default
-      - tf apply -auto-approve
-      - cd ../../../build-tools/layers/03.deployment
-      - tf init
-      - tf workspace select default
-      - tf apply -auto-approve
-
 
     environment:
       TF_VAR_access_key:
         from_secret: jaqu_lower_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_lower_aws_secret_access_key
-      TF_VAR_master_access_key:
-        from_secret: jaqu_master_aws_access_key_id
-      TF_VAR_master_secret_key:
-        from_secret: jaqu_master_aws_secret_access_key
       TF_VAR_account_id:
         from_secret: jaqu_lower_aws_account_id
       AWS_ACCESS_KEY_ID:
@@ -285,46 +258,46 @@ steps:
       event:
         - push
 
-    # Build pa11y-ci image
-  - name: build pa11y-ci image
-    image: docker
-    commands:
-      - cd pa11y
-      - docker build -t pa11y-ci .
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    when:
-      event:
-        - push
-
-  # Trigger accessibility test
-  - name: accessibility tests
-    image: pa11y-ci
-    pull: never
-    environment:
-      BASE_URL: https://dev-upload.taxiphvdata.co.uk
-    commands:
-      - mkdir screenshots
-      - /usr/local/bin/pa11y-ci -c pa11y/.pa11yci.conf.js
-    when:
-      event:
-        - push
-
-  # Execute jMeter scripts via taurus
-  - name: micro-performance tests
-    image: blazemeter/taurus
-    commands:
-      - gem install csv
-      - ruby jmeter/generate_taxi.rb
-      - mv CAZ-2020-01-08-100.csv jmeter
-      - bzt -o modules.jmeter.properties.hostname=dev-upload.taxiphvdata.co.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
-    when:
-      event:
-        - push
+  #   # Build pa11y-ci image
+  # - name: build pa11y-ci image
+  #   image: docker
+  #   commands:
+  #     - cd pa11y
+  #     - docker build -t pa11y-ci .
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
+  #   when:
+  #     event:
+  #       - push
+  #
+  # # Trigger accessibility test
+  # - name: accessibility tests
+  #   image: pa11y-ci
+  #   pull: never
+  #   environment:
+  #     BASE_URL: https://dev-upload.taxiphvdata.co.uk
+  #   commands:
+  #     - mkdir screenshots
+  #     - /usr/local/bin/pa11y-ci -c pa11y/.pa11yci.conf.js
+  #   when:
+  #     event:
+  #       - push
+  #
+  # # Execute jMeter scripts via taurus
+  # - name: micro-performance tests
+  #   image: blazemeter/taurus
+  #   commands:
+  #     - gem install csv
+  #     - ruby jmeter/generate_taxi.rb
+  #     - mv CAZ-2020-01-08-100.csv jmeter
+  #     - bzt -o modules.jmeter.properties.hostname=dev-upload.taxiphvdata.co.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
+  #   when:
+  #     event:
+  #       - push
 
 
   ################################################# End DEV Steps ############################################################
