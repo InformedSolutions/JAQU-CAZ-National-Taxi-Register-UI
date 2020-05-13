@@ -123,9 +123,9 @@ steps:
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout iac_restructure_baseline
+      - cd terraform-iac/projects/build-tools/layers/03.deployment
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
-      - cd terraform-iac/projects/build-tools/layers/03.deployment
       - tf init
       - tf workspace select default
       - tf apply -auto-approve
