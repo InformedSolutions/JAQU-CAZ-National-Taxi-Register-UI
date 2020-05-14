@@ -3,22 +3,58 @@
 require 'rails_helper'
 
 RSpec.describe 'VehiclesCheckerApi.licence_info' do
-  subject(:call) { VehiclesCheckerApi.licence_info(vrn) }
+  subject(:call) do
+    VehiclesCheckerApi.licence_info_historical(
+      vrn: vrn,
+      page: page,
+      start_date: start_date,
+      end_date: end_date
+    )
+  end
 
   let(:vrn) { 'CU57ABC' }
+  let(:page) { 2 }
+  let(:start_date) { '2010-01-01' }
+  let(:end_date) { '2020-03-24' }
 
   context 'when call returns 200' do
     before do
-      vrn_details = file_fixture('responses/licence_info_response.json').read
-      stub_request(:get, /CU57ABC/).to_return(status: 200, body: vrn_details)
+      vrn_history = read_unparsed_response('licence_info_historical_response.json')
+      stub_request(:get, /CU57ABC/).to_return(status: 200, body: vrn_history)
+    end
+
+    it 'calls API with proper query data' do
+      call
+      expect(WebMock).to have_requested(
+        :get,
+        /endDate=#{end_date}&pageNumber=#{page - 1}&pageSize=10&startDate=#{start_date}/
+      )
     end
 
     it 'returns proper fields' do
-      expect(call.keys).to contain_exactly(
-        'active',
-        'wheelchairAccessible',
-        'licensingAuthoritiesNames'
+      expect(call['1'].keys).to contain_exactly(
+        'perPage',
+        'page',
+        'pageCount',
+        'totalChangesCount',
+        'changes'
       )
+    end
+
+    it 'returns proper `changes` fields' do
+      expect(call['1']['changes'].first.keys).to contain_exactly(
+        'modifyDate',
+        'action',
+        'licensingAuthorityName',
+        'plateNumber',
+        'licenceStartDate',
+        'licenceEndDate',
+        'wheelchairAccessible'
+      )
+    end
+
+    it 'returns changes list' do
+      expect(call['1']['changes']).to be_a(Array)
     end
   end
 

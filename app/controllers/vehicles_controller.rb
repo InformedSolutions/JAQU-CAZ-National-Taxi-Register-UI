@@ -9,9 +9,9 @@ class VehiclesController < ApplicationController
   # checks if a user is logged in
   before_action :authenticate_user!
   # checks if VRN is present in the session
-  before_action :check_vrn, only: %i[index]
+  before_action :check_vrn, only: %i[index historic_search]
   # assign back button path
-  before_action :assign_back_button_url, only: %i[index search not_found]
+  before_action :assign_back_button_url, only: %i[index search not_found historic_search]
 
   ##
   # Renders the search page
@@ -33,14 +33,14 @@ class VehiclesController < ApplicationController
   #    :POST /vehicles/submit_search
   #
   def submit_search
-    form = SearchVrnForm.new(search_params)
+    form = SearchVrnForm.new(adjusted_search_params)
     unless form.valid?
       @errors = form.errors.messages
       return render :search
     end
 
-    session[:vrn] = parsed_vrn(search_params['vrn'])
-    redirect_to vehicles_path
+    session[:vrn] = form.vrn
+    determinate_results_page(form)
   end
 
   ##
@@ -54,6 +54,19 @@ class VehiclesController < ApplicationController
   end
 
   ##
+  # Renders the historical results page
+  #
+  # ==== Path
+  #    :GET /vehicles/historic_search
+  #
+  def historic_search
+    page = (params[:page] || 1).to_i
+    @vrn_details = HistoricalVrnDetails.new(vrn, page, start_date, end_date)
+    @vrn = vrn
+    @pagination = @vrn_details.pagination
+  end
+
+  ##
   # Renders not found page
   #
   # ==== Path
@@ -64,11 +77,6 @@ class VehiclesController < ApplicationController
   end
 
   private
-
-  # Returns uppercased VRN from the query params without any space, eg. 'CU1234'
-  def parsed_vrn(params_vrn)
-    @parsed_vrn ||= params_vrn.upcase&.delete(' ')
-  end
 
   # Redirects to {vehicle not found}[rdoc-ref:VehiclesController.not_found]
   def vrn_not_found
@@ -88,17 +96,34 @@ class VehiclesController < ApplicationController
     session[:vrn]
   end
 
-  # Returns the list of permitted params
-  def search_params
-    params.require(:search).permit(
-      :vrn,
-      :historic,
-      :start_date_day,
-      :start_date_month,
-      :start_date_year,
-      :end_date_day,
-      :end_date_month,
-      :end_date_year
+  # Gets Start Date from session. Returns string, eg '2010-01-01'
+  def start_date
+    session[:start_date]
+  end
+
+  # Gets End Date from session. Returns string, eg '2020-03-24'
+  def end_date
+    session[:end_date]
+  end
+
+  # Returns the list of permitted params and uppercased +vrn+ without any space, eg. 'CU1234'
+  def adjusted_search_params
+    strong_params = params.require(:search).permit(
+      :vrn, :historic, :start_date_day, :start_date_month, :start_date_year, :end_date_day,
+      :end_date_month, :end_date_year
     )
+    strong_params['vrn'] = strong_params['vrn']&.upcase&.delete(' ')
+    strong_params
+  end
+
+  # Returns redirect to the results page depending on the +historic+ value
+  def determinate_results_page(form)
+    if form.historic == 'true'
+      session[:start_date] = form.start_date
+      session[:end_date] = form.end_date
+      redirect_to historic_search_vehicles_path
+    else
+      redirect_to vehicles_path
+    end
   end
 end
