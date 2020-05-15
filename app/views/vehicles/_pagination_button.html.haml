@@ -1,0 +1,14 @@
+- active ||= false
+- form_class ||= nil
+- id = "pagination-button-#{button_text.to_s.downcase}"
+
+- if active
+  %li.moj-pagination__item.moj-pagination__item--active{id: id}
+    = button_text
+- else
+  %li.moj-pagination__item{id: id, class: ("moj-pagination__item--#{form_class}" if form_class)}
+    = link_to(historic_search_vehicles_path(page: page), class: 'moj-pagination__link') do
+      = button_text
+      - if button_text.is_a?(String)
+        %span.govuk-visually-hidden
+          set of pages

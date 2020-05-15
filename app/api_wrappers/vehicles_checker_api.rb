@@ -38,5 +38,54 @@ class VehiclesCheckerApi < BaseApi
       log_call('Getting vehicle details')
       request(:get, "/#{vrn}/licence-info")
     end
+
+    ##
+    # Calls +/v1/vehicles/:vrn/licence-info-historical+ endpoint with +GET+ method
+    # and returns paginated list of vehicle's information
+    #
+    # ==== Attributes
+    #
+    # * +vrn+ - Vehicle registration number, eg. 'CU12345'
+    # * +page+ - requested page of the results
+    # * +per_page+ - number of vehicles per page, defaults to 10
+    # * +start_date+ - string, date format, eg '2010-01-01'
+    # * +end_date+ - string, date format, eg '2020-03-24'
+    #
+    # ==== Result
+    #
+    # Returned vehicles details will have the following fields:
+    # * +page+ - number of available pages
+    # * +pageCount+ - number of available pages
+    # * +perPage+ - number of available pages
+    # * +totalChangesCount+ - integer, the total number of changes associated with this vehicle
+    # * +changes+ - array of objects, history of changes for current vrn
+    #   * +modifyDate+ - string, date format
+    #   * +action+ - string, status of current VRM for a specific date range
+    #   * +licensingAuthorityName+ - array of strings, containing the licensing authority names
+    #   * +plateNumber+ - string, A vehicle registration plate
+    #   * +licenceStartDate+ - string, date format
+    #   * +licenceEndDate+ - string, date format
+    #   * +wheelchairAccessible+ -  boolean, wheelchair accessible by any active operating licence
+    #
+    def licence_info_historical(vrn:, page:, per_page: 10, start_date:, end_date:)
+      log_call("Getting the historical details for page: #{page}, start_date: #{start_date}"\
+               " and end_date: #{end_date}")
+
+      query = {
+        'pageNumber' => calculate_page_number(page),
+        'pageSize' => per_page,
+        'startDate' => start_date,
+        'endDate' => end_date
+      }
+
+      request(:get, "/#{vrn}/licence-info-historical", query: query)
+    end
+
+    private
+
+    def calculate_page_number(page)
+      result = page - 1
+      result.negative? ? 0 : result
+    end
   end
 end

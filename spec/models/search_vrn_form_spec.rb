@@ -64,6 +64,16 @@ RSpec.describe SearchVrnForm, type: :model do
       it { is_expected.to be_valid }
     end
 
+    context 'dates should be in ISO 8601 format' do
+      it 'returns a proper `start_date` format' do
+        expect(form.start_date).to eq('2020-03-10')
+      end
+
+      it 'returns a proper `end_date` format' do
+        expect(form.end_date).to eq('2020-03-14')
+      end
+    end
+
     context 'with invalid start dates' do
       context 'when day is missing' do
         let(:start_date_day) { '' }
