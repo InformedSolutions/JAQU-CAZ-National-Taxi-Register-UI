@@ -51,7 +51,7 @@ module ApplicationHelper
       rel: 'noopener',
       'aria-label': "#{html_options[:'aria-label'] || text} (#{I18n.t('external_link')})"
     )
-    
+
     link_to "#{text} (#{I18n.t('external_link')})", url, html_options
   end
 end
