@@ -166,7 +166,7 @@ class SearchVrnForm < MultipleAttributesBaseForm
 
   # validates start and end dates period
   def validate_dates_period
-    if start_date >= end_date
+    if start_date > end_date
       add_errors_to_start_date
       errors.add(
         :start_date,
