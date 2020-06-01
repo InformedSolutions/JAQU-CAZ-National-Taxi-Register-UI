@@ -26,9 +26,7 @@ group :development, :test do
   gem 'byebug'
   gem 'dotenv-rails'
   gem 'haml-rails'
-  gem 'pry-byebug'
-  gem 'pry-rails'
-  gem 'rspec-rails', '~> 4.0.0.rc1'
+  gem 'rspec-rails'
   gem 'scss_lint-govuk', require: false
 end
 
