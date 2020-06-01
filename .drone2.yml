@@ -179,6 +179,7 @@ steps:
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
       AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-lower
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
