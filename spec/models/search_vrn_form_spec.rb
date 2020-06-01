@@ -164,9 +164,7 @@ RSpec.describe SearchVrnForm, type: :model do
           let(:end_date_month) { Date.yesterday.month.to_s }
           let(:end_date_year) { Date.yesterday.year.to_s }
 
-          it_behaves_like 'an invalid attribute input',
-                          :start_date,
-                          'Start date must be earlier than end date'
+          it { is_expected.to be_valid }
         end
       end
     end
