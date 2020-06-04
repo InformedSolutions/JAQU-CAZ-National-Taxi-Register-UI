@@ -284,7 +284,7 @@ type: docker
 name: ntr-web-st
 trigger:
   branch:
-    - iac-restructure-controlled
+    - iac-restructure-controlled-st
   event:
     - pull_request
     - push
