@@ -110,7 +110,7 @@ steps:
 
 
  # Push built image to ECR registry
-  - name: publish image to ecr
+  - name: publish dev image to ecr
     image: plugins/ecr
     settings:
       access_key:
@@ -389,7 +389,7 @@ steps:
 
 
  # Push built image to ECR registry
-  - name: publish image to ecr
+  - name: publish ST image to ecr
     image: plugins/ecr
     settings:
       access_key:
