@@ -130,19 +130,10 @@ class VehiclesController < ApplicationController
 
   # Returns the return url
   def return_url
-    if (!params[:page] || params[:page].to_i == 1) && params[:back]
+    if !params[:page] || params[:page].to_i == 1
       search_vehicles_path
     else
-      return_url_with_params
+      request.referer
     end
-  end
-
-  # Returns the return URL with params
-  def return_url_with_params
-    url = request.referer || root_path
-    params = { back: true }
-    uri = URI.parse url
-    uri.query = URI.encode_www_form URI.decode_www_form(uri.query || '').concat(params.to_a)
-    uri.to_s
   end
 end

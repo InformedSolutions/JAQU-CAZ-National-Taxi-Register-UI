@@ -45,7 +45,12 @@ Feature: Search a VRN
       And I should see 'Start date must be earlier than end date'
     Then I enter a vrn and valid dates format
       And I press 'Continue' button
-    Then I should see 'Results for CU57ABC'
+      And I should see 'Results for CU57ABC'
+    Then I press '2' link
+      And I press 'Back' link
+    Then I should be on the Historic Search Results page
+      And I press 'Back' link
+    Then I should be on the Search page
 
   Scenario: Search a VRN for historical results with Invalid date
     Given I am on the Search VRN page
