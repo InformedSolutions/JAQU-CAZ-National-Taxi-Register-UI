@@ -33,7 +33,7 @@ RUN export S3_AWS_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL && \
     yarn install --frozen-lockfile --non-interactive && \
     bundle exec rails assets:precompile && \
     yarn cache clean && \
-    rm -rf /home/app/node_moduless && \
+    rm -rf /home/app/node_modules && \
     unset S3_AWS_ACCESS_KEY_ID && \
     unset S3_AWS_SECRET_ACCESS_KEY && \
     unset SES_ACCESS_KEY_ID && \
