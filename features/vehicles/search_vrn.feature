@@ -47,6 +47,16 @@ Feature: Search a VRN
       And I press 'Continue' button
     Then I should see 'Results for CU57ABC'
 
+  Scenario: Search a VRN for historical results with Invalid date
+    Given I am on the Search VRN page
+      And I should see "Taxi register search"
+    When I enter a vrn and negative start date
+      And I press 'Continue' button
+    Then I should see 'Enter a real start date'
+    When I enter a vrn and negative end date
+      And I press 'Continue' button
+    Then I should see 'Enter a real end date'
+
   Scenario: Pagination on the historical results page
   Given I am on the Historical results page
   Then I should see active "1" pagination button

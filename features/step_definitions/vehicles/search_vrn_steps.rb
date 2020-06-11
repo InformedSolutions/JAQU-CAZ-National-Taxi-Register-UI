@@ -52,6 +52,18 @@ When('I enter a vrn and start date earlier than end date') do
   fill_in('search_end_date_year', with: Time.zone.now.year.to_s)
 end
 
+When('I enter a vrn and negative start date') do
+  fill_vrn
+  choose('Search for historical results')
+  fill_negative_start_date
+end
+
+When('I enter a vrn and negative end date') do
+  fill_vrn
+  choose('Search for historical results')
+  fill_negative_end_date
+end
+
 When('I enter an invalid vrn format') do
   fill_vrn('****&&&%%%%')
 end
@@ -107,6 +119,24 @@ def fill_dates
   fill_in('search_start_date_month', with: 3)
   fill_in('search_start_date_year', with: 2020)
   fill_in('search_end_date_day', with: 14)
+  fill_in('search_end_date_month', with: 3)
+  fill_in('search_end_date_year', with: 2020)
+end
+
+def fill_negative_start_date
+  fill_in('search_start_date_day', with: -10)
+  fill_in('search_start_date_month', with: 3)
+  fill_in('search_start_date_year', with: 2020)
+  fill_in('search_end_date_day', with: 14)
+  fill_in('search_end_date_month', with: 3)
+  fill_in('search_end_date_year', with: 2020)
+end
+
+def fill_negative_end_date
+  fill_in('search_start_date_day', with: 10)
+  fill_in('search_start_date_month', with: 3)
+  fill_in('search_start_date_year', with: 2020)
+  fill_in('search_end_date_day', with: -14)
   fill_in('search_end_date_month', with: 3)
   fill_in('search_end_date_year', with: 2020)
 end

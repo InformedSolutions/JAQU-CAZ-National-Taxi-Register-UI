@@ -140,6 +140,26 @@ RSpec.describe SearchVrnForm, type: :model do
                         'Enter a real start date'
       end
 
+      context 'when start month is negative' do
+        let(:start_date_day) { '12' }
+        let(:start_date_day) { '-12' }
+        let(:start_date_day) { '2020' }
+
+        it_behaves_like 'an invalid attribute input',
+                        :start_date,
+                        'Enter a real start date'
+      end
+
+      context 'when start day is negative' do
+        let(:start_date_day) { '-12' }
+        let(:start_date_day) { '12' }
+        let(:start_date_day) { '2020' }
+
+        it_behaves_like 'an invalid attribute input',
+                        :start_date,
+                        'Enter a real start date'
+      end
+
       context 'when the start date not earlier than end date' do
         context 'show errors' do
           let(:start_date_day) { Date.tomorrow.day.to_s }
@@ -164,9 +184,7 @@ RSpec.describe SearchVrnForm, type: :model do
           let(:end_date_month) { Date.yesterday.month.to_s }
           let(:end_date_year) { Date.yesterday.year.to_s }
 
-          it_behaves_like 'an invalid attribute input',
-                          :start_date,
-                          'Start date must be earlier than end date'
+          it { is_expected.to be_valid }
         end
       end
     end
@@ -219,6 +237,26 @@ RSpec.describe SearchVrnForm, type: :model do
 
       context 'when year is in an invalid format' do
         let(:end_date_year) { '-2020' }
+
+        it_behaves_like 'an invalid attribute input',
+                        :end_date,
+                        'Enter a real end date'
+      end
+
+      context 'when end day is negative' do
+        let(:end_date_day) { '-12' }
+        let(:end_date_day) { '12' }
+        let(:end_date_day) { '2020' }
+
+        it_behaves_like 'an invalid attribute input',
+                        :end_date,
+                        'Enter a real end date'
+      end
+
+      context 'when end month is negative' do
+        let(:end_date_day) { '12' }
+        let(:end_date_day) { '-12' }
+        let(:end_date_day) { '2020' }
 
         it_behaves_like 'an invalid attribute input',
                         :end_date,
