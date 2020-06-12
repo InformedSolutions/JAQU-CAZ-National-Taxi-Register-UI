@@ -1,4 +1,4 @@
-#################################################### DEV Steps ############################################################
+################################################### DEV Steps ############################################################
 
 kind: pipeline
 type: docker
@@ -18,7 +18,7 @@ volumes:
 
 steps:
   - name: secret test
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - echo ${JAQU_NEXUS_URL}
     environment:
@@ -31,7 +31,7 @@ steps:
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker system prune -f
     volumes:
@@ -40,7 +40,7 @@ steps:
 
   # Build docker image
   - name: build
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
     volumes:
@@ -218,7 +218,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: docker:19.03.11-git
     environment:
       build_id_url: https://dev2-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -234,7 +234,7 @@ steps:
 
     # Build pa11y-ci image
   - name: build pa11y-ci image
-    image: docker
+    image: docker:19.03.11-git
     commands:
       - cd pa11y
       - docker build -t pa11y-ci .
@@ -297,7 +297,7 @@ volumes:
 
 steps:
   - name: secret test
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - echo ${JAQU_NEXUS_URL}
     environment:
@@ -310,7 +310,7 @@ steps:
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker system prune -f
     volumes:
@@ -319,7 +319,7 @@ steps:
 
   # Build docker image
   - name: build
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
     volumes:
@@ -471,7 +471,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
@@ -565,7 +565,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: docker:19.03.11-git
     environment:
       build_id_url: https://st2-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -602,7 +602,7 @@ volumes:
 
 steps:
   - name: secret test
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - echo ${JAQU_NEXUS_URL}
     environment:
@@ -615,7 +615,7 @@ steps:
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker system prune -f
     volumes:
@@ -624,7 +624,7 @@ steps:
 
   # Build docker image
   - name: build
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
     volumes:
@@ -776,7 +776,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
@@ -870,7 +870,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: docker:19.03.11-git
     environment:
       build_id_url: https://sit2-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
