@@ -318,8 +318,8 @@ steps:
         path: /var/run/docker.sock
     commands:
       - yarn install
-
       - rspec -f d
+
   # Execute integration/scenario tests
   - name: integration tests
     image: test-national-taxi-register-frontend
@@ -712,7 +712,7 @@ steps:
       - tf plan
       - cd ../02.backends
       - tf init
-      - tf workspace select sit|| tf workspace new sit
+      - tf workspace select sit || tf workspace new sit
       - tf plan
       - cd ../04.web
       - tf init
