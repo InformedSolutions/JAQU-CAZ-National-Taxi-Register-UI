@@ -46,6 +46,8 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    build_args:
+      - AWS_REGION=eu-west-2
 
   # Trigger unit tests
   - name: unit tests
@@ -126,6 +128,7 @@ steps:
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
+        - AWS_REGION=eu-west-2
     when:
       event:
         - push
@@ -325,6 +328,9 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    build_args:
+      - AWS_REGION=eu-west-2
+
 
   # Trigger unit tests
   - name: unit tests
@@ -405,6 +411,7 @@ steps:
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
+        - AWS_REGION=eu-west-2
     when:
       event:
         - push
@@ -630,6 +637,8 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    build_args:
+      - AWS_REGION=eu-west-2
 
   # Trigger unit tests
   - name: unit tests
@@ -710,6 +719,7 @@ steps:
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
+        - AWS_REGION=eu-west-2
     when:
       event:
         - push
