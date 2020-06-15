@@ -17,18 +17,6 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:3.11.6
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
-
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
     image: docker:19.03.11-git
@@ -299,17 +287,6 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:3.11.6
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
@@ -341,8 +318,8 @@ steps:
         path: /var/run/docker.sock
     commands:
       - yarn install
-      - rspec -f d
 
+      - rspec -f d
   # Execute integration/scenario tests
   - name: integration tests
     image: test-national-taxi-register-frontend
@@ -608,17 +585,6 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:3.11.6
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
