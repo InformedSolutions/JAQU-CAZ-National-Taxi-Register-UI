@@ -1,4 +1,4 @@
-#################################################### DEV Steps ############################################################
+################################################### DEV Steps ############################################################
 
 kind: pipeline
 type: docker
@@ -17,21 +17,9 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:latest
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
-
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker system prune -f
     volumes:
@@ -40,12 +28,14 @@ steps:
 
   # Build docker image
   - name: build
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    build_args:
+      - AWS_REGION=eu-west-2
 
   # Trigger unit tests
   - name: unit tests
@@ -126,6 +116,7 @@ steps:
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
+        - AWS_REGION=eu-west-2
     when:
       event:
         - push
@@ -218,7 +209,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: docker:19.03.11-git
     environment:
       build_id_url: https://dev2-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -234,7 +225,7 @@ steps:
 
     # Build pa11y-ci image
   - name: build pa11y-ci image
-    image: docker
+    image: docker:19.03.11-git
     commands:
       - cd pa11y
       - docker build -t pa11y-ci .
@@ -296,21 +287,10 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:latest
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker system prune -f
     volumes:
@@ -319,12 +299,15 @@ steps:
 
   # Build docker image
   - name: build
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    build_args:
+      - AWS_REGION=eu-west-2
+
 
   # Trigger unit tests
   - name: unit tests
@@ -405,6 +388,7 @@ steps:
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
+        - AWS_REGION=eu-west-2
     when:
       event:
         - push
@@ -471,7 +455,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
@@ -565,7 +549,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: docker:19.03.11-git
     environment:
       build_id_url: https://st2-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -601,21 +585,10 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:latest
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker system prune -f
     volumes:
@@ -624,12 +597,14 @@ steps:
 
   # Build docker image
   - name: build
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
+    build_args:
+      - AWS_REGION=eu-west-2
 
   # Trigger unit tests
   - name: unit tests
@@ -706,10 +681,11 @@ steps:
       dockerfile: Dockerfile.build
       region: eu-west-2
       tags:
-        - latest
+        - release
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
+        - AWS_REGION=eu-west-2
     when:
       event:
         - push
@@ -736,7 +712,7 @@ steps:
       - tf plan
       - cd ../02.backends
       - tf init
-      - tf workspace select sit|| tf workspace new sit
+      - tf workspace select sit || tf workspace new sit
       - tf plan
       - cd ../04.web
       - tf init
@@ -776,7 +752,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
@@ -870,7 +846,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: docker:19.03.11-git
     environment:
       build_id_url: https://sit2-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
