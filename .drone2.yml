@@ -652,7 +652,7 @@ steps:
   #       path: /var/run/docker.sock
 
   # Invoke sonar scan
-  
+
  # Push built image to ECR registry
   - name: publish ST image to ecr
     image: plugins/ecr
@@ -896,7 +896,6 @@ steps:
       - tf init
       - tf workspace select preprod || tf workspace new preprod
       - tf plan
-
     environment:
       TF_VAR_access_key:
         from_secret: jaqu_staging_aws_access_key_id
@@ -919,7 +918,6 @@ steps:
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-staging
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
-      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
@@ -993,7 +991,6 @@ steps:
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-staging
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
-      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
@@ -1034,8 +1031,13 @@ steps:
     image: docker:19.03.11-git
     environment:
       build_id_url: https://preprod2-upload.taxiphvdata.co.uk/build_id
-      build_id: ${DRONE_BUILD_NUMBER}
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
     commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
       - sh build_utils/check_build_number.sh
     volumes:
