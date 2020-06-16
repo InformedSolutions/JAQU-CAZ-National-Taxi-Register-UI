@@ -69,18 +69,18 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # Invoke security analysis through Ruby libraries
-  - name: security tests (Ruby)
-    image: test-national-taxi-register-frontend
-    pull: never
-    commands:
-       - bundle audit check --update
-       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-       - yarn run improved-yarn-audit --exclude '1488, 1179, 1500' --retry-on-network-failure
-       - brakeman
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
+  # # Invoke security analysis through Ruby libraries
+  # - name: security tests (Ruby)
+  #   image: test-national-taxi-register-frontend
+  #   pull: never
+  #   commands:
+  #      - bundle audit check --update
+  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+  #      - yarn run improved-yarn-audit --exclude '1488, 1179, 1500' --retry-on-network-failure
+  #      - brakeman
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
 
   # Invoke sonar scan
   - name: sonar scan
@@ -341,18 +341,18 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # Invoke security analysis through Ruby libraries
-  - name: security tests (Ruby)
-    image: test-national-taxi-register-frontend
-    pull: never
-    commands:
-       - bundle audit check --update
-       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-       - yarn run improved-yarn-audit --exclude '1488, 1179, 1500' --retry-on-network-failure
-       - brakeman
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
+  # # Invoke security analysis through Ruby libraries
+  # - name: security tests (Ruby)
+  #   image: test-national-taxi-register-frontend
+  #   pull: never
+  #   commands:
+  #      - bundle audit check --update
+  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+  #      - yarn run improved-yarn-audit --exclude '1488, 1179, 1500' --retry-on-network-failure
+  #      - brakeman
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
 
   # Invoke sonar scan
   - name: sonar scan
@@ -639,34 +639,19 @@ steps:
         path: /var/run/docker.sock
 
   # Invoke security analysis through Ruby libraries
-  - name: security tests (Ruby)
-    image: test-national-taxi-register-frontend
-    pull: never
-    commands:
-       - bundle audit check --update
-       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-       - yarn run improved-yarn-audit --exclude '1488, 1179, 1500' --retry-on-network-failure
-       - brakeman
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
+  # - name: security tests (Ruby)
+  #   image: test-national-taxi-register-frontend
+  #   pull: never
+  #   commands:
+  #      - bundle audit check --update
+  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+  #      - yarn run improved-yarn-audit --exclude '1488, 1179, 1500' --retry-on-network-failure
+  #      - brakeman
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
 
   # Invoke sonar scan
-  - name: sonar scan
-    image: aosapps/drone-sonar-plugin
-    environment:
-      SONAR_HOST:
-        from_secret: jaqu_lower_sonar_host
-      SONAR_TOKEN:
-        from_secret: jaqu_lower_sonar_token
-      sonar.ruby.coverage.reportPaths: coverage/.resultset.json
-    commands:
-      - sonar-scanner
-        -Dsonar.projectName=${DRONE_REPO}
-        -Dsonar.host.url=$SONAR_HOST
-        -Dsonar.login=$SONAR_TOKEN
-        -Dproject.settings=./sonar-project.properties
-
 
  # Push built image to ECR registry
   - name: publish ST image to ecr
@@ -861,6 +846,207 @@ steps:
         - push
   ################################################# End SIT Steps ############################################################
 
+---
+
+#################################################### Preprod environment - Steps ############################################################
+
+kind: pipeline
+type: docker
+name: ntr-web-preprod
+trigger:
+  branch:
+    - iac-restructure-staging-preprod
+  event:
+    - pull_request
+    - push
+concurrency:
+  limit: 1
+
+steps:
+
+  - name: plan terraform updates in preprod
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout iac_restructure_staging
+      - cd terraform-iac/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf plan
+      - cd ../02.backends
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf plan
+      - cd ../04.web
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      TF_VAR_secret_key_base:
+        from_secret: ntr_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      environment: preprod
+    when:
+      event:
+        - pull_request
+
+  - name: provisioning warning
+    image: docker:19.03.11-git
+    commands:
+      - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
+    when:
+      status:
+        - failure
+
+  # Invoke terraform scripts with tagged image number
+  - name: deploy to preprod
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout iac_restructure_baseline
+      - cd terraform-iac/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf apply -auto-approve
+      - cd ../04.web
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      TF_VAR_secret_key_base:
+        from_secret: ntr_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      environment: preprod
+    when:
+      event:
+        - push
+
+  - name: codedeploy ui preprod
+    image: golang:alpine
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-shared-project-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: ntr-codedeploy-service-preprod
+      DEPLOYMENT_GROUP: ntr-codedeploy-service-preprod
+      AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-stagingServiceRole
+      PROJECT: ntr
+      DEPLOY_ENVIRONMENT: preprod
+      LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: docker:19.03.11-git
+    environment:
+      build_id_url: https://preprod2-upload.taxiphvdata.co.uk/build_id
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+  ################################################# End Preprod Steps ############################################################
 
 
   ################################################ Secrets - IAC Restructure #########################################################
@@ -923,6 +1109,36 @@ name: jaqu_controlled_service_aws_secret_access_key
 get:
   path: /build-tools/drone
   name: awsControlledServiceSecretAccessKey
+
+---
+kind: secret
+name: jaqu_staging_aws_access_key_id
+get:
+  path: /build-tools/drone
+  name: awsStagingAccessKeyId
+
+---
+kind: secret
+name: jaqu_staging_aws_secret_access_key
+get:
+  path: /build-tools/drone
+  name: awsStagingSecretAccessKey
+
+
+---
+kind: secret
+name: jaqu_staging_service_aws_access_key_id
+get:
+  path: /build-tools/drone
+  name: awsStagingServiceAccessKeyId
+
+---
+kind: secret
+name: jaqu_staging_service_aws_secret_access_key
+get:
+  path: /build-tools/drone
+  name: awsStagingServiceSecretAccessKey
+
 
 ---
 kind: secret
