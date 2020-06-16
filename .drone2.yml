@@ -1019,7 +1019,7 @@ steps:
       AWS_DEFAULT_REGION: eu-west-2
       APPLICATION_NAME: ntr-codedeploy-service-preprod
       DEPLOYMENT_GROUP: ntr-codedeploy-service-preprod
-      AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-stagingServiceRole
+      AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       PROJECT: ntr
       DEPLOY_ENVIRONMENT: preprod
       LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
@@ -1031,7 +1031,7 @@ steps:
     image: docker:19.03.11-git
     environment:
       build_id_url: https://preprod2-upload.taxiphvdata.co.uk/build_id
-      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_staging_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
