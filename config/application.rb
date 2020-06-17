@@ -22,7 +22,7 @@ module CsvUploader
     # name of service
     config.x.service_name = 'Taxi and PHV Data Portal'
     # Support Email Address
-    config.x.support_service_email = 'TaxiPHVDatabase.Support@informed.com'
+    config.x.support_service_email = ENV.fetch('SUPPORT_SERVICE_EMAIL', 'TaxiPHVDatabase.Support@informed.com')
     # email address for sending emails, eg 'from@example.com'
     default_email = 'TaxiandPHVCentralised.Database@defra.gov.uk'
     config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)
