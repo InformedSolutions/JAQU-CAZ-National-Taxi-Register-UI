@@ -183,7 +183,7 @@ steps:
         - push
 
   - name: codedeploy ui dev
-    image: golang:alpine
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -523,7 +523,7 @@ steps:
         - push
 
   - name: codedeploy ui st
-    image: golang:alpine
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -805,7 +805,7 @@ steps:
         - push
 
   - name: codedeploy ui sit
-    image: golang:alpine
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -1002,7 +1002,7 @@ steps:
         - push
 
   - name: codedeploy ui preprod
-    image: golang:alpine
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -1028,10 +1028,10 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker:19.03.11-git
+    image: alpine:3.11.6
     environment:
       build_id_url: https://preprod2-upload.taxiphvdata.co.uk/build_id
-      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_staging_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
