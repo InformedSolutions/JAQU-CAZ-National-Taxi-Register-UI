@@ -29,7 +29,7 @@ RSpec.describe Cognito::ForgotPassword::UpdateUser do
   end
 
   before do
-    allow(Cognito::Client.instance).to receive(:admin_update_user_attributes).with(
+    allow(COGNITO_CLIENT).to receive(:admin_update_user_attributes).with(
       user_pool_id: anything,
       username: username,
       user_attributes: user_attributes
@@ -38,7 +38,7 @@ RSpec.describe Cognito::ForgotPassword::UpdateUser do
 
   context 'with successful call' do
     it 'calls Cognito with proper params and returns true' do
-      expect(Cognito::Client.instance).to receive(:admin_update_user_attributes).with(
+      expect(COGNITO_CLIENT).to receive(:admin_update_user_attributes).with(
         user_pool_id: anything,
         username: username,
         user_attributes: user_attributes
@@ -47,11 +47,10 @@ RSpec.describe Cognito::ForgotPassword::UpdateUser do
     end
   end
 
-  context 'when `Cognito::Client.instance.admin_update_user_attributes`
-           call fails with proper params' do
+  context 'when `COGNITO_CLIENT.admin_update_user_attributes` call fails with proper params' do
     context 'and service raises `ServiceError`' do
       before do
-        allow(Cognito::Client.instance).to receive(:admin_update_user_attributes).with(
+        allow(COGNITO_CLIENT).to receive(:admin_update_user_attributes).with(
           user_pool_id: anything,
           username: username,
           user_attributes: user_attributes
@@ -67,7 +66,7 @@ RSpec.describe Cognito::ForgotPassword::UpdateUser do
 
     context 'and service raises `UserNotFoundException`' do
       before do
-        allow(Cognito::Client.instance).to receive(:admin_update_user_attributes).with(
+        allow(COGNITO_CLIENT).to receive(:admin_update_user_attributes).with(
           user_pool_id: anything,
           username: username,
           user_attributes: user_attributes
