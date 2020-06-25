@@ -1074,8 +1074,7 @@ steps:
       - pip install awscli
       - mkdir ~/.aws
       - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
-      # - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-preprod  --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-preprod  --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
@@ -1121,8 +1120,7 @@ steps:
         from_secret: jaqu_lower_github_private_key
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-prod
-      # SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
-      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
@@ -1149,8 +1147,7 @@ steps:
       - pip install awscli
       - mkdir ~/.aws
       - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
-      # - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-preprod  --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-preprod  --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
@@ -1196,8 +1193,7 @@ steps:
         from_secret: jaqu_lower_github_private_key
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-prod
-      # SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
-      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
@@ -1238,8 +1234,7 @@ steps:
     image: alpine:3.11.6
     environment:
       build_id_url: https://prod2-upload.taxiphvdata.co.uk/build_id
-      # SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
-      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_prod_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
@@ -1250,8 +1245,7 @@ steps:
       - pip install awscli
       - mkdir ~/.aws
       - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
-      # - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-preprod  --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-preprod  --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
       - sh build_utils/check_build_number.sh
