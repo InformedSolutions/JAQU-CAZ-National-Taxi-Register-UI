@@ -312,7 +312,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://dev-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -618,7 +618,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://st-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -893,7 +893,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://sit-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -1166,7 +1166,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://uat-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -1362,7 +1362,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://preprod-upload.taxiphvdata.co.uk/build_id
       AWS_ACCESS_KEY_ID:
@@ -1573,7 +1573,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: alpine:3.11.6
     environment:
       build_id_url: https://taxiphvdata.drive-clean-air-zone.service.gov.uk/build_id
       AWS_ACCESS_KEY_ID:
