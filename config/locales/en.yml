@@ -27,7 +27,7 @@ en:
   labels:
     vrn: Number plate
     vrn_example: For example, CU57ABC
-  external_link: Opens in new window - External website
+  external_link: opens in a new window
   search_vrn_form:
     errors:
       dates:

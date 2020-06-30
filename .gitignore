@@ -50,4 +50,5 @@ config/ssl/
 .env
 .vagrant/
 
-/doc
+# Ignore RDoc HTML files
+/doc/app
