@@ -6,8 +6,9 @@ en:
       too_long: 'The email exceeds the limit of 45 characters'
   password:
     errors:
+      required: 'Enter your password'
       complexity: 'Enter a password at least 8 characters long, including 1 uppercase letter and 1 number'
-      code_mismatch: 'The confirmation code does or match or has expired'
+      code_mismatch: 'The confirmation code does not match or has expired'
       code_required: 'Enter your confirmation code'
       passwords_required: 'Password and password confirmation are required'
       confirmation_required: 'Password confirmation is required'
