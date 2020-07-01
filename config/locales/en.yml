@@ -1,8 +1,8 @@
 en:
   email:
     errors:
-      invalid_format: 'The email is in an invalid format'
-      required: 'Email is required'
+      invalid_format: 'Enter your email address in a valid format'
+      required: 'Enter your email address'
       too_long: 'The email exceeds the limit of 45 characters'
   password:
     errors:
