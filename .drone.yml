@@ -428,7 +428,6 @@ steps:
     commands:
       - bundle install
       - yarn install
-      - cp .env.example .env
       - rspec -f d
 
   # Execute integration/scenario tests
@@ -975,7 +974,6 @@ steps:
     commands:
       - bundle install
       - yarn install
-      - cp .env.example .env
       - rspec -f d
 
   # Execute integration/scenario tests
