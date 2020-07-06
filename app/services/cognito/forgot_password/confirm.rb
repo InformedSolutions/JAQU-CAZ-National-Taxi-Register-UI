@@ -74,8 +74,8 @@ module Cognito
       # complexity of the criteria.
       def perform_cognito_call
         confirm_forgot_password
-      rescue AWS_ERROR::CodeMismatchException, AWS_ERROR::ExpiredCodeException => e
-        log_error e
+      rescue AWS_ERROR::CodeMismatchException, AWS_ERROR::ExpiredCodeException,
+             AWS_ERROR::UserNotFoundException
         raise CallException, I18n.t('password.errors.code_mismatch')
       rescue AWS_ERROR::InvalidPasswordException, AWS_ERROR::InvalidParameterException => e
         log_error e
