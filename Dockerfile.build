@@ -1,4 +1,4 @@
-FROM ruby:2.6.5-alpine3.11
+FROM ruby:2.6.6-alpine3.12
 
 # Set correct environment variables.
 ENV RAILS_ENV production
@@ -20,16 +20,24 @@ RUN apk add --no-cache --update build-base linux-headers tzdata nodejs \
 RUN mkdir -p /home/app
 WORKDIR /home/app
 COPY Gemfile Gemfile.lock /home/app/
-RUN gem install bundler -v 2.0.2 && bundle config force_ruby_platform true \
- && bundle install --without development test
+RUN gem install bundler && bundle config force_ruby_platform true \
+ && bundle config set without 'development test' && bundle install
 
 # Install node packages and precompile assets
 COPY . /home/app
 
-RUN yarn install --frozen-lockfile --non-interactive \
- && bundle exec rails assets:precompile \
- && yarn cache clean \
- && rm -rf /home/app/node_modules
+RUN export S3_AWS_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL && \
+    export S3_AWS_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL && \
+    export SES_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL && \
+    export SES_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL && \
+    yarn install --frozen-lockfile --non-interactive && \
+    bundle exec rails assets:precompile && \
+    yarn cache clean && \
+    rm -rf /home/app/node_modules && \
+    unset S3_AWS_ACCESS_KEY_ID && \
+    unset S3_AWS_SECRET_ACCESS_KEY && \
+    unset SES_ACCESS_KEY_ID && \
+    unset SES_SECRET_ACCESS_KEY
 
 EXPOSE 3000
 CMD ["rails", "server", "-b", "0.0.0.0", "-p", "3000"]

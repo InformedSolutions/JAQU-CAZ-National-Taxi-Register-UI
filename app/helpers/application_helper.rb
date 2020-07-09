@@ -14,6 +14,11 @@ module ApplicationHelper
     Rails.configuration.x.service_name
   end
 
+  # Returns Support service email, eg. 'TaxiPHVDatabase.Support@informed.com'.
+  def support_service_email
+    Rails.configuration.x.support_service_email
+  end
+
   # Returns configured contact email address, eg. 'TaxiandPHVCentralised.Database@defra.gov.uk'.
   def service_email
     Rails.configuration.x.service_email
@@ -48,9 +53,25 @@ module ApplicationHelper
     html_options.symbolize_keys!.reverse_merge!(
       target: '_blank',
       class: 'govuk-link',
-      rel: 'noopener noreferrer',
-      'area-label': "#{html_options[:'area-label'] || text} - #{I18n.t('content.external_link')}"
+      rel: 'noopener',
+      'aria-label': "#{html_options[:'aria-label'] || text} (#{I18n.t('external_link')})"
     )
-    link_to text, url, html_options
+
+    link_to "#{text} (#{I18n.t('external_link')})", url, html_options
+  end
+
+  # Transform hash of flat errors:
+  # {
+  #   :password=>"Password is required",
+  #   :password_confirmation=>"Password and password confirmation must be the same"
+  # }
+  # to array:
+  # [
+  #   ["Password is required", :password],
+  #   ["Password and password confirmation must be the same", :password_confirmation]
+  # ]
+  #
+  def transformed_flat_errors(errors)
+    errors.map { |error| [error.second, error.first] }.uniq(&:first)
   end
 end

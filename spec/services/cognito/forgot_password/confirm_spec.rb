@@ -2,13 +2,13 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::ConfirmForgotPassword do
+RSpec.describe Cognito::ForgotPassword::Confirm do
   subject(:service_call) do
     described_class.call(username: username, password: password,
                          code: code, password_confirmation: password)
   end
 
-  let(:username) { 'wojtek' }
+  let(:username) { 'wojtek@example.com' }
   let(:password) { 'password' }
   let(:code) { '123456' }
 
@@ -16,7 +16,7 @@ RSpec.describe Cognito::ConfirmForgotPassword do
   let(:form) { OpenStruct.new(valid?: true) }
 
   before do
-    allow(COGNITO_CLIENT).to receive(:confirm_forgot_password).with(
+    allow(Cognito::Client.instance).to receive(:confirm_forgot_password).with(
       client_id: anything,
       username: username,
       password: password,
@@ -41,7 +41,7 @@ RSpec.describe Cognito::ConfirmForgotPassword do
     end
 
     it 'calls Cognito' do
-      expect(COGNITO_CLIENT).to receive(:confirm_forgot_password)
+      expect(Cognito::Client.instance).to receive(:confirm_forgot_password)
       service_call
     end
   end
@@ -61,7 +61,7 @@ RSpec.describe Cognito::ConfirmForgotPassword do
     let(:error) { "User with username '#{username}' was not found" }
 
     before do
-      allow(COGNITO_CLIENT).to receive(:confirm_forgot_password).with(
+      allow(Cognito::Client.instance).to receive(:confirm_forgot_password).with(
         client_id: anything,
         username: username,
         password: password,

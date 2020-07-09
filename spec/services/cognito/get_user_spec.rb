@@ -17,7 +17,7 @@ RSpec.describe Cognito::GetUser do
   let(:sub) { SecureRandom.uuid }
 
   before do
-    allow(COGNITO_CLIENT).to receive(:get_user)
+    allow(Cognito::Client.instance).to receive(:get_user)
       .with(access_token: token)
       .and_return(cognito_response)
   end

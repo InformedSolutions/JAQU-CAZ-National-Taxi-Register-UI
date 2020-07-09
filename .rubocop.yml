@@ -2,7 +2,7 @@ require: rubocop-rails
 inherit_from: ./lib/rubocop/blacklist.yml
 
 AllCops:
-  TargetRubyVersion: 2.6.5
+  TargetRubyVersion: 2.6.6
 
 Style/Documentation:
   Enabled: false
@@ -20,6 +20,18 @@ Style/HashTransformKeys:
   Enabled: true
 
 Style/HashTransformValues:
+  Enabled: true
+
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Style/ExponentialNotation:
   Enabled: true
 
 Layout/LineLength:

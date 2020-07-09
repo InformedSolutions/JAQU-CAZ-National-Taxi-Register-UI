@@ -11,7 +11,7 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
   context 'with password_reset_token set' do
     before do
       inject_session(password_reset_token: SecureRandom.uuid)
-      allow(Cognito::ForgotPassword)
+      allow(Cognito::ForgotPassword::Reset)
         .to receive(:call)
         .with(username: username)
         .and_return(true)
@@ -31,7 +31,7 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
       let(:fallback_path) { reset_passwords_path }
 
       before do
-        allow(Cognito::ForgotPassword)
+        allow(Cognito::ForgotPassword::Reset)
           .to receive(:call)
           .with(username: username)
           .and_raise(Cognito::CallException.new('Something went wrong', fallback_path))
@@ -45,7 +45,7 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
 
     context 'when service raises `UserNotFoundException` exception' do
       before do
-        allow(COGNITO_CLIENT).to receive(:forgot_password).and_raise(
+        allow(Cognito::Client.instance).to receive(:forgot_password).and_raise(
           Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', '')
         )
         http_request
