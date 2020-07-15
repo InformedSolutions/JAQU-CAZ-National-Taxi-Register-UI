@@ -28,7 +28,7 @@ en:
     delivery_error: 'There was an error sending your confirmation email. Your data has still been saved.'
     content:
   labels:
-    vrn: Number plate
+    vrn: Enter a number plate
     vrn_example: For example, CU57ABC
   external_link: opens in a new window
   search_vrn_form:
