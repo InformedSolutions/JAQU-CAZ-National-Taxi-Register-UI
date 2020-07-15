@@ -16,13 +16,13 @@
         %table.govuk-table
           %thead.govuk-table__head
             %tr.govuk-table__row
-              %th.govuk-table__header{scope: 'col'} Data Upload Date
-              %th.govuk-table__header{scope: 'col'} Action
-              %th.govuk-table__header{scope: 'col'} Licensing Authority
-              %th.govuk-table__header{scope: 'col'} Plate Number
-              %th.govuk-table__header{scope: 'col'} License Start Date
-              %th.govuk-table__header{scope: 'col'} License End Date
-              %th.govuk-table__header{scope: 'col'} WAV
+              %th.govuk-table__header{scope: 'col'} Data <br> uploaded
+              %th.govuk-table__header{scope: 'col'} Activity
+              %th.govuk-table__header{scope: 'col'} Licensing <br> authority
+              %th.govuk-table__header{scope: 'col'} Licence <br> number
+              %th.govuk-table__header{scope: 'col'} Licence <br> start date
+              %th.govuk-table__header{scope: 'col'} Licence <br> end date
+              %th.govuk-table__header{scope: 'col'} Wheelchair <br> Accessible <br> Vehicle
             %tbody.govuk-table__body
               - @pagination.vrn_changes_list.each do |change|
                 %tr.govuk-table__row
