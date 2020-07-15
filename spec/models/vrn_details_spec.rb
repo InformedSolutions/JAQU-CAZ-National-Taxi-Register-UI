@@ -10,6 +10,7 @@ RSpec.describe VrnDetails, type: :model do
   let(:response) do
     {
       'active': active,
+      'description': 'Taxi',
       'wheelchairAccessible': wheelchair_accessible,
       'licensingAuthoritiesNames': %w[Birmingham Leeds]
     }.stringify_keys
@@ -30,8 +31,8 @@ RSpec.describe VrnDetails, type: :model do
 
   describe '.taxi_private_hire_vehicle' do
     context 'when active value is true' do
-      it 'returns a `Yes`' do
-        expect(subject.taxi_private_hire_vehicle).to eq('Yes')
+      it 'returns `Taxi`' do
+        expect(subject.taxi_private_hire_vehicle).to eq('Taxi')
       end
     end
 

@@ -24,7 +24,7 @@ class VrnDetails
   # Returns a string 'Yes' if value is true
   # Returns a string 'No' if value is false
   def taxi_private_hire_vehicle
-    vehicles_checker_api['active'] ? 'Yes' : 'No'
+    vehicles_checker_api['active'] ? vehicles_checker_api['description'] : 'No'
   end
 
   # Check 'wheelchairAccessible' value.
