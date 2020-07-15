@@ -21,7 +21,7 @@ class VrnDetails
 
   # Check 'active' value.
   #
-  # Returns taxi or phv if value is true
+  # Returns a string Taxi or PHV if value is true
   # Returns a string 'No' if value is false
   def taxi_private_hire_vehicle
     if vehicles_checker_api['active']
