@@ -110,6 +110,18 @@ When('I press {int} pagination button') do |selected_page|
   page.find("#pagination-button-#{selected_page}").first('a').click
 end
 
+And('I should be on the Search results') do
+  expect(page).to have_current_path(historic_search_vehicles_url)
+end
+
+And('I should be on the Search results page number {int}') do |page_number|
+  expect(page).to have_current_path("#{historic_search_vehicles_url}?page=#{page_number}")
+end
+
+And('I should be on the Search results page number {int} when using back button') do |page_number|
+  expect(page).to have_current_path("#{historic_search_vehicles_url}?page=#{page_number}?back=true")
+end
+
 private
 
 def fill_vrn(vrn_value = vrn)
@@ -175,9 +187,9 @@ def paginated_history(page = 1)
     PaginatedVrnHistory,
     vrn_changes_list: mocked_changes,
     page: page,
-    total_pages: 2,
+    total_pages: 5,
     range_start: 1,
     range_end: 10,
-    total_changes_count: 12
+    total_changes_count: 42
   )
 end

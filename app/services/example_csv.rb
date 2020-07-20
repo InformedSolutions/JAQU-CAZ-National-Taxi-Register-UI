@@ -46,12 +46,12 @@ class ExampleCsv < BaseService
 
   # Returns a string, random vrn in the proper format, eg. 'NWF218'
   def random_vrn
-    ([*('A'..'Z')].sample(3) + [*(0..9)].sample(3)).join
+    (Array(('A'..'Z')).sample(3) + Array((0..9)).sample(3)).join
   end
 
   # Returns an array, random time range, eg. ["2019-03-19", "2020-03-19"]
   def random_time_range
-    i = [*(3..20)].sample
+    i = Array((3..20)).sample
     [(Date.current - i.months).iso8601, (Date.current + i.months).iso8601]
   end
 

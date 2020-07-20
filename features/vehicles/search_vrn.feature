@@ -57,17 +57,35 @@ Feature: Search a VRN
       And I press 'Continue' button
     Then I should see 'Enter a real end date'
 
+  # Order of calling pages: 1, 3, 5, 2
   Scenario: Pagination on the historical results page
   Given I am on the Historical results page
-  Then I should see active "1" pagination button
-    And I should see inactive "2" pagination button
-    And I should see inactive "next" pagination button
+    And I should be on the Search results
+    Then I should see active "1" pagination button
     And I should not see "previous" pagination button
-  When I press 2 pagination button
-  Then I should see active "2" pagination button
-    And I should see inactive "1" pagination button
-    And I should see inactive "previous" pagination button
+  Then I press 3 pagination button
+    And I should be on the Search results page number 3
+    And I should see active "3" pagination button
+  Then I press 5 pagination button
+    And I should be on the Search results page number 5
+    And I should see active "5" pagination button
     And I should not see "next" pagination button
+  Then I press 2 pagination button
+    And I should be on the Search results page number 2
+    And I should see active "2" pagination button
+    And I should see inactive "1" pagination button
+  Then I press 'Back' link
+    And I should be on the Search results page number 5 when using back button
+  Then I press 3 pagination button
+    And I should be on the Search results page number 3
+  Then I press 'Back' link
+     And I should be on the Search results page number 5 when using back button
+  Then I press 'Back' link
+    And I should be on the Search results page number 3 when using back button
+  Then I press 'Back' link
+    And I should be on the Search results page number 1 when using back button
+  Then I press 'Back' link
+    And I should be on the Search page
 
   Scenario: Historical Search when no results found
     Given I am on the Search VRN page
