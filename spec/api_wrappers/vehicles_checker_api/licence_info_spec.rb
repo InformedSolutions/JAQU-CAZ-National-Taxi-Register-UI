@@ -17,6 +17,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
       expect(call.keys).to contain_exactly(
         'active',
         'wheelchairAccessible',
+        'description',
         'licensingAuthoritiesNames'
       )
     end
