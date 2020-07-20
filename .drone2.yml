@@ -48,7 +48,7 @@ steps:
     environment:
       ZAP: true
       ZAP_PROXY_URL: 'zap'
-      BASEURL_NTR: 'https://dev2-upload.taxiphvdata.co.uk'
+      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
       SCREENSHOT_TYPE: 'base'
@@ -626,7 +626,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://st2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://st-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
