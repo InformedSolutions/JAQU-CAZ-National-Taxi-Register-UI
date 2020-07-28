@@ -24,7 +24,7 @@ RSpec.describe BackLinkHistoryService do
         expect(subject).to include('/vehicles/search')
       end
 
-      it 'sets weekly to false' do
+      it 'adding first step to the session' do
         subject
         expect(session[:back_link_history]).to eq({ 1 => 1 })
       end
@@ -38,7 +38,7 @@ RSpec.describe BackLinkHistoryService do
         expect(subject).to include('page=1')
       end
 
-      it 'sets previous number page to the session' do
+      it 'adding steps to the session' do
         subject
         expect(session[:back_link_history]).to eq({ '1' => 1, '2' => 4 })
       end
@@ -52,21 +52,7 @@ RSpec.describe BackLinkHistoryService do
         expect(subject).to include('search')
       end
 
-      it 'sets weekly to false' do
-        subject
-        expect(session[:back_link_history]).to eq({ '1' => 1 })
-      end
-    end
-
-    context 'when in session already 10 steps and back button is true' do
-      let(:session) { { back_link_history: { '1' => 1, '2' => 4 } } }
-      let(:back_button) { true }
-
-      it 'returns correct page' do
-        expect(subject).to include('search')
-      end
-
-      it 'sets weekly to false' do
+      it 'removes keys from next steps' do
         subject
         expect(session[:back_link_history]).to eq({ '1' => 1 })
       end
