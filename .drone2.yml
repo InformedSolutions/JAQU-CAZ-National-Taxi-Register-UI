@@ -1680,7 +1680,7 @@ get:
 
 ---
 kind: secret
-name: jaqu_stagimg_service_aws_access_key_id
+name: jaqu_staging_service_aws_access_key_id
 get:
   path: /build-tools/drone
   name: awsStagingServiceAccessKeyId
