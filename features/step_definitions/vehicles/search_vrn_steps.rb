@@ -122,6 +122,10 @@ And('I should be on the Search results page number {int} when using back button'
   expect(page).to have_current_path("#{historic_search_vehicles_url}?page=#{page_number}?back=true")
 end
 
+And('I go the Search vehicles results page') do
+  visit historic_search_vehicles_path
+end
+
 private
 
 def fill_vrn(vrn_value = vrn)

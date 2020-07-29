@@ -63,7 +63,12 @@ Feature: Search a VRN
     And I should be on the Search results
     Then I should see active "1" pagination button
     And I should not see "previous" pagination button
-  Then I press 3 pagination button
+  Then I go the Search vehicles results page
+     And I should see active "1" pagination button
+  Then I press 'Back' link
+    And I should be on the Search page
+  Then I go the Search vehicles results page
+    And I press 3 pagination button
     And I should be on the Search results page number 3
     And I should see active "3" pagination button
   Then I press 5 pagination button

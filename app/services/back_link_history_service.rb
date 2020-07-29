@@ -40,7 +40,7 @@ class BackLinkHistoryService < BaseService
       session[KEY] = { 1 => page }
     elsif back_button && history
       clear_unused_steps
-    else
+    elsif last_step_page != page
       session.dig(KEY)[next_step] = page
     end
   end
@@ -68,6 +68,11 @@ class BackLinkHistoryService < BaseService
   # Returns previous number of step, e.g '4'
   def previous_step
     (history.keys.last.to_i - 1).to_s
+  end
+
+  # Returns the last step page number, e.g 4
+  def last_step_page
+    history.values.last
   end
 
   # Returns previous next of step, e.g '5'

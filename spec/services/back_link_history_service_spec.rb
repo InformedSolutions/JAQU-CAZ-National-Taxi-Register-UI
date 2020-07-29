@@ -44,6 +44,20 @@ RSpec.describe BackLinkHistoryService do
       end
     end
 
+    context 'when session is not empty, back button is false and last page the same with new one' do
+      let(:session) { { company_back_link_history: { '1' => 1 } } }
+      let(:page) { 1 }
+
+      it 'returns correct page' do
+        expect(subject).to include('search')
+      end
+
+      it 'not adding steps to the session' do
+        subject
+        expect(session[:company_back_link_history]).to eq({ '1' => 1 })
+      end
+    end
+
     context 'when session is not empty and back button is true' do
       let(:session) { { back_link_history: { '1' => 1, '2' => 4 } } }
       let(:back_button) { true }
