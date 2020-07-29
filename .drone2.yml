@@ -1,10 +1,102 @@
+  #################################################### Nightly Steps ############################################################
+kind: pipeline
+type: docker
+name: ntr-web-nightly
+trigger:
+  event:
+    - cron
+concurrency:
+  limit: 1
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+services:
+  - name: zap
+    image: owasp/zap2docker-stable
+    commands:
+      - zap.sh -daemon -host 0.0.0.0 -port 8080 -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true -config api.disablekey=true
+    ports:
+      - 8080
+
+steps:
+
+  - name: build testing tools image
+    image: docker:19.03.11-git
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
+      - cd JAQU-CAZ-QA-selenium
+      - docker build -t test-tools-image .
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+
+  - name: run owasp zap tests
+    image: test-tools-image
+    pull: never
+    failure: ignore
+    environment:
+      ZAP: true
+      ZAP_PROXY_URL: 'zap'
+      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
+      VALID_USERNAME: 'tester@informed.com'
+      VALID_PASSWORD: 'Tester123..'
+      SCREENSHOT_TYPE: 'base'
+      LOCATION: local
+    commands:
+      - cd JAQU-CAZ-QA-selenium
+      - cucumber -t @ZAPNTR
+
+  - name: security warning
+    image: docker:19.03.11-git
+    commands:
+      - echo "OWASP ZAP tests failed. Please check outputs in case of false positives."
+    when:
+      status:
+        - failure
+
+    # Run end to end tests
+  - name: run end to end tests
+    image: test-tools-image
+    pull: never
+    environment:
+      BS_USERNAME:
+        from_secret: browserstack_username
+      BS_AUTHKEY:
+        from_secret: browserstack_auth_key
+      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
+      VALID_USERNAME: 'tester@informed.com'
+      VALID_PASSWORD: 'Tester123..'
+      BROWSER_SET: 'mid'
+      SCREENSHOT_TYPE: 'base'
+      BUILD: NTR-UI-${DRONE_BUILD_NUMBER}
+      SPECTRE: false
+      LOCATION: browserstack
+    commands:
+      - cd JAQU-CAZ-QA-selenium
+      - cucumber -t @NTR --guess --retry 3
+
+  ################################################# End Nightly Steps ############################################################
+
+---
+
 ################################################### Dev Environment Steps ############################################################
 kind: pipeline
 type: docker
 name: ntr-web-dev
 trigger:
   branch:
-    - iac-restructure-baseline
+    - develop
   event:
     - pull_request
     - push
@@ -134,7 +226,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout iac_restructure_baseline
+      - git checkout lower_dev
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -175,7 +267,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: dev
     when:
       event:
@@ -210,7 +302,7 @@ steps:
   - name: await ecs rollout
     image: docker:19.03.11-git
     environment:
-      build_id_url: https://dev2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://dev-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -274,7 +366,7 @@ type: docker
 name: ntr-web-st
 trigger:
   branch:
-    - iac-restructure-controlled-st
+    - release-candidate/*
   event:
     - pull_request
     - push
@@ -353,22 +445,6 @@ steps:
   #     - name: docker_sock
   #       path: /var/run/docker.sock
 
-  # Invoke sonar scan
-  - name: sonar scan
-    image: aosapps/drone-sonar-plugin
-    environment:
-      SONAR_HOST:
-        from_secret: jaqu_lower_sonar_host
-      SONAR_TOKEN:
-        from_secret: jaqu_lower_sonar_token
-      sonar.ruby.coverage.reportPaths: coverage/.resultset.json
-    commands:
-      - sonar-scanner
-        -Dsonar.projectName=${DRONE_REPO}
-        -Dsonar.host.url=$SONAR_HOST
-        -Dsonar.login=$SONAR_TOKEN
-        -Dproject.settings=./sonar-project.properties
-
 
  # Push built image to ECR registry
   - name: publish ST image to ecr
@@ -383,7 +459,7 @@ steps:
       dockerfile: Dockerfile.build
       region: eu-west-2
       tags:
-        - latest
+        - release-candidate
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
@@ -405,7 +481,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout iac_restructure_controlled
+      - git checkout controlled_st
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -447,7 +523,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: st
     when:
       event:
@@ -474,7 +550,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout iac_restructure_baseline
+      - git checkout controlled_st
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -515,7 +591,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: st
     when:
       event:
@@ -548,9 +624,9 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker:19.03.11-git
+    image: alpine:3.11.6
     environment:
-      build_id_url: https://st2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://st-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -563,6 +639,7 @@ steps:
         - push
   ################################################# End of ST Environment Steps ############################################################
 
+
 ---
 
 #################################################### SIT Environment Steps ############################################################
@@ -571,7 +648,7 @@ type: docker
 name: ntr-web-sit
 trigger:
   branch:
-    - iac-restructure-controlled-sit
+    - release/*
   event:
     - pull_request
     - push
@@ -686,7 +763,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout iac_restructure_controlled
+      - git checkout controlled_sit
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -728,7 +805,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: sit
     when:
       event:
@@ -755,7 +832,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout iac_restructure_baseline
+      - git checkout controlled_sit
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -796,7 +873,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: sit
     when:
       event:
@@ -831,7 +908,7 @@ steps:
   - name: await ecs rollout
     image: docker:19.03.11-git
     environment:
-      build_id_url: https://sit2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://sit-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -852,7 +929,7 @@ type: docker
 name: ntr-web-preprod
 trigger:
   branch:
-    - iac-restructure-staging-preprod
+    - staging
   event:
     - pull_request
     - push
@@ -878,7 +955,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout iac_restructure_staging
+      - git checkout staging_preprod
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -919,7 +996,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: preprod
     when:
       event:
@@ -951,7 +1028,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout iac_restructure_baseline
+      - git checkout staging_preprod
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -992,7 +1069,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: preprod
     when:
       event:
@@ -1027,7 +1104,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://preprod2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://preprod-upload.taxiphvdata.co.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_controlled_aws_access_key_id
@@ -1050,6 +1127,288 @@ steps:
       event:
         - push
   ################################################# End of Preprod Environment Steps ############################################################
+
+---
+#################################################### UAT Environment Steps ############################################################
+
+kind: pipeline
+type: docker
+name: ntr-web-uat
+trigger:
+  branch:
+    -  uat/*
+  event:
+    - pull_request
+    - push
+concurrency:
+  limit: 1
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+steps:
+
+  # Clean agent images and containers to prevent disk space overuse
+  - name: clean agent
+    image: docker:19.03.11-git
+    commands:
+    - docker system prune -f
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Build docker image
+  - name: build
+    image: docker:19.03.11-git
+    commands:
+    - docker build -f Dockerfile.test -t test-national-taxi-register-frontend:latest .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    build_args:
+      - AWS_REGION=eu-west-2
+
+
+  # Trigger unit tests
+  - name: unit tests
+    image: test-national-taxi-register-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - yarn install
+      - rspec -f d
+
+  # Execute integration/scenario tests
+  - name: integration tests
+    image: test-national-taxi-register-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - cucumber
+
+  # Invoke static code analysis through Ruby libraries
+  - name: static code analysis (Ruby)
+    image: test-national-taxi-register-frontend
+    pull: never
+    commands:
+      - rubocop
+      - scss-lint app/javascript
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # # Invoke security analysis through Ruby libraries
+  # - name: security tests (Ruby)
+  #   image: test-national-taxi-register-frontend
+  #   pull: never
+  #   commands:
+  #      - bundle audit check --update
+  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+  #      - yarn run improved-yarn-audit --exclude '1488, 1179, 1500' --retry-on-network-failure
+  #      - brakeman
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
+
+
+ # Push built image to ECR registry
+  - name: publish uat image to ecr
+    image: plugins/ecr
+    settings:
+      access_key:
+        from_secret: jaqu_staging_service_aws_access_key_id
+      secret_key:
+        from_secret: jaqu_staging_service_aws_secret_access_key
+      repo: 311075478274.dkr.ecr.eu-west-2.amazonaws.com/ntr-repo
+      registry: 311075478274.dkr.ecr.eu-west-2.amazonaws.com
+      dockerfile: Dockerfile.build
+      region: eu-west-2
+      tags:
+        - release
+        - hotfix
+        - ${DRONE_BUILD_NUMBER}
+      build_args:
+        - secret_key_base=${DRONE_COMMIT}
+    when:
+      event:
+        - push
+
+
+  - name: plan terraform updates in uat
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout staging_uat
+      - cd terraform-iac/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf plan
+      - cd ../02.backends
+      - tf init
+      - tf workspace select uat|| tf workspace new uat
+      - tf plan
+      - cd ../04.web
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf plan
+
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      TF_VAR_secret_key_base:
+        from_secret: ntr_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
+      environment: uat
+    when:
+      event:
+        - pull_request
+
+  - name: provisioning warning
+    image: docker:19.03.11-git
+    commands:
+      - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
+    when:
+      status:
+        - failure
+
+  # Invoke terraform scripts with tagged image number
+  - name: deploy to uat
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout staging_uat
+      - cd terraform-iac/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf apply -auto-approve
+      - cd ../04.web
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      TF_VAR_secret_key_base:
+        from_secret: ntr_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
+      environment: uat
+    when:
+      event:
+        - push
+
+  - name: codedeploy ui uat
+    image: alpine:3.11.6
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-shared-project-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: ntr-codedeploy-service-uat
+      DEPLOYMENT_GROUP: ntr-codedeploy-service-uat
+      AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
+      PROJECT: ntr
+      DEPLOY_ENVIRONMENT: uat
+      LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: alpine:3.11.6
+    environment:
+      build_id_url: https://uat-upload.taxiphvdata.co.uk/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+  ################################################# End of UAT Environment Steps ############################################################
+
 ---
 
 #################################################### Prod Environment Steps ############################################################
@@ -1058,7 +1417,7 @@ type: docker
 name: ntr-web-prod
 trigger:
   branch:
-    - iac-restructure-prod
+    - master
   event:
     - pull_request
     - push
@@ -1084,7 +1443,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout iac_restructure_prod
+      - git checkout prod_live
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -1123,7 +1482,7 @@ steps:
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
-      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_google_analytics_id: UA-150934733-1
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
       environment: prod
@@ -1157,7 +1516,7 @@ steps:
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout iac_restructure_baseline
+      - git checkout prod_live
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -1196,7 +1555,7 @@ steps:
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
-      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_google_analytics_id: UA-150934733-1
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
       environment: prod
@@ -1233,7 +1592,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://prod2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://taxiphvdata.drive-clean-air-zone.service.gov.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_staging_aws_access_key_id
@@ -1336,7 +1695,7 @@ get:
 
 ---
 kind: secret
-name: jaqu_staging_service_aws_access_key_id
+name: jaqu_stagimg_service_aws_access_key_id
 get:
   path: /build-tools/drone
   name: awsStagingServiceAccessKeyId
@@ -1347,6 +1706,7 @@ name: jaqu_staging_service_aws_secret_access_key
 get:
   path: /build-tools/drone
   name: awsStagingServiceSecretAccessKey
+
 
 ---
 kind: secret
@@ -1363,19 +1723,6 @@ get:
   name: awsProdSecretAccessKey
 
 
----
-kind: secret
-name: jaqu_prod_service_aws_access_key_id
-get:
-  path: /build-tools/drone
-  name: awsProdServiceAccessKeyId
-
----
-kind: secret
-name: jaqu_prod_service_aws_secret_access_key
-get:
-  path: /build-tools/drone
-  name: awsProdServiceSecretAccessKey
 
 ---
 kind: secret
