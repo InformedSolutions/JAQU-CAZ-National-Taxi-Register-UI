@@ -1,9 +1,9 @@
 var config = {
     defaults: {
-        standard: 'WCAG2AA',
+        standard: "WCAG2AA",
         // ignore issue with role=presentation on start button
         ignore: ["WCAG2AA.Principle1.Guideline1_3.1_3_1.F92,ARIA4"],
-        timeout: 15000,
+        timeout: 5000,
         wait: 1500,
         chromeLaunchConfig: {
             args: [
@@ -12,29 +12,27 @@ var config = {
         }
     },
     urls: [
-        '${BASE_URL}?home_page',
         {
-            "url": "${BASE_URL}?cookie_control",
+            "url": "${BASE_URL}/cookie_control",
             "actions": [
                 "wait for element #ccc-dismiss-button to be visible",
                 "click element #ccc-dismiss-button"
             ]
         },
         {
-            "url": "${BASE_URL}?sign_in",
+            "url": "${BASE_URL}/users/sign_in",
             "actions": [
-		"wait for element #user_username to be visible",
-		"wait for element #user_password to be visible",
+                "wait for element #ccc-dismiss-button to be visible",
+                "click element #ccc-dismiss-button",
+                "wait for element #user_username to be visible",
+                "wait for element #user_password to be visible",
                 "set field #user_username to tester@informed.com",
                 "set field #user_password to Tester123..",
-		"wait for element #sign_in_button to be visible",
+                "wait for element #sign_in_button to be visible",
                 "click element #sign_in_button",
-		"wait for element #file-upload-1 to be visible"
+                "wait for element #file-upload-1 to be visible"
             ]
         },
-        '${BASE_URL}/cookies',
-        '${BASE_URL}/accessibility_statement',
-        '${BASE_URL}/privacy_notice',
         {
             "url": '${BASE_URL}?upload_page',
             "actions": [
@@ -48,9 +46,10 @@ var config = {
                 "wait for path to be /upload/data_rules"
             ]
         },
-        {
-            "url": '${BASE_URL}/upload/success'
-        }
+        '${BASE_URL}/cookies',
+        '${BASE_URL}/accessibility_statement',
+        '${BASE_URL}/privacy_notice',
+        '${BASE_URL}/upload/success'
     ]
 };
 
