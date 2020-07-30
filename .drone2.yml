@@ -48,7 +48,7 @@ steps:
     environment:
       ZAP: true
       ZAP_PROXY_URL: 'zap'
-      BASEURL_NTR: 'https://dev2-upload.taxiphvdata.co.uk'
+      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
       SCREENSHOT_TYPE: 'base'
@@ -626,7 +626,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://st2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://st-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -712,21 +712,6 @@ steps:
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
-
-  # Invoke security analysis through Ruby libraries
-  # - name: security tests (Ruby)
-  #   image: test-national-taxi-register-frontend
-  #   pull: never
-  #   commands:
-  #      - bundle audit check --update
-  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --exclude '1488, 1179, 1500' --retry-on-network-failure
-  #      - brakeman
-  #   volumes:
-  #     - name: docker_sock
-  #       path: /var/run/docker.sock
-
-  # Invoke sonar scan
 
  # Push built image to ECR registry
   - name: publish ST image to ecr
@@ -908,7 +893,7 @@ steps:
   - name: await ecs rollout
     image: docker:19.03.11-git
     environment:
-      build_id_url: https://sit2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://sit-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -1104,7 +1089,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://preprod2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://preprod-upload.taxiphvdata.co.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_controlled_aws_access_key_id
@@ -1396,7 +1381,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://uat2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://uat-upload.taxiphvdata.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -1482,7 +1467,7 @@ steps:
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
-      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_google_analytics_id: UA-150934733-1
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
       environment: prod
@@ -1555,7 +1540,7 @@ steps:
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       TF_VAR_secret_key_base:
         from_secret: ntr_ruby_secret
-      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_google_analytics_id: UA-150934733-1
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
       environment: prod
@@ -1592,7 +1577,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://prod2-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://taxiphvdata.drive-clean-air-zone.service.gov.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_staging_aws_access_key_id
@@ -1695,7 +1680,7 @@ get:
 
 ---
 kind: secret
-name: jaqu_stagimg_service_aws_access_key_id
+name: jaqu_staging_service_aws_access_key_id
 get:
   path: /build-tools/drone
   name: awsStagingServiceAccessKeyId
