@@ -3,7 +3,7 @@ var config = {
         standard: 'WCAG2AA',
         // ignore issue with role=presentation on start button
         ignore: ["WCAG2AA.Principle1.Guideline1_3.1_3_1.F92,ARIA4"],
-        timeout: 5000,
+        timeout: 15000,
         wait: 1500,
         chromeLaunchConfig: {
             args: [
