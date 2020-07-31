@@ -50,7 +50,7 @@ module Cognito
     def user_data
       unless defined? @user_data
         log_action "Getting user: #{username}"
-        @user_data = COGNITO_CLIENT.get_user(access_token: access_token)
+        @user_data = client.get_user(access_token: access_token)
         log_successful_call
       end
 
