@@ -26,7 +26,6 @@ class BackLinkHistoryService < BaseService
   #
   # Returns a back link url
   def call
-    log_action('Saving page number to the history session')
     update_steps_history
     clear_more_then_10_steps
     determinate_back_link_url
@@ -35,18 +34,21 @@ class BackLinkHistoryService < BaseService
   private
 
   # Creating first step or adding page number to correct step
-  def update_steps_history
+  def update_steps_history # rubocop:disable Metrics/AbcSize
     if history.nil?
-      session[KEY] = { 1 => page }
-    elsif back_button && history
-      clear_unused_steps
+      log_action('Creating first step into the back link history')
+      session[KEY] = { '1' => page }
     elsif last_step_page != page
+      return clear_unused_steps if back_button && history
+
+      log_action('Adding step to the back link history')
       session.dig(KEY)[next_step] = page
     end
   end
 
   # Removes futures steps when back button was used
   def clear_unused_steps
+    log_action('Clearing future steps from the back link history')
     current_step_keys = history.select { |k, _v| k <= previous_step }.keys
     session[KEY] = history.slice(*current_step_keys)
   end
