@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-creds = if ENV['S3_AWS_ACCESS_KEY_ID']
+creds = if ENV['SES_ACCESS_KEY_ID'] && ENV['SES_SECRET_ACCESS_KEY']
           Aws::Credentials.new(
             ENV.fetch('SES_ACCESS_KEY_ID', 'SES_ACCESS_KEY_ID'),
             ENV.fetch('SES_SECRET_ACCESS_KEY', 'SES_SECRET_ACCESS_KEY')
