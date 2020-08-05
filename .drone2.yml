@@ -1251,7 +1251,6 @@ steps:
       - tf init
       - tf workspace select uat || tf workspace new uat
       - tf plan
-
     environment:
       TF_VAR_access_key:
         from_secret: jaqu_staging_aws_access_key_id
@@ -1766,3 +1765,5 @@ get:
   name: ntrRubySecret
 
 ################################################ End Secrets -IAC Resrucgture #########################################################
+
+
