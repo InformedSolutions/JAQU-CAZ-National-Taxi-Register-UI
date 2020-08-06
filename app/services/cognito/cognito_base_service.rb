@@ -10,7 +10,7 @@ module Cognito
 
     # Logs success message on +info+ level
     def log_successful_call
-      log_action 'The call was successful'
+      log_action('The call was successful')
     end
 
     # Logs invalid form message on +error+ level

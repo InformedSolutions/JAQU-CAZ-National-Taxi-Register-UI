@@ -40,5 +40,8 @@ module CsvUploader
 
     # https://stackoverflow.com/questions/49086693/how-do-i-remove-mail-html-content-from-rails-logs
     config.action_mailer.logger = nil
+
+    # Configurable CSV upload size limit
+    config.x.csv_file_size_limit = ENV.fetch('CSV_FILE_SIZE_LIMIT_MB', 50).to_i
   end
 end

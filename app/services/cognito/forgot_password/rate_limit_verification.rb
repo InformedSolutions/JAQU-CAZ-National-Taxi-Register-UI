@@ -63,7 +63,7 @@ module Cognito
       # * +custom:pw-reset-requested+
       def user_data
         unless defined? @user_data
-          log_action 'Query rate limiting fields from user account'
+          log_action('Query rate limiting fields from user account')
           @user_data = Cognito::ForgotPassword::GetUser.call(username: username)
           log_successful_call
         end
