@@ -78,7 +78,7 @@ module Cognito
 
     # Update user based on Cognito call response.
     # Sets user's :aws_status to 'FORCE_NEW_PASSWORD' to force the password changing process.
-    def update_challenged_user(auth_response)
+    def update_challenged_user(auth_response) # rubocop:disable Metrics/AbcSize
       challenge_parameters = auth_response.challenge_parameters
       user.username = challenge_parameters['USER_ID_FOR_SRP']
       user.email = JSON.parse(challenge_parameters['userAttributes'])['email']
