@@ -171,7 +171,7 @@ steps:
       - brakeman
     volumes:
       - name: docker_sock
-      path: /var/run/docker.sock
+        path: /var/run/docker.sock
 
   # Invoke sonar scan
   - name: sonar scan
@@ -443,7 +443,7 @@ steps:
       - brakeman
     volumes:
       - name: docker_sock
-      path: /var/run/docker.sock
+        path: /var/run/docker.sock
 
 
  # Push built image to ECR registry
@@ -1198,7 +1198,7 @@ steps:
       - brakeman
     volumes:
       - name: docker_sock
-      path: /var/run/docker.sock
+        path: /var/run/docker.sock
 
 
  # Push built image to ECR registry
