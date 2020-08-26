@@ -17,3 +17,6 @@ Metrics/BlockLength:
 
 Style/GuardClause:
   Enabled: false
+
+Lint/MissingSuper:
+   Enabled: false
