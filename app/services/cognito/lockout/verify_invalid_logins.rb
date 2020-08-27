@@ -34,7 +34,7 @@ module Cognito
       # Method checks if user exceeded maximum invalid login attempts.
       # Returns boolean.
       def invalid_logins_exceeded?
-        user_data.invalid_logins >= LOCKOUT_LOGIN_ATTEMPTS
+        user_data(reload: true).invalid_logins >= LOCKOUT_LOGIN_ATTEMPTS
       end
 
       # Method calls update service with the incremented invalid login count.
@@ -55,9 +55,14 @@ module Cognito
         update_user(failed_logins: 1)
       end
 
+      # Method returns either already stored user data or fetches them from Cognito.
+      def user_data(reload: false)
+        reload ? (@user_data = user_data_call) : (@user_data ||= user_data_call)
+      end
+
       # Method calls service which returns user data.
-      def user_data
-        @user_data ||= Cognito::Lockout::UserData.new(username: username)
+      def user_data_call
+        Cognito::Lockout::UserData.new(username: username)
       end
 
       # Method calls service responsible for user updates.

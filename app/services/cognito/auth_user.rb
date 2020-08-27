@@ -50,6 +50,7 @@ module Cognito
     rescue AWS_ERROR::NotAuthorizedException => e
       log_error e
       Cognito::Lockout::VerifyInvalidLogins.call(username: username)
+      false
     rescue AWS_ERROR::ServiceError => e
       log_error e
       false
