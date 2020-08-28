@@ -8,6 +8,7 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module CsvUploader
+  # The class is responsible for building the middleware stack
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
@@ -18,7 +19,7 @@ module CsvUploader
     # timeout the user session without activity.
     config.x.session_timeout_in_min = ENV.fetch('SESSION_TIMEOUT', 15).to_i
     # link to feedback page.
-    config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.co.uk/r/2T8BX2D')
+    config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX')
     # name of service
     config.x.service_name = 'Taxi and PHV Data Portal'
     # Support Email Address

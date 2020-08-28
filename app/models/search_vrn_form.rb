@@ -3,7 +3,7 @@
 ##
 # This class is used to validate user data filled in +app/views/vehicles/search.html.haml+.
 #
-# rubocop:disable Metrics/ClassLength, Metrics/CyclomaticComplexity
+# rubocop:disable Metrics/ClassLength
 class SearchVrnForm < MultipleAttributesBaseForm
   # Attribute used in the search view
   attr_accessor :vrn, :historic, :start_date_day, :start_date_month, :start_date_year,
@@ -207,4 +207,4 @@ class SearchVrnForm < MultipleAttributesBaseForm
     end_date_year.to_i.positive? && end_date_day.to_i.positive? && end_date_month.to_i.positive?
   end
 end
-# rubocop:enable Metrics/ClassLength, Metrics/CyclomaticComplexity
+# rubocop:enable Metrics/ClassLength

@@ -18,9 +18,9 @@
                             'data-aria-controls': 'conditional-historic-conditional',
                             checked: params.dig(:search, :historic) == 'false')
         = form.label(:historic,
-                     'Search for current information',
                      class: 'govuk-label govuk-radios__label',
-                     for: 'historical_off')
+                     for: 'historical_off') do
+          Quick search <br> View the latest entry.
 
       .govuk-radios__item
         = form.radio_button(:historic,
@@ -30,9 +30,9 @@
                             id: 'historical_on',
                             checked: params.dig(:search, :historic) == 'true')
         = form.label(:historic,
-                     'Search for historical results',
                      class: 'govuk-label govuk-radios__label',
-                     for: 'historical_on')
+                     for: 'historical_on') do 
+          Detailed search <br> View all entries.
 
       #conditional-historical.govuk-radios__conditional
         .govuk-form-group{class: ('govuk-form-group govuk-form-group--error' if @errors[:start_date].present?)}
@@ -40,7 +40,9 @@
             %legend.govuk-fieldset__legend.govuk-fieldset__legend--m
               Start date
             %span#start_date_hint.govuk-hint
-              For example, 31 3 1980
+              You can search for any date since data has been 
+              %br
+              uploaded to the Taxi and PHV Data Portal.
 
             - if @errors[:start_date].present?
               %span#start_date_error.govuk-error-message

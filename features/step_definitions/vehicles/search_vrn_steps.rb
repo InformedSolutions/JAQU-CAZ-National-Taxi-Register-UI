@@ -9,30 +9,31 @@ When('I enter a vrn {string}') do |vrn_value|
   response = read_response_file('licence_info_response.json')
   allow(api).to receive(:licence_info).with(vrn).and_return(response)
   fill_vrn(vrn_value)
+  choose('Quick search')
 end
 
 When('I enter a vrn and choose Search for historical results') do
   fill_vrn
-  choose('Search for historical results')
+  choose('Detailed search')
 end
 
 When('I enter a vrn and valid dates format') do
   mock_vrn_history
   fill_vrn
   fill_dates
-  choose('Search for historical results')
+  choose('Detailed search')
 end
 
 When('I enter a vrn without history and valid dates format') do
   mock_vrn_history(1, true, true)
   fill_vrn
   fill_dates
-  choose('Search for historical results')
+  choose('Detailed search')
 end
 
 When('I enter a vrn and invalid dates format') do
   fill_vrn
-  choose('Search for historical results')
+  choose('Detailed search')
   fill_in('search_start_date_day', with: 44)
   fill_in('search_start_date_month', with: 44)
   fill_in('search_start_date_year', with: 4444)
@@ -43,7 +44,7 @@ end
 
 When('I enter a vrn and start date earlier than end date') do
   fill_vrn
-  choose('Search for historical results')
+  choose('Detailed search')
   fill_in('search_start_date_day', with: Time.zone.tomorrow.day.to_s)
   fill_in('search_start_date_month', with: Time.zone.tomorrow.month.to_s)
   fill_in('search_start_date_year', with: Time.zone.tomorrow.year.to_s)
@@ -54,13 +55,13 @@ end
 
 When('I enter a vrn and negative start date') do
   fill_vrn
-  choose('Search for historical results')
+  choose('Detailed search')
   fill_negative_start_date
 end
 
 When('I enter a vrn and negative end date') do
   fill_vrn
-  choose('Search for historical results')
+  choose('Detailed search')
   fill_negative_end_date
 end
 
@@ -71,6 +72,7 @@ end
 When('I enter a vrn when server is unavailable') do
   allow(api).to receive(:licence_info).with(vrn).and_raise(Errno::ECONNREFUSED)
   fill_vrn
+  choose('Quick search')
 end
 
 When('I enter a vrn which not exists in database') do
@@ -79,6 +81,7 @@ When('I enter a vrn which not exists in database') do
     service.new(404, 'VRN number was not found', {})
   )
   fill_vrn
+  choose('Quick search')
 end
 
 Given('I am on the Historical results page') do
@@ -107,11 +110,27 @@ When('I press {int} pagination button') do |selected_page|
   page.find("#pagination-button-#{selected_page}").first('a').click
 end
 
+And('I should be on the Search results') do
+  expect(page).to have_current_path(historic_search_vehicles_url)
+end
+
+And('I should be on the Search results page number {int}') do |page_number|
+  expect(page).to have_current_path("#{historic_search_vehicles_url}?page=#{page_number}")
+end
+
+And('I should be on the Search results page number {int} when using back button') do |page_number|
+  expect(page).to have_current_path("#{historic_search_vehicles_url}?page=#{page_number}?back=true")
+end
+
+And('I go the Search vehicles results page') do
+  visit historic_search_vehicles_path
+end
+
 private
 
 def fill_vrn(vrn_value = vrn)
   fill_in('vrn', with: vrn_value)
-  choose('Search for current information')
+  choose('Detailed search')
 end
 
 def fill_dates
@@ -172,9 +191,9 @@ def paginated_history(page = 1)
     PaginatedVrnHistory,
     vrn_changes_list: mocked_changes,
     page: page,
-    total_pages: 2,
+    total_pages: 5,
     range_start: 1,
     range_end: 10,
-    total_changes_count: 12
+    total_changes_count: 42
   )
 end

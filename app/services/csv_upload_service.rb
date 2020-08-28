@@ -36,9 +36,7 @@ class CsvUploadService < BaseService
   #
   # Returns a boolean.
   def validate
-    if no_file_selected? || invalid_extname? || invalid_filename?
-      raise CsvUploadFailureException, error
-    end
+    raise CsvUploadFailureException, error if no_file_selected? || invalid_extname? || invalid_filename?
   end
 
   # Checks if file is present.
@@ -47,9 +45,7 @@ class CsvUploadService < BaseService
   # Returns a boolean if file is present.
   # Returns a string if not.
   def no_file_selected?
-    if file.nil?
-      @error = I18n.t('csv.errors.no_file')
-    end
+    @error = I18n.t('csv.errors.no_file') if file.nil?
   end
 
   # Checks if filename extension equals `csv`.
@@ -58,9 +54,7 @@ class CsvUploadService < BaseService
   # Returns a boolean if filename extension equals `csv`.
   # Returns a string if not.
   def invalid_extname?
-    unless File.extname(file.original_filename).downcase == '.csv'
-      @error = I18n.t('csv.errors.invalid_ext')
-    end
+    @error = I18n.t('csv.errors.invalid_ext') unless File.extname(file.original_filename).downcase == '.csv'
   end
 
   # Checks if filename is compliant with the naming rules.
@@ -80,7 +74,7 @@ class CsvUploadService < BaseService
   #
   # Returns a boolean.
   def upload_to_s3
-    log_action "Uploading file to s3 by a user: #{user.username}"
+    log_action('Uploading file to s3')
     return true if aws_call
 
     raise CsvUploadFailureException, I18n.t('csv.errors.base')
