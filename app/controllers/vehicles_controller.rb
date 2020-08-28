@@ -11,7 +11,7 @@ class VehiclesController < ApplicationController
   # checks if VRN is present in the session
   before_action :check_vrn, only: %i[index historic_search]
   # assign back button path
-  before_action :assign_back_button_url, only: %i[index search not_found historic_search]
+  before_action :assign_back_button_url, only: %i[index not_found historic_search]
 
   ##
   # Renders the search page
@@ -64,7 +64,7 @@ class VehiclesController < ApplicationController
     @vrn_details = HistoricalVrnDetails.new(vrn, page, start_date, end_date)
     @vrn = vrn
     @pagination = @vrn_details.pagination
-    @return_url = return_url
+    @return_url = determinate_back_link_url(page)
   end
 
   ##
@@ -122,27 +122,24 @@ class VehiclesController < ApplicationController
     if form.historic == 'true'
       session[:start_date] = form.start_date
       session[:end_date] = form.end_date
+      session[:back_link_history] = nil
       redirect_to historic_search_vehicles_path
     else
       redirect_to vehicles_path
     end
   end
 
-  # Returns the return url
-  def return_url
-    if (!params[:page] || params[:page].to_i == 1) && params[:back]
-      search_vehicles_path
-    else
-      return_url_with_params
-    end
+  # Returns back link url, e.g '.../vehicles/historic_search?page=3?back=true'
+  def determinate_back_link_url(page)
+    BackLinkHistoryService.call(
+      session: session,
+      back_button: back_button_used?,
+      page: page,
+      url: historic_search_vehicles_url
+    )
   end
 
-  # Returns the return URL with params
-  def return_url_with_params
-    url = request.referer || root_path
-    params = { back: true }
-    uri = URI.parse url
-    uri.query = URI.encode_www_form URI.decode_www_form(uri.query || '').concat(params.to_a)
-    uri.to_s
+  def back_button_used?
+    request.query_parameters['page']&.include?('back')
   end
 end

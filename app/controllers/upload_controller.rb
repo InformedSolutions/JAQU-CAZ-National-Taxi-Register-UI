@@ -130,9 +130,7 @@ class UploadController < ApplicationController
 
   # Checks if user +aws_status+ equality to 'FORCE_NEW_PASSWORD'.
   def redirect_to_new_password_path
-    if current_user.aws_status == 'FORCE_NEW_PASSWORD'
-      redirect_to new_password_path
-    end
+    redirect_to new_password_path if current_user.aws_status == 'FORCE_NEW_PASSWORD'
   end
 
   # Checks if session +job+ is present.
