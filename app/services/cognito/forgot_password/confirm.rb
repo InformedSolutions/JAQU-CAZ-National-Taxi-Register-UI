@@ -74,8 +74,8 @@ module Cognito
       # complexity of the criteria.
       def perform_cognito_call
         confirm_forgot_password
-      rescue AWS_ERROR::CodeMismatchException, AWS_ERROR::ExpiredCodeException => e
-        log_error e
+      rescue AWS_ERROR::CodeMismatchException, AWS_ERROR::ExpiredCodeException,
+             AWS_ERROR::UserNotFoundException
         raise CallException, I18n.t('password.errors.code_mismatch')
       rescue AWS_ERROR::InvalidPasswordException, AWS_ERROR::InvalidParameterException => e
         log_error e
@@ -87,7 +87,7 @@ module Cognito
 
       # Perform call to AWS Cognito to set a new password.
       def confirm_forgot_password
-        log_action "Confirming forgot password by a user: #{username}"
+        log_action 'Confirming forgot password'
         client.confirm_forgot_password(
           client_id: ENV['AWS_COGNITO_CLIENT_ID'],
           username: username,

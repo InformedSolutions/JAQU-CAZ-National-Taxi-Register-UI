@@ -73,7 +73,7 @@ module Cognito
 
     # Sets a new user password on Cognito.
     def call_cognito
-      log_action "Respond to auth call by a user: #{user.username}"
+      log_action('Respond to auth call')
       result = client.respond_to_auth_challenge(
         challenge_name: 'NEW_PASSWORD_REQUIRED',
         client_id: ENV.fetch('AWS_COGNITO_CLIENT_ID', 'AWS_COGNITO_CLIENT_ID'),
@@ -88,9 +88,8 @@ module Cognito
       # Returns hash, error message.
       def password_complexity_error
         {
-          base_message: I18n.t('password.errors.complexity'),
-          link: true,
-          password: I18n.t('password.errors.complexity')
+          password: I18n.t('password.errors.invalid_format'),
+          password_confirmation: I18n.t('password.errors.confirmation_invalid_format')
         }
       end
     end

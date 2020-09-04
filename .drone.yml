@@ -171,7 +171,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -282,7 +282,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: dev
     when:
       event:
@@ -428,7 +428,6 @@ steps:
     commands:
       - bundle install
       - yarn install
-      - cp .env.example .env
       - rspec -f d
 
   # Execute integration/scenario tests
@@ -458,7 +457,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -530,7 +529,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: st
     when:
       event:
@@ -589,7 +588,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: st
     when:
       event:
@@ -733,7 +732,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -805,7 +804,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: sit
     when:
       event:
@@ -864,7 +863,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: sit
     when:
       event:
@@ -975,7 +974,6 @@ steps:
     commands:
       - bundle install
       - yarn install
-      - cp .env.example .env
       - rspec -f d
 
   # Execute integration/scenario tests
@@ -1005,7 +1003,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -1078,7 +1076,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: uat
     when:
       event:
@@ -1137,7 +1135,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: uat
     when:
       event:
@@ -1266,7 +1264,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: preprod
     when:
       event:
@@ -1333,7 +1331,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
       environment: preprod
     when:
       event:
@@ -1477,7 +1475,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-150934733-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_0iVduRjEHUkoEFD
       environment: prod
     when:
       event:
@@ -1544,7 +1542,7 @@ steps:
         from_secret: ntr_ruby_secret
       TF_VAR_google_analytics_id: UA-150934733-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_0iVduRjEHUkoEFD
       environment: prod
     when:
       event:

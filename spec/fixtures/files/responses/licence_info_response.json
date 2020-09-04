@@ -1,5 +1,6 @@
 {
   "active": true,
   "wheelchairAccessible": false,
+  "description": "taxi",
   "licensingAuthoritiesNames": ["Birmingham", "Leeds"]
 }
