@@ -67,7 +67,7 @@ class VehiclesCheckerApi < BaseApi
     #   * +licenceEndDate+ - string, date format
     #   * +wheelchairAccessible+ -  boolean, wheelchair accessible by any active operating licence
     #
-    def licence_info_historical(vrn:, page:, per_page: 10, start_date:, end_date:)
+    def licence_info_historical(vrn:, page:, start_date:, end_date:, per_page: 10)
       log_call("Getting the historical details for page: #{page}, start_date: #{start_date}"\
                " and end_date: #{end_date}")
 
