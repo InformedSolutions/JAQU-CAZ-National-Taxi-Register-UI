@@ -50,7 +50,7 @@ steps:
       ZAP_PROXY_URL: 'zap'
       BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
       VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
+      VALID_PASSWORD: 'Tester123...'
       SCREENSHOT_TYPE: 'base'
       LOCATION: local
     commands:
@@ -76,7 +76,7 @@ steps:
         from_secret: browserstack_auth_key
       BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
       VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
+      VALID_PASSWORD: 'Tester123...'
       BROWSER_SET: 'mid'
       SCREENSHOT_TYPE: 'base'
       BUILD: NTR-UI-${DRONE_BUILD_NUMBER}
@@ -217,7 +217,8 @@ steps:
   - name: deploy to dev
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -472,7 +473,8 @@ steps:
   - name: plan terraform updates in st
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -541,7 +543,8 @@ steps:
   - name: deploy to st
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -739,7 +742,8 @@ steps:
   - name: plan terraform updates in sit
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -808,7 +812,8 @@ steps:
   - name: deploy to sit
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -1227,7 +1232,8 @@ steps:
   - name: plan terraform updates in uat
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -1296,7 +1302,8 @@ steps:
   - name: deploy to uat
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk update && apk add bash
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
