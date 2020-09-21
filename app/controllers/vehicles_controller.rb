@@ -8,6 +8,8 @@ class VehiclesController < ApplicationController
   rescue_from BaseApi::Error404Exception, with: :vrn_not_found
   # checks if a user is logged in
   before_action :authenticate_user!
+  # checks if a user belongs to proper group
+  before_action -> { check_permissions(current_user.search_group?) }
   # checks if VRN is present in the session
   before_action :check_vrn, only: %i[index historic_search]
   # assign back button path

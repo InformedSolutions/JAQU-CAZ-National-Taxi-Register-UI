@@ -63,7 +63,6 @@ module Cognito
           client_id: ENV['AWS_COGNITO_CLIENT_ID'],
           username: username
         )
-        log_successful_call
       rescue AWS_ERROR::ServiceError => e
         log_error e
       end

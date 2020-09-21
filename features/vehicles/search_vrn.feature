@@ -28,7 +28,7 @@ Feature: Search a VRN
     Given I am on the Search VRN page
       And I enter a vrn when server is unavailable
       And I press 'Continue' button
-    Then I should see the Service Unavailable page
+    Then I should see 'Sorry, the service is unavailable' title
 
   Scenario: Search a VRN for historical results
     Given I am on the Search VRN page
@@ -98,3 +98,9 @@ Feature: Search a VRN
       And I press 'Continue' button
     Then I should see 'There is no historical data for CU57ABC'
       And I should not see "Date modified"
+
+  Scenario: Sign in and not belongs to any Cognito group
+    Given I am signed and not belongs to any group
+      And I should not see 'Search' link
+    When I navigate to a Search vehicles page
+    Then I should be on the Service Unavailable page

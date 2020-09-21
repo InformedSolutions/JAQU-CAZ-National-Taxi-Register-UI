@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe VrnDetails, type: :model do
+describe VrnDetails do
   subject { described_class.new(vrn) }
 
   let(:vrn) { 'CU57ABC' }

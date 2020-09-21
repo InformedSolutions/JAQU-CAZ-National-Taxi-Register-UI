@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::ForgotPassword::Confirm do
+describe Cognito::ForgotPassword::Confirm do
   subject(:service_call) do
     described_class.call(username: username, password: password,
                          code: code, password_confirmation: password)
@@ -30,7 +30,7 @@ RSpec.describe Cognito::ForgotPassword::Confirm do
     ).and_return(form)
   end
 
-  context 'when form is valid and cognito returns 200' do
+  context 'when form is valid and cognito returns 200 OK status' do
     it 'returns true' do
       expect(service_call).to be_truthy
     end

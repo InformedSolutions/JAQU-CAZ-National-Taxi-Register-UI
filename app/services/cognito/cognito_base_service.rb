@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+##
+# Module used to wrap communication with Amazon Cognito
 module Cognito
   ##
   # Base class for all the Cognito services. Inherits from BaseService.
@@ -13,11 +15,6 @@ module Cognito
     # Env variables associated with the lockout mechanism
     LOCKOUT_LOGIN_ATTEMPTS = ENV.fetch('LOCKOUT_LOGIN_ATTEMPTS', 5).to_i
     LOCKOUT_TIMEOUT = ENV.fetch('LOCKOUT_TIMEOUT', 30).to_i
-
-    # Logs success message on +info+ level
-    def log_successful_call
-      log_action('The call was successful')
-    end
 
     # Logs invalid form message on +error+ level
     #

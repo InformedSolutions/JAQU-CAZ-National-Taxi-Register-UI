@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe BackLinkHistoryService do
+describe BackLinkHistoryService do
   subject { described_class.call(session: session, back_button: back_button, page: page, url: url) }
 
   let(:session) { {} }

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe SearchVrnForm, type: :model do
+describe SearchVrnForm do
   subject(:form) { described_class.new(params) }
 
   let(:params) do
