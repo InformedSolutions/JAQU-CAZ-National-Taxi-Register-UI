@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe HistoricalVrnDetails, type: :model do
+describe HistoricalVrnDetails do
   subject { described_class.new(vrn, page, start_date, end_date) }
 
   let(:vrn) { 'CU57ABC' }

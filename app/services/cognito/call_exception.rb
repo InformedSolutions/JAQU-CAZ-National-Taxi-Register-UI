@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+##
+# Module used to wrap communication with Amazon Cognito
 module Cognito
   ##
   # Exception raised as the result of other exceptions that may occur during performing Cognito calls.

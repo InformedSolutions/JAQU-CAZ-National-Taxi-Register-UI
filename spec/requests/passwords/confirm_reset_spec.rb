@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-describe 'PasswordsController - GET #confirm_reset', type: :request do
-  subject(:http_request) { get confirm_reset_passwords_path }
+describe 'PasswordsController - GET #confirm_reset' do
+  subject { get confirm_reset_passwords_path }
 
   let(:username) { 'wojtek@example.com' }
 
@@ -15,15 +15,15 @@ describe 'PasswordsController - GET #confirm_reset', type: :request do
       )
     end
 
-    it 'returns 200' do
-      http_request
-      expect(response).to be_successful
+    it 'returns a 200 OK status' do
+      subject
+      expect(response).to have_http_status(:ok)
     end
   end
 
   context 'without password_reset_token set' do
     it 'returns redirect to success page' do
-      http_request
+      subject
       expect(response).to redirect_to(success_passwords_path)
     end
   end
@@ -34,7 +34,7 @@ describe 'PasswordsController - GET #confirm_reset', type: :request do
     end
 
     it 'returns redirect to login page' do
-      http_request
+      subject
       expect(response).to redirect_to(new_user_session_path)
     end
   end

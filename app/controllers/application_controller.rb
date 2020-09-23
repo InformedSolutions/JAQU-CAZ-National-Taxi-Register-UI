@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
               BaseApi::Error500Exception,
               BaseApi::Error422Exception,
               BaseApi::Error400Exception,
-              with: :redirect_to_server_unavailable
+              with: :render_server_unavailable
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
 
@@ -71,9 +71,18 @@ class ApplicationController < ActionController::Base
     redirect_to new_user_session_path
   end
 
+  # Checks if user has a proper permissions
+  # If not redirects to the service unavailable page
+  def check_permissions(value)
+    return if value == true
+
+    Rails.logger.warn('Permission Denied: Your group have no access to the requested flow')
+    redirect_to service_unavailable_path
+  end
+
   # Function used as a rescue from API errors.
-  # Logs the exception and redirects to ErrorsController#service_unavailable
-  def redirect_to_server_unavailable(exception)
+  # Logs the exception and renders service unavailable page
+  def render_server_unavailable(exception)
     Rails.logger.error "#{exception.class}: #{exception}"
 
     render template: 'errors/service_unavailable', status: :service_unavailable

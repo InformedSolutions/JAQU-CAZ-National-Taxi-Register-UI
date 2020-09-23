@@ -5,6 +5,10 @@ Given('I am on the Search VRN page') do
   visit search_vehicles_path
 end
 
+When('I navigate to a Search vehicles page') do
+  visit search_vehicles_path
+end
+
 When('I enter a vrn {string}') do |vrn_value|
   response = read_response_file('licence_info_response.json')
   allow(api).to receive(:licence_info).with(vrn).and_return(response)

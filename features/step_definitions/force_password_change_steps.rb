@@ -10,11 +10,11 @@ And('I am a newly created user') do
   allow(Cognito::AuthUser).to receive(:call).and_return(challenged_cognito_user)
 end
 
-And('I enter valid credentials') do
+And('I enter valid credentials and press the Continue') do
   basic_sign_in
 end
 
-Then('I am transferred to “Force Change password” page') do
+Then('I am transferred to the Force Change password page') do
   expect(current_path).to eq(new_password_path)
 end
 

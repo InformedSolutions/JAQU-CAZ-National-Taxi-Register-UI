@@ -2,12 +2,12 @@
 
 require 'rails_helper'
 
-RSpec.describe 'VehiclesCheckerApi.licence_info' do
+describe 'VehiclesCheckerApi.licence_info' do
   subject(:call) { VehiclesCheckerApi.licence_info(vrn) }
 
   let(:vrn) { 'CU57ABC' }
 
-  context 'when call returns 200' do
+  context 'when call returns a 200 OK status' do
     before do
       vrn_details = file_fixture('responses/licence_info_response.json').read
       stub_request(:get, /CU57ABC/).to_return(status: 200, body: vrn_details)

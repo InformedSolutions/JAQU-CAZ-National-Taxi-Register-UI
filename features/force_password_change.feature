@@ -6,8 +6,8 @@ Feature: Force password change on first login
   Scenario: First login
     Given I am on the Sign in page
       And I am a newly created user
-    When I enter valid credentials
-    Then I am transferred to “Force Change password” page
+    When I enter valid credentials and press the Continue
+    Then I am transferred to the Force Change password page
 
   Scenario: Invalid new password
     Given I am on a Force Change password page

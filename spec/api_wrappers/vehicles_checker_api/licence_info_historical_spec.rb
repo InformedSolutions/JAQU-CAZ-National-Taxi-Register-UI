@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'VehiclesCheckerApi.licence_info' do
+describe 'VehiclesCheckerApi.licence_info' do
   subject(:call) do
     VehiclesCheckerApi.licence_info_historical(
       vrn: vrn,
@@ -17,7 +17,7 @@ RSpec.describe 'VehiclesCheckerApi.licence_info' do
   let(:start_date) { '2010-01-01' }
   let(:end_date) { '2020-03-24' }
 
-  context 'when call returns 200' do
+  context 'when call returns a 200 OK status' do
     before do
       vrn_history = read_unparsed_response('licence_info_historical_response.json')
       stub_request(:get, /CU57ABC/).to_return(status: 200, body: vrn_history)

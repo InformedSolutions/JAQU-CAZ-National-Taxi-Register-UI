@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-describe 'UploadController - GET #index', type: :request do
-  subject(:http_request) { get authenticated_root_path }
+describe 'UploadController - GET #index' do
+  subject { get authenticated_root_path }
 
   let(:file_path) do
     File.join(
@@ -16,7 +16,7 @@ describe 'UploadController - GET #index', type: :request do
   before { sign_in user }
 
   it 'returns a success response' do
-    http_request
+    subject
     expect(response).to have_http_status(:success)
   end
 
@@ -31,11 +31,11 @@ describe 'UploadController - GET #index', type: :request do
 
     it 'calls RegisterCheckerApi.job_errors' do
       expect(RegisterCheckerApi).to receive(:job_errors).with(job_name, correlation_id)
-      http_request
+      subject
     end
 
     it 'clears job from session' do
-      http_request
+      subject
       expect(session[:job]).to be_nil
     end
   end
@@ -44,12 +44,12 @@ describe 'UploadController - GET #index', type: :request do
     let(:user) { create_user(login_ip: '0.0.0.0') }
 
     it 'returns a redirect to login page' do
-      http_request
+      subject
       expect(response).to redirect_to(new_user_session_path)
     end
 
     it 'logs out the user' do
-      http_request
+      subject
       expect(controller.current_user).to be_nil
     end
   end

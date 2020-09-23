@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-describe 'UploadController - GET #processing', type: :request do
-  subject(:http_request) { get processing_upload_index_path }
+describe 'UploadController - GET #processing' do
+  subject { get processing_upload_index_path }
 
   let(:job_status) { 'SUCCESS' }
   let(:correlation_id) { SecureRandom.uuid }
@@ -16,7 +16,7 @@ describe 'UploadController - GET #processing', type: :request do
     before do
       inject_session(job: job_data)
       allow(RegisterCheckerApi).to receive(:job_status).and_return(job_status)
-      http_request
+      subject
     end
 
     context 'when job status is SUCCESS' do
@@ -28,12 +28,12 @@ describe 'UploadController - GET #processing', type: :request do
     context 'when job status is RUNNING' do
       let(:job_status) { 'RUNNING' }
 
-      it 'returns 200' do
-        expect(response).to be_successful
+      it 'returns a 200 OK status' do
+        expect(response).to have_http_status(:ok)
       end
 
       it 'does not clear job from session' do
-        http_request
+        subject
         expect(session[:job]).to eq(job_data)
       end
     end
@@ -46,7 +46,7 @@ describe 'UploadController - GET #processing', type: :request do
       end
 
       it 'does not clear job from session' do
-        http_request
+        subject
         expect(session[:job]).to eq(job_data)
       end
     end
@@ -54,7 +54,7 @@ describe 'UploadController - GET #processing', type: :request do
 
   context 'with missing job data' do
     it 'returns a redirect to root page' do
-      http_request
+      subject
       expect(response).to redirect_to(root_path)
     end
   end
