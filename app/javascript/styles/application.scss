@@ -22,3 +22,18 @@ html {
 .moj-pagination {
   margin-bottom: 30px;
 }
+
+.search-notice {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: govuk-colour($colour: 'blue');
+  color: govuk-colour($colour: 'white');
+
+  &__body {
+    font-family: "GDS Transport", Arial, sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.25;
+  }
+}
