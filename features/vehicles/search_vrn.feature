@@ -32,7 +32,7 @@ Feature: Search a VRN
 
   Scenario: Search a VRN for historical results
     Given I am on the Search VRN page
-      And I should see "Search the taxi register"
+      And I should see "Search the Taxi & PHV Data"
     When I enter a vrn and choose Search for historical results
       And I press 'Continue' button
     Then I should see 'Start date must include a day, month and year'
@@ -49,7 +49,7 @@ Feature: Search a VRN
 
   Scenario: Search a VRN for historical results with Invalid date
     Given I am on the Search VRN page
-      And I should see "Search the taxi register"
+      And I should see "Search the Taxi & PHV Data"
     When I enter a vrn and negative start date
       And I press 'Continue' button
     Then I should see 'Enter a real start date'
