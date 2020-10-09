@@ -61,79 +61,79 @@ class SearchVrnForm < MultipleAttributesBaseForm
 
   # validates presence of day, month and year
   def validate_day_month_year(period, period_msg, day, month, year)
-    if day.empty? && month.empty? && year.empty?
-      errors.add(
-        period,
-        :missing,
-        message: I18n.t('search_vrn_form.errors.dates.missing.all', parameter: period_msg)
-      )
-    end
+    return unless day.empty? && month.empty? && year.empty?
+
+    errors.add(
+      period,
+      :missing,
+      message: I18n.t('search_vrn_form.errors.dates.missing.all', parameter: period_msg)
+    )
   end
 
   # validates presence of day
   def validate_day(period, period_msg, day, month, year)
-    if day.empty? && month.present? && year.present?
-      errors.add(
-        period,
-        :missing,
-        message: I18n.t('search_vrn_form.errors.dates.missing.day', parameter: period_msg)
-      )
-    end
+    return unless day.empty? && month.present? && year.present?
+
+    errors.add(
+      period,
+      :missing,
+      message: I18n.t('search_vrn_form.errors.dates.missing.day', parameter: period_msg)
+    )
   end
 
   # validates presence of month
   def validate_month(period, period_msg, day, month, year)
-    if day.present? && month.empty? && year.present?
-      errors.add(
-        period,
-        :missing,
-        message: I18n.t('search_vrn_form.errors.dates.missing.month', parameter: period_msg)
-      )
-    end
+    return unless day.present? && month.empty? && year.present?
+
+    errors.add(
+      period,
+      :missing,
+      message: I18n.t('search_vrn_form.errors.dates.missing.month', parameter: period_msg)
+    )
   end
 
   # validates presence of year
   def validate_year(period, period_msg, day, month, year)
-    if day.present? && month.present? && year.empty?
-      errors.add(
-        period,
-        :missing,
-        message: I18n.t('search_vrn_form.errors.dates.missing.year', parameter: period_msg)
-      )
-    end
+    return unless day.present? && month.present? && year.empty?
+
+    errors.add(
+      period,
+      :missing,
+      message: I18n.t('search_vrn_form.errors.dates.missing.year', parameter: period_msg)
+    )
   end
 
   # validates presence of day and month
   def validate_day_month(period, period_msg, day, month, year)
-    if day.empty? && month.empty? && year.present?
-      errors.add(
-        period,
-        :missing,
-        message: I18n.t('search_vrn_form.errors.dates.missing.day_month', parameter: period_msg)
-      )
-    end
+    return unless day.empty? && month.empty? && year.present?
+
+    errors.add(
+      period,
+      :missing,
+      message: I18n.t('search_vrn_form.errors.dates.missing.day_month', parameter: period_msg)
+    )
   end
 
   # validates presence of day and year
   def validate_day_year(period, period_msg, day, month, year)
-    if day.empty? && month.present? && year.empty?
-      errors.add(
-        period,
-        :missing,
-        message: I18n.t('search_vrn_form.errors.dates.missing.day_year', parameter: period_msg)
-      )
-    end
+    return unless day.empty? && month.present? && year.empty?
+
+    errors.add(
+      period,
+      :missing,
+      message: I18n.t('search_vrn_form.errors.dates.missing.day_year', parameter: period_msg)
+    )
   end
 
   # validates presence of month and year
   def validate_month_year(period, period_msg, day, month, year)
-    if day.present? && month.empty? && year.empty?
-      errors.add(
-        period,
-        :missing,
-        message: I18n.t('search_vrn_form.errors.dates.missing.month_year', parameter: period_msg)
-      )
-    end
+    return unless day.present? && month.empty? && year.empty?
+
+    errors.add(
+      period,
+      :missing,
+      message: I18n.t('search_vrn_form.errors.dates.missing.month_year', parameter: period_msg)
+    )
   end
 
   # validates start date format
@@ -166,14 +166,14 @@ class SearchVrnForm < MultipleAttributesBaseForm
 
   # validates start and end dates period
   def validate_dates_period
-    if start_date > end_date
-      add_errors_to_start_date
-      errors.add(
-        :start_date,
-        :invalid,
-        message: I18n.t('search_vrn_form.errors.dates.invalid.start_date')
-      )
-    end
+    return unless start_date > end_date
+
+    add_errors_to_start_date
+    errors.add(
+      :start_date,
+      :invalid,
+      message: I18n.t('search_vrn_form.errors.dates.invalid.start_date')
+    )
   end
 
   # checks if +start_date+ or +end_date+ errors are empty

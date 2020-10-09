@@ -36,9 +36,9 @@ class CsvUploadService < BaseService
   #
   # Returns a boolean.
   def validate
-    if no_file_selected? || invalid_extname? || invalid_filename? || filesize_too_big?
-      raise CsvUploadFailureException, error
-    end
+    return unless no_file_selected? || invalid_extname? || invalid_filename? || filesize_too_big?
+
+    raise CsvUploadFailureException, error
   end
 
   # Checks if file is present.
@@ -65,9 +65,9 @@ class CsvUploadService < BaseService
   # Returns a boolean if filename is compliant with the naming rules
   # Returns a string if not.
   def invalid_filename?
-    if File.basename(file.original_filename, '.*').match(NAME_FORMAT).nil?
-      @error = I18n.t('csv.errors.invalid_name')
-    end
+    return unless File.basename(file.original_filename, '.*').match(NAME_FORMAT).nil?
+
+    @error = I18n.t('csv.errors.invalid_name')
   end
 
   # Checks if file size not bigger than `Rails.configuration.x.csv_file_size_limit`
