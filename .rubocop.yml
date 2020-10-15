@@ -20,3 +20,4 @@ Style/GuardClause:
 
 Lint/MissingSuper:
    Enabled: false
+
