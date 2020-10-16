@@ -20,7 +20,7 @@ module ActiveRecord
         @configuration = configuration
       end
 
-      def create(_ = false)
+      def create(_: false)
         # NO-OP
       end
 

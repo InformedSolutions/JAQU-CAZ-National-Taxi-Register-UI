@@ -6,7 +6,9 @@ creds = if ENV['SES_ACCESS_KEY_ID'] && ENV['SES_SECRET_ACCESS_KEY']
             ENV.fetch('SES_SECRET_ACCESS_KEY', 'SES_SECRET_ACCESS_KEY')
           )
         else
+          # :nocov:
           Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })
+          # :nocov:
         end
 
 # default to Ireland, as SES is not supported in London

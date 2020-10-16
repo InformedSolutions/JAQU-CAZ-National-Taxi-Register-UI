@@ -9,7 +9,7 @@
 # All methods are on the class level, so there is no initializer method.
 class VehiclesCheckerApi < BaseApi
   API_URL = ENV.fetch('TAXI_PHV_REGISTER_API_URL', 'localhost:3001').freeze
-  base_uri API_URL + '/v1/vehicles'
+  base_uri "#{API_URL}/v1/vehicles"
 
   headers(
     'Content-Type' => 'application/json',
@@ -67,7 +67,7 @@ class VehiclesCheckerApi < BaseApi
     #   * +licenceEndDate+ - string, date format
     #   * +wheelchairAccessible+ -  boolean, wheelchair accessible by any active operating licence
     #
-    def licence_info_historical(vrn:, page:, per_page: 10, start_date:, end_date:)
+    def licence_info_historical(vrn:, page:, start_date:, end_date:, per_page: 10)
       log_call("Getting the historical details for page: #{page}, start_date: #{start_date}"\
                " and end_date: #{end_date}")
 

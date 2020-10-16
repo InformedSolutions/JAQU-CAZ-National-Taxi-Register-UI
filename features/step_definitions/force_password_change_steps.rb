@@ -31,10 +31,6 @@ And('I enter password that does not comply with Cognito setup password policy') 
   fill_new_password_form
 end
 
-Then('I am presented with an error') do
-  expect(page).to have_content('Enter your password in a valid format')
-end
-
 And('I can retry') do
   fill_new_password_form
 end
