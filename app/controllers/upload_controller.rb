@@ -14,6 +14,20 @@ class UploadController < ApplicationController
   before_action :assign_back_button_url, only: %i[data_rules]
 
   ##
+  # Renders the upload page.
+  #
+  # ==== Path
+  #
+  #    :GET /upload/index
+  #
+  def index
+    return unless session[:job]
+
+    @job_errors = RegisterCheckerApi.job_errors(job_name, job_correlation_id)
+    session[:job] = nil
+  end
+
+  ##
   # Upload csv file to AWS S3.
   #
   # ==== Path
@@ -57,20 +71,6 @@ class UploadController < ApplicationController
     else
       redirect_to authenticated_root_path, alert: 'Uploaded file is not valid'
     end
-  end
-
-  ##
-  # Renders the upload page.
-  #
-  # ==== Path
-  #
-  #    :GET /upload/index
-  #
-  def index
-    return unless session[:job]
-
-    @job_errors = RegisterCheckerApi.job_errors(job_name, job_correlation_id)
-    session[:job] = nil
   end
 
   # Renders the data rules page.
