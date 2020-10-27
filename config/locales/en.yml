@@ -1,51 +1,52 @@
+---
 en:
+  csv:
+    errors:
+      base: The selected file could not be uploaded – try again
+      invalid_ext: The selected file must be a CSV
+      invalid_name: The selected file must be named correctly
+      no_file: Select a CSV file to upload
   email:
     errors:
       invalid_format: Enter your email address in a valid format
       required: Enter your email address
       too_long: The email exceeds the limit of 45 characters
-  password:
-    errors:
-      required: Enter your password
-      complexity: Password must be at least 12 characters long, include at least one upper case letter, a number, and a special character
-      code_mismatch: The confirmation code does not match or has expired
-      code_required: Enter your confirmation code
-      passwords_required: Password and password confirmation are required
-      confirmation_required: Enter your password confirmation
-      password_required: Enter your password
-      password_equality: Enter a password and password confirmation that are the same
-      password_unchanged: New password must be different than your temporary one
   expired_session: Your session has expired
-  csv:
-    errors:
-      base: The selected file could not be uploaded – try again
-      no_file: Select a CSV file to upload
-      invalid_ext: The selected file must be a CSV
-      invalid_name: The selected file must be named correctly
-  upload:
-    delivery_error: There was an error sending your confirmation email. Your data has still been saved.
-    content:
+  external_link: opens in a new window
   labels:
     vrn: Enter a number plate
     vrn_example: For example, CU57ABC
-  external_link: opens in a new window
+  password:
+    errors:
+      code_mismatch: The confirmation code does not match or has expired
+      code_required: Enter your confirmation code
+      complexity: Password must be at least 12 characters long, include at least one
+        upper case letter, a number, and a special character
+      confirmation_required: Enter your password confirmation
+      password_equality: Enter a password and password confirmation that are the same
+      password_required: Enter your password
+      password_unchanged: New password must be different than your temporary one
+      required: Enter your password
   search_vrn_form:
     errors:
       dates:
-        missing:
-          search_type: Choose a search type
-          all: '%{parameter} must include a day, month and year'
-          day: '%{parameter} must include a day'
-          month: '%{parameter} must include a month'
-          year: '%{parameter} must include a year'
-          day_month: '%{parameter} must include a day and month'
-          day_year: '%{parameter} must include a day and year'
-          month_year: '%{parameter} must include a month and year'
         invalid:
-          start_date_format: Enter a real start date
           end_date_format: Enter a real end date
           start_date: Start date must be earlier than end date
+          start_date_format: Enter a real start date
+        missing:
+          all: "%{parameter} must include a day, month and year"
+          day: "%{parameter} must include a day"
+          day_month: "%{parameter} must include a day and month"
+          day_year: "%{parameter} must include a day and year"
+          month: "%{parameter} must include a month"
+          month_year: "%{parameter} must include a month and year"
+          search_type: Choose a search type
+          year: "%{parameter} must include a year"
+    invalid_format: Enter the number plate of the vehicle in a valid format
     vrn_missing: Enter the number plate of the vehicle
     vrn_too_long: The number plate of the vehicle is too long
     vrn_too_short: The number plate of the vehicle is too short
-    invalid_format: Enter the number plate of the vehicle in a valid format
+  upload:
+    delivery_error: There was an error sending your confirmation email. Your data
+      has still been saved.
