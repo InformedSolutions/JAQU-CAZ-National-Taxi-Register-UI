@@ -8,7 +8,6 @@
 #
 # All methods are on the class level, so there is no initializer method.
 class VehiclesCheckerApi < BaseApi
-  API_URL = ENV.fetch('TAXI_PHV_REGISTER_API_URL', 'localhost:3001').freeze
   base_uri "#{API_URL}/v1/vehicles"
 
   headers(
