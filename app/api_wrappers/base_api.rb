@@ -66,8 +66,9 @@ class BaseApi
     def parse_body(body)
       JSON.parse(body.presence || '{}')
     rescue JSON::ParserError
-      Rails.logger.error "Error during parsing: #{body}"
-      raise ApiException.new(500, 'Parse error', {})
+      exception = Error500Exception.new(500, 'Response body parsing failed', body)
+      log_exception(exception)
+      raise exception
     end
 
     ##

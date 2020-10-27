@@ -9,7 +9,7 @@ require 'show_me_the_cookies'
 
 SimpleCov.start 'rails' do
   # minimum coverage percentage expected
-  minimum_coverage 90
+  minimum_coverage 100
   # ignore next folders and files
   add_filter %w[
     app/models/application_record.rb
