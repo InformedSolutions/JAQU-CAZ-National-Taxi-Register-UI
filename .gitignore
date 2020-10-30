@@ -57,3 +57,6 @@ config/ssl/
 
 # YARD files
 .yardoc
+
+# jard debugger files
+jard_errors.txt
