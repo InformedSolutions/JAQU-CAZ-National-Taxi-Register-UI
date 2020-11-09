@@ -5,6 +5,7 @@ module UserFactory
     User.new(
       email: options[:email] || 'test@example.com',
       username: options[:username] || 'test@example.com',
+      groups: options[:groups] || %w[ntr.search.dev],
       **account_data(options),
       login_ip: options[:login_ip] || @remote_ip
     )

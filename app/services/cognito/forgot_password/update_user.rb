@@ -41,7 +41,6 @@ module Cognito
         client.admin_update_user_attributes(
           { user_pool_id: user_pool_id, username: username, user_attributes: user_attributes }
         )
-        log_successful_call
       rescue AWS_ERROR::ServiceError => e
         log_error e
         raise CallException, 'Something went wrong'

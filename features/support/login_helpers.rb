@@ -2,8 +2,8 @@
 
 # Sign in methods used in feature tests
 module LoginHelpers
-  def sign_in_user
-    allow(Cognito::AuthUser).to receive(:call).and_return(unchallenged_cognito_user)
+  def sign_in_user(groups: user_groups)
+    allow(Cognito::AuthUser).to receive(:call).and_return(unchallenged_cognito_user(groups))
     visit new_user_session_path
     basic_sign_in
   end
@@ -23,8 +23,9 @@ module LoginHelpers
     click_button 'Continue'
   end
 
-  def unchallenged_cognito_user
+  def unchallenged_cognito_user(groups = user_groups)
     user = cognito_user
+    user.groups = groups
     user.aws_status = 'OK'
     user.aws_session = nil
     user
@@ -39,10 +40,15 @@ module LoginHelpers
 
   def cognito_user
     User.new(
-      username: 'user',
+      username: 'user@example.com',
+      groups: user_groups,
       email: 'user@example.com',
       login_ip: remote_ip
     )
+  end
+
+  def user_groups
+    %w[ntr.search.dev]
   end
 
   def remote_ip

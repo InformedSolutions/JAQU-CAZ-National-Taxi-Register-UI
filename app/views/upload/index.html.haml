@@ -5,16 +5,15 @@
         = render 'upload/job_errors'
       - elsif alert
         = render 'shared/errors'
-      %h1.govuk-heading-m Welcome to the Taxi and PHV Data Portal
+      %h1.govuk-heading-xl Taxi and PHV Data Portal
       %p
-        You can use this service to upload and manage information about Taxis and PHVs in your licensing authority.
-      %h1.govuk-heading-m Uploading your Taxi and PHV data
+        Use this service to upload, manage and search data about taxis and PHVs in your licensing authority.
+      %h2.govuk-heading-m Uploading your data
       %p
-        You’ll need to provide your data as a .CSV file and in a valid format.
-        Otherwise your taxi and PHV data will not be uploaded into the service.
-        Full details for formatting your data are provided within the
+        Your data must be saved as a CSV file and be formatted according to the
         = succeed '.' do
           = link_to('data rules',  data_rules_upload_index_path)
+        You should read the data rules before you upload a file to avoid errors.
 
       = form_tag(import_upload_index_path, multipart: true) do
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}

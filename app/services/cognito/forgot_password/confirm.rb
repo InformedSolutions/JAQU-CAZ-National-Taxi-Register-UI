@@ -94,7 +94,6 @@ module Cognito
           password: password,
           confirmation_code: code
         )
-        log_successful_call
       end
     end
   end

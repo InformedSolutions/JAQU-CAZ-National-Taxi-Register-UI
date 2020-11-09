@@ -2,42 +2,55 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::AuthUser do
+describe Cognito::AuthUser do
   subject(:service_call) do
     described_class.call(username: username, password: password, login_ip: remote_ip)
   end
 
-  let(:username) { 'wojtek@example.com' }
+  let(:username) { 'user@example.com' }
   let(:password) { 'password' }
   let(:remote_ip) { '1.2.3.4' }
+  let(:auth_params) do
+    {
+      client_id: anything,
+      auth_flow: 'USER_PASSWORD_AUTH',
+      auth_parameters:
+          {
+            'USERNAME' => username,
+            'PASSWORD' => password
+          }
+    }
+  end
 
   context 'with successful call' do
     before do
-      allow(Cognito::Client.instance).to receive(:initiate_auth).with(
-        client_id: anything,
-        auth_flow: 'USER_PASSWORD_AUTH',
-        auth_parameters:
-            {
-              'USERNAME' => username,
-              'PASSWORD' => password
-            }
-      ).and_return(auth_response)
+      allow(Cognito::Client.instance).to receive(:initiate_auth).with(auth_params).and_return(auth_response)
+
+      allow(Cognito::Client.instance).to receive(:admin_list_groups_for_user).with(
+        user_pool_id: anything,
+        username: username
+      ).and_return(OpenStruct.new(groups: [OpenStruct.new(group_name: 'ntr.search.dev')]))
     end
 
     context 'when user changed the password' do
-      let(:auth_response) do
-        OpenStruct.new(authentication_result: OpenStruct.new(access_token: token))
-      end
+      let(:auth_response) { OpenStruct.new(authentication_result: OpenStruct.new(access_token: token)) }
       let(:token) { SecureRandom.uuid }
 
       before do
         allow(Cognito::GetUser).to receive(:call).and_return(User.new)
+        user_groups_response = OpenStruct.new(groups: [OpenStruct.new(group_name: 'ntr.search.dev')])
+        allow(Cognito::GetUser).to receive(:call).and_return(user_groups_response)
       end
 
-      it 'calls Cognito::GetUser' do
-        expect(Cognito::GetUser)
-          .to receive(:call)
+      it 'calls `Cognito::GetUser`' do
+        expect(Cognito::GetUser).to receive(:call)
           .with(access_token: token, username: username, user: an_instance_of(User))
+        service_call
+      end
+
+      it 'calls `Cognito::GetUserGroups`' do
+        expect(Cognito::GetUserGroups).to receive(:call)
+          .with(username: username).and_return(OpenStruct.new(groups: []))
         service_call
       end
     end
@@ -79,16 +92,36 @@ RSpec.describe Cognito::AuthUser do
       it 'sets login_ip' do
         expect(service_call.login_ip).to eq(remote_ip)
       end
+
+      it 'sets groups' do
+        expect(service_call.groups).to eq(%w[ntr.search.dev])
+      end
     end
   end
 
-  context 'when call raises exception' do
+  context 'when `initiate_auth` call raises exception' do
     before do
-      allow(Cognito::Client.instance)
-        .to receive(:initiate_auth)
+      allow(Cognito::Client.instance).to receive(:initiate_auth)
         .and_raise(
           Aws::CognitoIdentityProvider::Errors::NotAuthorizedException.new('', 'error')
         )
+    end
+
+    it 'returns false' do
+      expect(service_call).to be_falsey
+    end
+  end
+
+  context 'when `admin_list_groups_for_user` call raises exception' do
+    before do
+      token = SecureRandom.uuid
+      allow(Cognito::Client.instance).to receive(:initiate_auth)
+        .with(auth_params)
+        .and_return(OpenStruct.new(authentication_result: OpenStruct.new(access_token: token)))
+
+      allow(Cognito::Client.instance).to receive(:admin_list_groups_for_user)
+        .and_raise(Aws::CognitoIdentityProvider::Errors::ServiceError.new('', 'error'))
+      allow(Cognito::GetUser).to receive(:call).and_return(User.new)
     end
 
     it 'returns false' do

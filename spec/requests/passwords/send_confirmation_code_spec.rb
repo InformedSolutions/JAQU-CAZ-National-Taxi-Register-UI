@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-describe 'PasswordsController - POST #send_confirmation_code', type: :request do
-  subject(:http_request) { post send_confirmation_code_passwords_path, params: params }
+describe 'PasswordsController - POST #send_confirmation_code' do
+  subject { post send_confirmation_code_passwords_path, params: params }
 
   let(:params) { { user: { username: username } } }
   let(:username) { 'wojtek' }
@@ -18,12 +18,12 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
     end
 
     it 'redirects to confirm reset' do
-      http_request
+      subject
       expect(response).to redirect_to(confirm_reset_passwords_path)
     end
 
     it 'sets username in session' do
-      http_request
+      subject
       expect(session[:password_reset_username]).to eq(username)
     end
 
@@ -35,7 +35,7 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
           .to receive(:call)
           .with(username: username)
           .and_raise(Cognito::CallException.new('Something went wrong', fallback_path))
-        http_request
+        subject
       end
 
       it 'redirects to fallback path' do
@@ -48,7 +48,7 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
         allow(Cognito::Client.instance).to receive(:forgot_password).and_raise(
           Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', '')
         )
-        http_request
+        subject
       end
 
       it 'redirects to confirm reset' do
@@ -59,7 +59,7 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
 
   context 'without password_reset_token set' do
     it 'returns redirect to success page' do
-      http_request
+      subject
       expect(response).to redirect_to(success_passwords_path)
     end
   end

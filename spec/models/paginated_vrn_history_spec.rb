@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe PaginatedVrnHistory, type: :model do
+describe PaginatedVrnHistory do
   subject { described_class.new(data) }
 
   let(:size) { 51 }

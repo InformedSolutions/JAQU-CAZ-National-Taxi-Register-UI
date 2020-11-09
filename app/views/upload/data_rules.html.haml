@@ -1,4 +1,4 @@
-- title_and_header = 'Taxi and PHV Data Rules'
+- title_and_header = 'Taxi and PHV Data Portal'
 - content_for(:title, title_and_header)
 
 = link_to 'Back', @back_button_url, class: 'govuk-back-link'
@@ -6,10 +6,9 @@
 %main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
     .govuk-grid-column-two-thirds
-      %h1.govuk-heading-l
+      %h1.govuk-heading-xl
         = title_and_header
 
-      %p This service allows you to upload taxi/PHV data.
       %h2.govuk-heading-m File naming rules
       %p
         The file must be named according to the following format:

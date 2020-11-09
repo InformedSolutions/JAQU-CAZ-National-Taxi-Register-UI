@@ -70,7 +70,6 @@ module Cognito
         auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }
       )
       Cognito::Lockout::UpdateUser.call(username: username, failed_logins: 0)
-      log_successful_call
       auth_response
     end
 
@@ -81,6 +80,7 @@ module Cognito
       else
         update_challenged_user(auth_response)
       end
+      assign_groups_to_user
     end
 
     # Update user based on Cognito call response.
@@ -105,6 +105,13 @@ module Cognito
     def user_locked_out?
       Cognito::Lockout::AttemptUserUnlock.call(username: username)
       Cognito::Lockout::IsUserLocked.call(username: username)
+    end
+
+    # Performs {call}[rdoc-ref:Cognito::GetUserGroups.call] to get user groups.
+    # Assign array of groups to user instance
+    def assign_groups_to_user
+      response = Cognito::GetUserGroups.call(username: username)
+      user.groups = response.groups.map(&:group_name)
     end
   end
 end
