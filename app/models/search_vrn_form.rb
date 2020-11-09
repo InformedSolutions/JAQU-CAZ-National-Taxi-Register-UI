@@ -37,6 +37,7 @@ class SearchVrnForm < MultipleAttributesBaseForm
   validate :validate_start_date_format, if: -> { historic == 'true' && no_date_errors? }
   validate :validate_end_date_format, if: -> { historic == 'true' && no_date_errors? }
   validate :validate_dates_period, if: -> { historic == 'true' && no_date_errors? }
+  validate :validate_start_date, if: -> { historic == 'true' && no_date_errors? }
 
   private
 
@@ -195,16 +196,28 @@ class SearchVrnForm < MultipleAttributesBaseForm
     end
   end
 
-  # check all start date values are postive
+  # check all start date values are positive
   def positive_start_date
     (start_date_year.to_i.positive? &&
       start_date_day.to_i.positive? &&
       start_date_month.to_i.positive?)
   end
 
-  # check all end date values are postive
+  # check all end date values are positive
   def positive_end_date
     end_date_year.to_i.positive? && end_date_day.to_i.positive? && end_date_month.to_i.positive?
+  end
+
+  # Validate start date if date in the future
+  def validate_start_date
+    return if Date.parse(start_date) <= Date.current
+
+    add_errors_to_start_date
+    errors.add(
+      :start_date,
+      :invalid,
+      message: I18n.t('search_vrn_form.errors.dates.invalid.start_date_in_future')
+    )
   end
 end
 # rubocop:enable Metrics/ClassLength

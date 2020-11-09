@@ -20,12 +20,12 @@ describe SearchVrnForm do
 
   let(:vrn) { 'CU57ABC' }
   let(:historic) { 'false' }
-  let(:start_date_day) { '10' }
-  let(:start_date_month) { '3' }
-  let(:start_date_year) { '2020' }
-  let(:end_date_day) { '14' }
-  let(:end_date_month) { '3' }
-  let(:end_date_year) { '2020' }
+  let(:start_date_day) { Date.current.yesterday.day.to_s }
+  let(:start_date_month) { Date.current.yesterday.month.to_s }
+  let(:start_date_year) { Date.current.yesterday.year.to_s }
+  let(:end_date_day) { Date.current.tomorrow.day.to_s }
+  let(:end_date_month) { Date.current.tomorrow.month.to_s }
+  let(:end_date_year) { Date.current.tomorrow.year.to_s }
 
   before { form.valid? }
 
@@ -66,11 +66,13 @@ describe SearchVrnForm do
 
     context 'dates should be in ISO 8601 format' do
       it 'returns a proper `start_date` format' do
-        expect(form.start_date).to eq('2020-03-10')
+        start_date = "#{start_date_year}-#{start_date_month}-#{start_date_day}"
+        expect(form.start_date).to eq(Date.parse(start_date).strftime('%Y-%m-%d'))
       end
 
       it 'returns a proper `end_date` format' do
-        expect(form.end_date).to eq('2020-03-14')
+        end_date = "#{end_date_year}-#{end_date_month}-#{end_date_day}"
+        expect(form.end_date).to eq(Date.parse(end_date).strftime('%Y-%m-%d'))
       end
     end
 
@@ -261,6 +263,16 @@ describe SearchVrnForm do
         it_behaves_like 'an invalid attribute input',
                         :end_date,
                         'Enter a real end date'
+      end
+
+      context 'when start date with future date' do
+        let(:start_date_day) { Date.current.tomorrow.day.to_s }
+        let(:start_date_month) { Date.current.tomorrow.month.to_s }
+        let(:start_date_year) { Date.current.tomorrow.year.to_s }
+
+        it_behaves_like 'an invalid attribute input',
+                        :start_date,
+                        'Start date must be in the past'
       end
     end
   end
