@@ -34,6 +34,7 @@ en:
           end_date_format: Enter a real end date
           start_date: Start date must be earlier than end date
           start_date_format: Enter a real start date
+          start_date_in_future: Start date must be in the past
         missing:
           all: "%{parameter} must include a day, month and year"
           day: "%{parameter} must include a day"
