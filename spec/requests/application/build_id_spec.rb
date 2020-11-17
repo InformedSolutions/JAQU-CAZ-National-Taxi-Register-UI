@@ -2,12 +2,12 @@
 
 require 'rails_helper'
 
-describe 'Build ID', type: :request do
+describe 'ApplicationController - GET #build_id' do
   subject { get build_id_path }
 
-  it 'returns 200' do
+  it 'returns a 200 OK status' do
     subject
-    expect(response).to be_successful
+    expect(response).to have_http_status(:ok)
   end
 
   it 'returns undefined' do
@@ -18,9 +18,7 @@ describe 'Build ID', type: :request do
   context 'when BUILD_ID is defined' do
     let(:build_id) { '50.0' }
 
-    before do
-      allow(ENV).to receive(:fetch).with('BUILD_ID', 'undefined').and_return(build_id)
-    end
+    before { allow(ENV).to receive(:fetch).with('BUILD_ID', 'undefined').and_return(build_id) }
 
     it 'returns BUILD_ID' do
       subject

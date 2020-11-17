@@ -12,8 +12,8 @@ Then('I should be on the Results not found page') do
   expect_path(not_found_vehicles_path)
 end
 
-Then('I should see the Service Unavailable page') do
-  expect(page).to have_title 'Sorry, the service is unavailable'
+Then('I should be on the Service Unavailable page') do
+  expect_path(service_unavailable_path)
 end
 
 private

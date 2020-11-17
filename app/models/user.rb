@@ -16,8 +16,8 @@ class User
   devise :timeoutable
 
   # Attribute that is being used to authorize a user and use it in csv uploading.
-  attr_accessor :email, :username, :aws_status, :aws_session, :sub,
-                :confirmation_code, :hashed_password, :login_ip
+  attr_accessor :email, :username, :groups, :aws_status, :aws_session, :sub, :confirmation_code,
+                :hashed_password, :login_ip
 
   # Overrides default initializer for compliance with Devise Gem.
   def initialize(options = {})
@@ -36,17 +36,26 @@ class User
   # ==== Example
   #   user = User.new
   #   user.email = 'example@email.com'
+  #   user.groups = ['ntr.search.dev']
   #   user #<User email: example@email.com, username: nil, ...>
   #   user.serializable_hash #{:email=>"example@email.com", :username=>nil, ...}
   def serializable_hash(_options = nil)
     {
       email: email,
       username: username,
+      groups: groups,
       aws_status: aws_status,
       aws_session: aws_session,
       sub: sub,
       hashed_password: hashed_password,
       login_ip: login_ip
     }
+  end
+
+  # Checks if the user belongs to 'ntr.search' group
+  #
+  # Returns boolean
+  def search_group?
+    groups.any? { |group| group.include?('ntr.search') }
   end
 end

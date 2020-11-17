@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe BackLinkHistoryService do
+describe BackLinkHistoryService do
   subject { described_class.call(session: session, back_button: back_button, page: page, url: url) }
 
   let(:session) { {} }
@@ -26,7 +26,7 @@ RSpec.describe BackLinkHistoryService do
 
       it 'adding first step to the session' do
         subject
-        expect(session[:back_link_history]).to eq({ 1 => 1 })
+        expect(session[:back_link_history]).to eq({ '1' => 1 })
       end
     end
 
@@ -55,6 +55,21 @@ RSpec.describe BackLinkHistoryService do
       it 'not adding steps to the session' do
         subject
         expect(session[:company_back_link_history]).to eq({ '1' => 1 })
+      end
+    end
+
+    context 'when session is not empty, back button is true and last page the same with new one' do
+      let(:session) { { back_link_history: { '1' => 1, '2' => 4 } } }
+      let(:page) { 4 }
+      let(:back_button) { true }
+
+      it 'returns correct page' do
+        expect(subject).to include('page=1?back=true')
+      end
+
+      it 'not adding steps to the session' do
+        subject
+        expect(session[:back_link_history]).to eq({ '1' => 1, '2' => 4 })
       end
     end
 

@@ -87,14 +87,13 @@ module Cognito
 
       # Perform call to AWS Cognito to set a new password.
       def confirm_forgot_password
-        log_action 'Confirming forgot password'
+        log_action('Confirming forgot password')
         client.confirm_forgot_password(
           client_id: ENV['AWS_COGNITO_CLIENT_ID'],
           username: username,
           password: password,
           confirmation_code: code
         )
-        log_successful_call
       end
     end
   end

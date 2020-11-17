@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ExampleCsv do
+describe ExampleCsv do
   subject(:service_call) { described_class.call(lines: lines, dir: dir) }
 
   let(:lines) { 5 }

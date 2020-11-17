@@ -2,15 +2,19 @@
 
 require 'rails_helper'
 
-RSpec.describe 'VehiclesController - GET #search', type: :request do
-  subject(:http_request) { get search_vehicles_path }
+describe 'VehiclesController - GET #search' do
+  subject { get search_vehicles_path }
 
-  before do
-    sign_in create_user
-    http_request
+  context 'user belongs to proper group' do
+    before do
+      sign_in create_user
+      subject
+    end
+
+    it 'returns a success response' do
+      expect(response).to have_http_status(:success)
+    end
   end
 
-  it 'returns a success response' do
-    expect(response).to have_http_status(:success)
-  end
+  it_behaves_like 'user does not belongs to any group'
 end

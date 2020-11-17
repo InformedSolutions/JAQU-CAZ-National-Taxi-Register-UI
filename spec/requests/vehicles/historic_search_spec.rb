@@ -2,23 +2,27 @@
 
 require 'rails_helper'
 
-RSpec.describe 'VehiclesController - GET #historic_search', type: :request do
-  subject(:http_request) { get historic_search_vehicles_path }
+describe 'VehiclesController - GET #historic_search' do
+  subject { get historic_search_vehicles_path }
 
-  before do
-    add_to_session(vrn: 'CU57ABC')
-    mock_vrn_history
-    sign_in create_user
-    http_request
+  context 'user belongs to proper group' do
+    before do
+      add_to_session(vrn: 'CU57ABC')
+      mock_vrn_history
+      sign_in create_user
+      subject
+    end
+
+    it 'returns a success response' do
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'renders the view' do
+      expect(response).to render_template(:historic_search)
+    end
   end
 
-  it 'returns a success response' do
-    expect(response).to have_http_status(:success)
-  end
-
-  it 'renders the view' do
-    expect(response).to render_template(:historic_search)
-  end
+  it_behaves_like 'user does not belongs to any group'
 end
 
 private

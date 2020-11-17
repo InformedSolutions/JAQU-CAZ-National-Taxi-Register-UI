@@ -2,22 +2,22 @@
 
 require 'rails_helper'
 
-describe 'UploadController - GET #success', type: :request do
-  subject(:http_request) { get success_upload_index_path }
+describe 'UploadController - GET #success' do
+  subject { get success_upload_index_path }
 
   let(:user) { create_user }
 
   before { sign_in user }
 
   context 'with empty session' do
-    it 'returns 200' do
-      http_request
-      expect(response).to be_successful
+    it 'returns a 200 OK status' do
+      subject
+      expect(response).to have_http_status(:ok)
     end
 
     it 'does not call Ses::SendSuccessEmail' do
       expect(Ses::SendSuccessEmail).not_to receive(:call)
-      http_request
+      subject
     end
   end
 
@@ -38,23 +38,23 @@ describe 'UploadController - GET #success', type: :request do
     context 'with successful call to Ses::SendSuccessEmail' do
       before { allow(Ses::SendSuccessEmail).to receive(:call).and_return(true) }
 
-      it 'returns 200' do
-        http_request
-        expect(response).to be_successful
+      it 'returns a 200 OK status' do
+        subject
+        expect(response).to have_http_status(:ok)
       end
 
       it 'calls Ses::SendSuccessEmail' do
         expect(Ses::SendSuccessEmail).to receive(:call).with(user: user, job_data: job_data)
-        http_request
+        subject
       end
 
       it 'clears job data from the session' do
-        http_request
+        subject
         expect(session[:job]).to be_nil
       end
 
       it 'deos not render the warning' do
-        http_request
+        subject
         expect(response.body).not_to include(I18n.t('upload.delivery_error'))
       end
     end
@@ -62,11 +62,11 @@ describe 'UploadController - GET #success', type: :request do
     context 'with unsuccessful call to Ses::SendSuccessEmail' do
       before do
         allow(Ses::SendSuccessEmail).to receive(:call).and_return(false)
-        http_request
+        subject
       end
 
-      it 'returns 200' do
-        expect(response).to be_successful
+      it 'returns a 200 OK status' do
+        expect(response).to have_http_status(:ok)
       end
 
       it 'clears job data from the session' do

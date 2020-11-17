@@ -58,12 +58,11 @@ module Cognito
 
       # Requests a Cognito service to perform email send with a new temporary password.
       def cognito_call
-        log_action 'Forgot password call and email sending'
+        log_action('Forgot password call and email sending')
         client.forgot_password(
           client_id: ENV['AWS_COGNITO_CLIENT_ID'],
           username: username
         )
-        log_successful_call
       rescue AWS_ERROR::ServiceError => e
         log_error e
       end

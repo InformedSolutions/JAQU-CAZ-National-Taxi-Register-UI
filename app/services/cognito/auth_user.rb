@@ -43,8 +43,14 @@ module Cognito
     # which is raised if password or username doesn't match.
     #
     def call
+      return false if user_locked_out?
+
       update_user(auth_user)
       user
+    rescue AWS_ERROR::NotAuthorizedException => e
+      log_error e
+      Cognito::Lockout::VerifyInvalidLogins.call(username: username)
+      false
     rescue AWS_ERROR::ServiceError => e
       log_error e
       false
@@ -63,7 +69,7 @@ module Cognito
         auth_flow: 'USER_PASSWORD_AUTH',
         auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }
       )
-      log_successful_call
+      Cognito::Lockout::UpdateUser.call(username: username, failed_logins: 0)
       auth_response
     end
 
@@ -74,11 +80,12 @@ module Cognito
       else
         update_challenged_user(auth_response)
       end
+      assign_groups_to_user
     end
 
     # Update user based on Cognito call response.
     # Sets user's :aws_status to 'FORCE_NEW_PASSWORD' to force the password changing process.
-    def update_challenged_user(auth_response)
+    def update_challenged_user(auth_response) # rubocop:disable Metrics/AbcSize
       challenge_parameters = auth_response.challenge_parameters
       user.username = challenge_parameters['USER_ID_FOR_SRP']
       user.email = JSON.parse(challenge_parameters['userAttributes'])['email']
@@ -91,6 +98,20 @@ module Cognito
     # Passes username and access_token received from the previous call.
     def update_unchallenged_user(access_token)
       @user = Cognito::GetUser.call(access_token: access_token, username: username, user: user)
+    end
+
+    # Attempts to unlock user and returns information if user is locked out
+    # Returns a boolean.
+    def user_locked_out?
+      Cognito::Lockout::AttemptUserUnlock.call(username: username)
+      Cognito::Lockout::IsUserLocked.call(username: username)
+    end
+
+    # Performs {call}[rdoc-ref:Cognito::GetUserGroups.call] to get user groups.
+    # Assign array of groups to user instance
+    def assign_groups_to_user
+      response = Cognito::GetUserGroups.call(username: username)
+      user.groups = response.groups.map(&:group_name)
     end
   end
 end

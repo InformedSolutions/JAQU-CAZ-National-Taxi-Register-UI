@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe CsvUploadService do
+describe CsvUploadService do
   subject(:service_call) { described_class.call(file: file, user: create_user) }
 
   let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID.csv')) }
@@ -61,6 +61,16 @@ RSpec.describe CsvUploadService do
         end
 
         it 'raises a proper exception' do
+          expect { service_call }.to raise_exception(CsvUploadFailureException)
+        end
+      end
+
+      context 'when file size is too big' do
+        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08-AuthorityID.csv')) }
+
+        before { allow(file).to receive(:size).and_return(52_428_801) }
+
+        it 'raises exception' do
           expect { service_call }.to raise_exception(CsvUploadFailureException)
         end
       end

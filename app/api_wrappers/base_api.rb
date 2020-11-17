@@ -37,9 +37,7 @@ class BaseApi
     #
     def request(method, path, options = {})
       response_object = public_send(method, path, options)
-      parsed_body = validate_response(response_object.response)
-      log_call('The call was successful')
-      parsed_body
+      validate_response(response_object.response)
     end
 
     private

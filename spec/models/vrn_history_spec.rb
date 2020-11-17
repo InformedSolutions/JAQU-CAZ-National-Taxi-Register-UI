@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe VrnHistory, type: :model do
+describe VrnHistory do
   subject(:vehicle) { described_class.new(data) }
 
   let(:data) do

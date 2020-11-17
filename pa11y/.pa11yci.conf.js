@@ -27,7 +27,7 @@ var config = {
                 "wait for element #user_username to be visible",
                 "wait for element #user_password to be visible",
                 "set field #user_username to tester@informed.com",
-                "set field #user_password to Tester123..",
+                "set field #user_password to Tester123...",
                 "wait for element #sign_in_button to be visible",
                 "click element #sign_in_button",
                 "wait for element #file-upload-1 to be visible"

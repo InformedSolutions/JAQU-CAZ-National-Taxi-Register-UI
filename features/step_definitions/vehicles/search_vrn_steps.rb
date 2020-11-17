@@ -5,6 +5,10 @@ Given('I am on the Search VRN page') do
   visit search_vehicles_path
 end
 
+When('I navigate to a Search vehicles page') do
+  visit search_vehicles_path
+end
+
 When('I enter a vrn {string}') do |vrn_value|
   response = read_response_file('licence_info_response.json')
   allow(api).to receive(:licence_info).with(vrn).and_return(response)
@@ -25,7 +29,7 @@ When('I enter a vrn and valid dates format') do
 end
 
 When('I enter a vrn without history and valid dates format') do
-  mock_vrn_history(1, true, true)
+  mock_vrn_history(page: 1, total_changes_count_zero: true, changes_empty: true)
   fill_vrn
   fill_dates
   choose('Detailed search')
@@ -106,7 +110,7 @@ Then('I should not see {string} pagination button') do |text|
 end
 
 When('I press {int} pagination button') do |selected_page|
-  mock_vrn_history(selected_page)
+  mock_vrn_history(page: selected_page)
   page.find("#pagination-button-#{selected_page}").first('a').click
 end
 
@@ -168,7 +172,7 @@ def api
   VehiclesCheckerApi
 end
 
-def mock_vrn_history(page = 1, total_changes_count_zero = false, changes_empty = false)
+def mock_vrn_history(page: 1, total_changes_count_zero: false, changes_empty: false)
   allow(HistoricalVrnDetails).to receive(:new).and_return(
     create_history(page, total_changes_count_zero, changes_empty)
   )

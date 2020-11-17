@@ -50,6 +50,11 @@ Feature: Upload
     When I upload a csv file whose format that is not .csv or .CSV
     Then I should see "The selected file must be a CSV"
 
+  Scenario: Upload a csv file whose size is too big
+    Given I am on the Upload page
+    When I upload a csv file whose size is too big
+    Then I should see "The CSV must be smaller than 50MB"
+
   Scenario: Upload a valid csv file during error is encountered writing to S3
     Given I am on the Upload page
     When I upload a csv file during error on S3

@@ -10,11 +10,11 @@ And('I am a newly created user') do
   allow(Cognito::AuthUser).to receive(:call).and_return(challenged_cognito_user)
 end
 
-And('I enter valid credentials') do
+And('I enter valid credentials and press the Continue') do
   basic_sign_in
 end
 
-Then('I am transferred to “Force Change password” page') do
+Then('I am transferred to the Force Change password page') do
   expect(current_path).to eq(new_password_path)
 end
 
@@ -29,10 +29,6 @@ And('I enter password that does not comply with Cognito setup password policy') 
     NewPasswordException.new(service.send(:password_complexity_error))
   )
   fill_new_password_form
-end
-
-Then('I am presented with an error') do
-  expect(page).to have_content('Enter your password in a valid format')
 end
 
 And('I can retry') do

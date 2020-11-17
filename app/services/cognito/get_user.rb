@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+##
+# Module used to wrap communication with Amazon Cognito
 module Cognito
   ##
   # Class responsible for getting actual user data from Cognito.
@@ -15,7 +17,7 @@ module Cognito
     # * +access_token+ - UUID , eg. '8d414417-2bbe-4e70-a145-e108f45d33d3'
     # * +user+ - instance of {User class}[rdoc-ref:User]
     # * +username+ - string, user email address
-    def initialize(access_token:, user: User.new, username:)
+    def initialize(access_token:, username:, user: User.new)
       @access_token = access_token
       @user = user
       @username = username&.downcase
@@ -51,7 +53,6 @@ module Cognito
       unless defined? @user_data
         log_action('Getting user')
         @user_data = client.get_user(access_token: access_token)
-        log_successful_call
       end
 
       @user_data

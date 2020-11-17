@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::ForgotPassword::Reset do
+describe Cognito::ForgotPassword::Reset do
   subject(:service_call) { described_class.call(username: username) }
 
   let(:username) { 'wojtek@email.com' }
@@ -20,7 +20,7 @@ RSpec.describe Cognito::ForgotPassword::Reset do
     ).and_return(cognito_response)
   end
 
-  context 'when form is valid and cognito returns 200' do
+  context 'when form is valid and cognito returns 200 OK status' do
     it 'returns true' do
       expect(service_call).to be_truthy
     end
