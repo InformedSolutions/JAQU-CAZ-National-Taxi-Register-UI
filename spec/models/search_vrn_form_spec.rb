@@ -272,7 +272,7 @@ describe SearchVrnForm do
 
         it_behaves_like 'an invalid attribute input',
                         :start_date,
-                        'Start date must be in the past'
+                        'Start date must be before tomorrow'
       end
     end
   end
