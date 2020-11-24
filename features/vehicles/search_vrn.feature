@@ -39,7 +39,7 @@ Feature: Search a VRN
       And I should see 'End date must include a day, month and year'
     Then I enter a vrn and invalid dates format
       And I press 'Continue' button
-    Then I should see 'Enter a real start date'
+    Then I should see 'Start date must be a real date'
     When I enter a vrn and start date earlier than end date
       And I press 'Continue' button
       And I should see 'Start date must be earlier than end date'
@@ -52,10 +52,10 @@ Feature: Search a VRN
       And I should see "Search the Taxi & PHV Data"
     When I enter a vrn and negative start date
       And I press 'Continue' button
-    Then I should see 'Enter a real start date'
+    Then I should see 'Start date must be a real date'
     When I enter a vrn and negative end date
       And I press 'Continue' button
-    Then I should see 'Enter a real end date'
+    Then I should see 'End date must be a real date'
 
   # Order of calling pages: 1, 3, 5, 2
   Scenario: Pagination on the historical results page

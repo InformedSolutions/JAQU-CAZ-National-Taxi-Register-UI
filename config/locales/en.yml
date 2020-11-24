@@ -31,9 +31,9 @@ en:
     errors:
       dates:
         invalid:
-          end_date_format: Enter a real end date
+          end_date_format: End date must be a real date
           start_date: Start date must be earlier than end date
-          start_date_format: Enter a real start date
+          start_date_format: Start date must be a real date
           start_date_in_future: Start date must be before tomorrow
         missing:
           all: "%{parameter} must include a day, month and year"
