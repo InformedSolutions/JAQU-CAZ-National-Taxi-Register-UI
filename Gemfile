@@ -50,7 +50,7 @@ group :test do
   gem 'scss_lint-govuk', require: false
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
-  gem 'simplecov', '~> 0.17.1', require: false
+  gem 'simplecov', '~> 0.20.0', require: false
   gem 'webdrivers'
   gem 'webmock'
 end
