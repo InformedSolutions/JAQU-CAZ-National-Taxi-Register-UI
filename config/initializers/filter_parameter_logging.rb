@@ -8,4 +8,5 @@ Rails.application.config.filter_parameters += %i[
   password
   username
   vrn
+  email
 ]

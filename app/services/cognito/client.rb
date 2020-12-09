@@ -8,6 +8,7 @@ module Cognito
   class Client
     include Singleton
 
+    # Reader used in Cognito::CognitoBaseService
     attr_reader :client
 
     ##

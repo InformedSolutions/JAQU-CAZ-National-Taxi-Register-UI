@@ -36,8 +36,9 @@ module Cognito
     def update_user
       user.username = user_data.username
       user.email = extract_attr('email')
-      user.sub = extract_attr('sub')
       user.aws_status = 'OK'
+      user.preferred_username = preferred_username || sub
+      update_preferred_username
     end
 
     # Returns a string, eg. `test@example.com`
@@ -48,7 +49,7 @@ module Cognito
     # Returns instance of OpenStruct which is contains:
     # * +username+ - string, username, eg. 'test'
     # * +email+ - string, user email address, eg. 'test@example.com'
-    # * +sub+ - UUID, eg '685f6373-75bc-4cb9-9a01-dbe1f9c383cf'
+    # * +preferred_username+ - UUID, eg '685f6373-75bc-4cb9-9a01-dbe1f9c383cf'
     def user_data
       unless defined? @user_data
         log_action('Getting user')
@@ -56,6 +57,25 @@ module Cognito
       end
 
       @user_data
+    end
+
+    # Requesting a Cognito service to update `preferred_username` attribute
+    def update_preferred_username
+      Cognito::UpdatePreferredUsername.call(
+        username: username,
+        preferred_username: preferred_username,
+        sub: sub
+      )
+    end
+
+    # `preferred_username` on Cognito
+    def preferred_username
+      @preferred_username ||= extract_attr('preferred_username')
+    end
+
+    # `sub` on Cognito
+    def sub
+      @sub ||= extract_attr('sub')
     end
   end
 end
