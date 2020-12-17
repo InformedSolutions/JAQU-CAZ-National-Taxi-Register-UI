@@ -2,6 +2,7 @@
 
 # Class to manipulate session and determinate correct page number on the historical results page
 class BackLinkHistoryService < BaseService
+  # Allow access to url helpers, e.g. search_vehicles_path
   include Rails.application.routes.url_helpers
   # key in session
   KEY = :back_link_history

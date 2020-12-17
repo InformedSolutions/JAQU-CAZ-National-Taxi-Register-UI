@@ -9,11 +9,13 @@ module Cognito
   class CognitoBaseService < BaseService
     # Symbolizes base class for all Aws::CognitoIdentityProvider errors.
     AWS_ERROR = Aws::CognitoIdentityProvider::Errors
-    # Names of the custom Cognito attributes
+    # Count of failed logins
     FAILED_LOGINS_ATTR = 'custom:failed-logins'
+    # Lockout time, this will hold an ISO-8601 date but a string is the only other data available for Cognito attributes
     LOCKOUT_TIME_ATTR = 'custom:lockout-time'
     # Env variables associated with the lockout mechanism
     LOCKOUT_LOGIN_ATTEMPTS = ENV.fetch('LOCKOUT_LOGIN_ATTEMPTS', 5).to_i
+    # Time for which the user is going to be locked out after exceeding maximum number of failed logins.
     LOCKOUT_TIMEOUT = ENV.fetch('LOCKOUT_TIMEOUT', 30).to_i
 
     # Logs invalid form message on +error+ level

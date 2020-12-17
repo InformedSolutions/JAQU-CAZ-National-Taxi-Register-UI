@@ -5,22 +5,13 @@ require 'rails_helper'
 describe 'User singing in' do
   let(:email) { 'user@example.com' }
   let(:password) { '12345678' }
-  let(:params) do
-    {
-      user: {
-        username: email,
-        password: password
-      }
-    }
-  end
+  let(:params) { { user: { username: email, password: password } } }
 
   describe 'signing in' do
     subject { post user_session_path(params) }
 
     context 'when correct credentials given' do
-      before do
-        allow(Cognito::AuthUser).to receive(:call).and_return(User.new)
-      end
+      before { allow(Cognito::AuthUser).to receive(:call).and_return(User.new) }
 
       it 'logs user in' do
         subject
@@ -59,6 +50,21 @@ describe 'User singing in' do
 
       it 'shows `The username or password you entered is incorrect` message' do
         expect(response.body).to include(I18n.t('devise.failure.invalid'))
+      end
+    end
+
+    context 'when email is an invalid format' do
+      let(:email) { 'invalid_email_format' }
+
+      before { subject }
+
+      it 'provides proper error messages' do
+        errors = { email: 'Enter your email address in a valid format', password: 'Enter your password' }
+        expect(flash[:errors]).to eq(errors)
+      end
+
+      it 'redirects to the sign in page' do
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end

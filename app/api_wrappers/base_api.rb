@@ -7,6 +7,9 @@
 class BaseApi
   include HTTParty
 
+  # Url is needed for submit taxi and phv registration
+  API_URL = ENV.fetch('TAXI_PHV_REGISTER_API_URL', 'localhost:3001').freeze
+
   ##
   # Class representing 500 HTTP response code (Internal Server Error) returned by API
   class Error500Exception < ApiException; end
@@ -66,8 +69,9 @@ class BaseApi
     def parse_body(body)
       JSON.parse(body.presence || '{}')
     rescue JSON::ParserError
-      Rails.logger.error "Error during parsing: #{body}"
-      raise ApiException.new(500, 'Parse error', {})
+      exception = Error500Exception.new(500, 'Response body parsing failed', body)
+      log_exception(exception)
+      raise exception
     end
 
     ##

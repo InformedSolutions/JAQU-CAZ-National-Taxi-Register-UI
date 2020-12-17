@@ -9,11 +9,13 @@ describe Cognito::GetUser do
   let(:cognito_response) do
     OpenStruct.new(username: username, user_attributes: [
                      OpenStruct.new(name: 'email', value: email),
+                     OpenStruct.new(name: 'preferred_username', value: preferred_username),
                      OpenStruct.new(name: 'sub', value: sub)
                    ])
   end
   let(:email) { 'test@example.com' }
   let(:username) { 'wojtek' }
+  let(:preferred_username) { SecureRandom.uuid }
   let(:sub) { SecureRandom.uuid }
 
   before do
@@ -42,8 +44,19 @@ describe Cognito::GetUser do
     expect(service_call.aws_session).to eq(nil)
   end
 
-  it 'sets sub' do
-    expect(service_call.sub).to eq(sub)
+  describe '.preferred_username' do
+    context 'when preferred_username not nil' do
+      it 'returns a proper value' do
+        expect(service_call.preferred_username).to eq(preferred_username)
+      end
+    end
+    context 'when preferred_username is nil' do
+      let(:preferred_username) { nil }
+
+      it 'returns a proper value' do
+        expect(service_call.preferred_username).to eq(sub)
+      end
+    end
   end
 
   context 'when the initial user is given' do

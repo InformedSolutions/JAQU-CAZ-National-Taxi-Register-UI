@@ -29,9 +29,7 @@ RSpec.configure do |config|
 
   config.before(:each) do
     @remote_ip = '1.2.3.4'
-    allow_any_instance_of(ActionDispatch::Request)
-      .to receive(:remote_ip)
-      .and_return(@remote_ip)
+    allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return(@remote_ip)
   end
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures

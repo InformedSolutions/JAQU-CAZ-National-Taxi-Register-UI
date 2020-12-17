@@ -15,7 +15,7 @@ module UserFactory
 
   def account_data(options)
     {
-      sub: options[:sub] || SecureRandom.uuid,
+      preferred_username: options[:preferred_username] || SecureRandom.uuid,
       aws_status: options[:aws_status] || 'OK',
       aws_session: options[:aws_session] || nil,
       hashed_password: options[:hashed_password] || nil
