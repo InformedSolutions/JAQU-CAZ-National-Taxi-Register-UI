@@ -1,4 +1,6 @@
-# CAZ CSV Uploader
+# CAZ Taxi/PHV License Uploader
+
+[![Build Status](http://drone-1587293244.eu-west-2.elb.amazonaws.com/api/badges/InformedSolutions/JAQU-CAZ-National-Taxi-Register-UI/status.svg?ref=refs/heads/develop)](http://drone-1587293244.eu-west-2.elb.amazonaws.com/InformedSolutions/JAQU-CAZ-National-Taxi-Register-UI)
 
 ### Generating documentation
 
