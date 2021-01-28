@@ -34,6 +34,8 @@ class SearchVrnForm < MultipleAttributesBaseForm
   }, allow_blank: true
 
   validate :validate_dates, if: -> { historic == 'true' }
+  validate :validate_start_month_format, if: -> { historic == 'true' && no_date_errors? }
+  validate :validate_end_month_format, if: -> { historic == 'true' && no_date_errors? }
   validate :validate_start_date_format, if: -> { historic == 'true' && no_date_errors? }
   validate :validate_end_date_format, if: -> { historic == 'true' && no_date_errors? }
   validate :validate_dates_period, if: -> { historic == 'true' && no_date_errors? }
@@ -217,6 +219,32 @@ class SearchVrnForm < MultipleAttributesBaseForm
       :start_date,
       :invalid,
       message: I18n.t('search_vrn_form.errors.dates.invalid.start_date_in_future')
+    )
+  end
+
+  # strip leading zeros and validate if the start date month is not more then 12
+  def validate_start_month_format
+    self.start_date_month = start_date_month.sub(/^0+/, '')
+    return if start_date_month.to_i <= 12
+
+    add_errors_to_start_date
+    errors.add(
+      :start_date,
+      :invalid,
+      message: I18n.t('search_vrn_form.errors.dates.invalid.start_date_format')
+    )
+  end
+
+  # strip leading zeros and validate if the end date month is not more then 12
+  def validate_end_month_format
+    self.end_date_month = end_date_month.sub(/^0+/, '')
+    return if end_date_month.to_i <= 12
+
+    add_errors_to_end_date
+    errors.add(
+      :end_date,
+      :invalid,
+      message: I18n.t('search_vrn_form.errors.dates.invalid.end_date_format')
     )
   end
 end
