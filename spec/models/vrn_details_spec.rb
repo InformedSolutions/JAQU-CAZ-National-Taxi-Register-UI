@@ -9,10 +9,10 @@ describe VrnDetails do
 
   let(:response) do
     {
-      'active': active,
-      'description': description,
-      'wheelchairAccessible': wheelchair_accessible,
-      'licensingAuthoritiesNames': %w[Birmingham Leeds]
+      active: active,
+      description: description,
+      wheelchairAccessible: wheelchair_accessible,
+      licensingAuthoritiesNames: %w[Birmingham Leeds]
     }.stringify_keys
   end
   let(:active) { true }
