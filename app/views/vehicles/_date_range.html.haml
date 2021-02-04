@@ -32,7 +32,7 @@
         = form.label(:historic,
                      class: 'govuk-label govuk-radios__label',
                      for: 'historical_on') do 
-          Detailed search <br> View all entries.
+          Detailed search
 
       #conditional-historical.govuk-radios__conditional
         .govuk-form-group{class: ('govuk-form-group govuk-form-group--error' if @errors[:start_date].present?)}
@@ -40,9 +40,7 @@
             %legend.govuk-fieldset__legend.govuk-fieldset__legend--m
               Start date
             %span#start_date_hint.govuk-hint
-              You can search for any date since data has been 
-              %br
-              uploaded to the Taxi and PHV Data Portal.
+              You can search for 1 month of data starting on any date since data has been uploaded to the Taxi and PHV Data Portal.
 
             - if @errors[:start_date].present?
               %span#start_date_error.govuk-error-message
