@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'UploadController - GET #index' do
+describe 'UploadController - GET #index', type: :request do
   subject { get authenticated_root_path }
 
   let(:file_path) do
@@ -30,8 +30,8 @@ describe 'UploadController - GET #index' do
     end
 
     it 'calls RegisterCheckerApi.job_errors' do
-      expect(RegisterCheckerApi).to receive(:job_errors).with(job_name, correlation_id)
       subject
+      expect(RegisterCheckerApi).to have_received(:job_errors).with(job_name, correlation_id)
     end
 
     it 'clears job from session' do

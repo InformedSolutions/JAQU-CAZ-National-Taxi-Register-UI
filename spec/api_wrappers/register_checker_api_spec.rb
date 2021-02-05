@@ -41,14 +41,8 @@ describe RegisterCheckerApi do
       let(:body) { 'invalid JSON format' }
 
       it 'raises Error500Exception' do
-        expect { subject }.to raise_exception(
-          an_instance_of(BaseApi::Error500Exception)
-            .and(having_attributes(
-                   status: 500,
-                   status_message: 'Response body parsing failed',
-                   body: body
-                 ))
-        )
+        expect { subject }.to raise_exception(an_instance_of(BaseApi::Error500Exception)
+          .and(having_attributes(status: 500, status_message: 'Response body parsing failed', body: body)))
       end
     end
   end

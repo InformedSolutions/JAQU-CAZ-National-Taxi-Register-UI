@@ -23,17 +23,16 @@ describe Cognito::UpdatePreferredUsername do
 
     context 'with successful call' do
       it 'calls Cognito with proper params and returns true' do
-        expect(Cognito::Client.instance).to receive(:admin_update_user_attributes).with(
+        subject
+        expect(Cognito::Client.instance).to have_received(:admin_update_user_attributes).with(
           user_pool_id: anything,
           username: username,
           user_attributes: user_attributes
-        ).and_return(true)
-        subject
+        )
       end
     end
 
-    context 'when `Cognito::Client.instance.admin_update_user_attributes`
-           call fails with proper params' do
+    context 'when `Cognito::Client.instance.admin_update_user_attributes` call fails with proper params' do
       context 'and service raises `ServiceError`' do
         before do
           allow(Cognito::Client.instance).to receive(:admin_update_user_attributes).with(
@@ -68,9 +67,11 @@ describe Cognito::UpdatePreferredUsername do
     end
 
     context 'when preferred_username is not nil' do
+      before { allow(Cognito::Client.instance).to receive(:call) }
+
       it 'does not call Cognito' do
-        expect(Cognito::Client.instance).not_to receive(:call)
         subject
+        expect(Cognito::Client.instance).not_to have_received(:call)
       end
     end
   end

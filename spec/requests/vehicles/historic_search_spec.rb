@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'VehiclesController - GET #historic_search' do
+describe 'VehiclesController - GET #historic_search', type: :request do
   subject { get historic_search_vehicles_path }
 
   context 'user belongs to proper group' do

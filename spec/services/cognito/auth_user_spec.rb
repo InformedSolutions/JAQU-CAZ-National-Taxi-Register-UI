@@ -25,7 +25,6 @@ describe Cognito::AuthUser do
   context 'with successful call' do
     before do
       allow(Cognito::Client.instance).to receive(:initiate_auth).with(auth_params).and_return(auth_response)
-
       allow(Cognito::Client.instance).to receive(:admin_list_groups_for_user).with(
         user_pool_id: anything,
         username: username
@@ -40,18 +39,18 @@ describe Cognito::AuthUser do
         allow(Cognito::GetUser).to receive(:call).and_return(User.new)
         user_groups_response = OpenStruct.new(groups: [OpenStruct.new(group_name: 'ntr.search.dev')])
         allow(Cognito::GetUser).to receive(:call).and_return(user_groups_response)
+        allow(Cognito::GetUserGroups).to receive(:call).and_return(user_groups_response)
       end
 
       it 'calls `Cognito::GetUser`' do
-        expect(Cognito::GetUser).to receive(:call)
-          .with(access_token: token, username: username, user: an_instance_of(User))
         service_call
+        expect(Cognito::GetUser).to have_received(:call)
+          .with(access_token: token, username: username, user: an_instance_of(User))
       end
 
       it 'calls `Cognito::GetUserGroups`' do
-        expect(Cognito::GetUserGroups).to receive(:call)
-          .with(username: username).and_return(OpenStruct.new(groups: []))
         service_call
+        expect(Cognito::GetUserGroups).to have_received(:call).with(username: username)
       end
     end
 

@@ -15,7 +15,7 @@ And('I enter valid credentials and press the Continue') do
 end
 
 Then('I am transferred to the Force Change password page') do
-  expect(current_path).to eq(new_password_path)
+  expect(page).to have_current_path(new_password_path, ignore_query: true)
 end
 
 Given('I am on a Force Change password page') do
@@ -41,5 +41,5 @@ And('I enter password that is compliant with Cognito setup password policy') do
 end
 
 Then('I am taken to Password set successfully page') do
-  expect(current_path).to eq(success_passwords_path)
+  expect(page).to have_current_path(success_passwords_path, ignore_query: true)
 end

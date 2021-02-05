@@ -20,8 +20,8 @@ describe Ses::SendSuccessEmail do
     it { is_expected.to be_truthy }
 
     it 'sends an email with proper params' do
-      expect(UploadMailer).to receive(:success_upload).with(user, filename, time)
       service_call
+      expect(UploadMailer).to have_received(:success_upload).with(user, filename, time)
     end
   end
 
@@ -34,8 +34,8 @@ describe Ses::SendSuccessEmail do
       it { is_expected.to be_falsey }
 
       it 'does not call UploadMailer' do
-        expect(UploadMailer).not_to receive(:success_upload)
         service_call
+        expect(UploadMailer).not_to have_received(:success_upload)
       end
     end
 
@@ -45,8 +45,8 @@ describe Ses::SendSuccessEmail do
       it { is_expected.to be_falsey }
 
       it 'does not call UploadMailer' do
-        expect(UploadMailer).not_to receive(:success_upload)
         service_call
+        expect(UploadMailer).not_to have_received(:success_upload)
       end
     end
 
@@ -56,8 +56,8 @@ describe Ses::SendSuccessEmail do
       it { is_expected.to be_falsey }
 
       it 'does not call UploadMailer' do
-        expect(UploadMailer).not_to receive(:success_upload)
         service_call
+        expect(UploadMailer).not_to have_received(:success_upload)
       end
     end
   end

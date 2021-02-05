@@ -47,13 +47,11 @@ describe Cognito::Lockout::VerifyInvalidLogins do
     let(:lockout_time) { nil }
 
     it 'sets lockout-time attribute' do
-      expect(Cognito::Lockout::UpdateUser)
-        .to have_received(:call)
-        .with(
-          username: username,
-          failed_logins: lockout_login_attempts,
-          lockout_time: Time.zone.now.iso8601
-        )
+      expect(Cognito::Lockout::UpdateUser).to have_received(:call).with(
+        username: username,
+        failed_logins: lockout_login_attempts,
+        lockout_time: Time.zone.now.iso8601
+      )
     end
   end
 

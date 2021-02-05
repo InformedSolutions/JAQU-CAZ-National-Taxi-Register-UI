@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'SessionsController - DELETE #destroy' do
+describe 'SessionsController - DELETE #destroy', type: :request do
   subject { delete destroy_user_session_url }
 
   before do

@@ -38,12 +38,12 @@ describe Cognito::Lockout::UpdateUser do
 
   context 'with successful call' do
     it 'calls Cognito with proper params and returns true' do
-      expect(Cognito::Client.instance).to receive(:admin_update_user_attributes).with(
+      subject
+      expect(Cognito::Client.instance).to have_received(:admin_update_user_attributes).with(
         user_pool_id: anything,
         username: username,
         user_attributes: user_attributes
-      ).and_return(true)
-      subject
+      )
     end
   end
 

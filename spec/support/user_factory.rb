@@ -7,7 +7,7 @@ module UserFactory
       username: options[:username] || 'test@example.com',
       groups: options[:groups] || %w[ntr.search.dev],
       **account_data(options),
-      login_ip: options[:login_ip] || @remote_ip
+      login_ip: options[:login_ip] || '1.2.3.4'
     )
   end
 

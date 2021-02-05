@@ -32,6 +32,7 @@ en:
       dates:
         invalid:
           end_date_format: End date must be a real date
+          one_month_between: End date must be within 1 month of the start date
           start_date: Start date must be earlier than end date
           start_date_format: Start date must be a real date
           start_date_in_future: Start date must be before tomorrow

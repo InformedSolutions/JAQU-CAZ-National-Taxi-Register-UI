@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe ErrorsController do
+describe ErrorsController, type: :request do
   before { subject }
 
   describe '#not_found' do

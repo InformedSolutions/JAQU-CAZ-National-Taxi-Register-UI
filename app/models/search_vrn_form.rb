@@ -40,6 +40,7 @@ class SearchVrnForm < MultipleAttributesBaseForm
   validate :validate_end_date_format, if: -> { historic == 'true' && no_date_errors? }
   validate :validate_dates_period, if: -> { historic == 'true' && no_date_errors? }
   validate :validate_start_date, if: -> { historic == 'true' && no_date_errors? }
+  validate :validate_one_month_between, if: -> { historic == 'true' && no_date_errors? }
 
   private
 
@@ -245,6 +246,20 @@ class SearchVrnForm < MultipleAttributesBaseForm
       :end_date,
       :invalid,
       message: I18n.t('search_vrn_form.errors.dates.invalid.end_date_format')
+    )
+  end
+
+  # Validate a start and end date with more than a month between them
+  def validate_one_month_between
+    parsed_start_date = Date.parse(start_date)
+    parsed_end_date = Date.parse(end_date)
+    return if (parsed_start_date..(parsed_start_date + 1.month)).cover?(parsed_end_date)
+
+    add_errors_to_end_date
+    errors.add(
+      :end_date,
+      :invalid,
+      message: I18n.t('search_vrn_form.errors.dates.invalid.one_month_between')
     )
   end
 end

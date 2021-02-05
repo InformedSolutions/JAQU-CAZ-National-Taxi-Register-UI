@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'UploadController - #force_new_password' do
+describe 'UploadController - #force_new_password', type: :request do
   subject { get root_path }
 
   let(:user) { create_user(aws_status: 'FORCE_NEW_PASSWORD') }

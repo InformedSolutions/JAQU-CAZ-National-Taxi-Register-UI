@@ -3,9 +3,9 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.2'
+ruby '3.0.0'
 
-gem 'rails', '~> 6.0.3.4'
+gem 'rails', '~> 6.1.1'
 
 gem 'activerecord-nulldb-adapter'
 gem 'aws-sdk-cognitoidentityprovider'
@@ -25,6 +25,7 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'haml-rails'
   gem 'rspec-rails'
+  gem 'rubocop-rspec', require: false
   gem 'ruby_jard'
   gem 'yard'
 end
