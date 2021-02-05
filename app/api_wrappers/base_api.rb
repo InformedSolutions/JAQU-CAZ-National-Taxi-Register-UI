@@ -10,16 +10,15 @@ class BaseApi
   # Url is needed for submit taxi and phv registration
   API_URL = ENV.fetch('TAXI_PHV_REGISTER_API_URL', 'localhost:3001').freeze
 
-  ##
   # Class representing 500 HTTP response code (Internal Server Error) returned by API
   class Error500Exception < ApiException; end
-  ##
+
   # Class representing 422 HTTP response code (Unprocessable Entity) returned by API
   class Error422Exception < ApiException; end
-  ##
+
   # Class representing 404 HTTP response code (Not Found) returned by API
   class Error404Exception < ApiException; end
-  ##
+
   # Class representing 400 HTTP response code (Bad Request) returned by API
   class Error400Exception < ApiException; end
 

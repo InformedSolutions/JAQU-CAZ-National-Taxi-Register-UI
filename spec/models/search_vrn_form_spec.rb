@@ -139,7 +139,7 @@ describe SearchVrnForm do
 
         it_behaves_like 'an invalid attribute input',
                         :start_date,
-                        'Enter a real start date'
+                        'Start date must be a real date'
       end
 
       context 'when start month is negative' do
@@ -149,7 +149,7 @@ describe SearchVrnForm do
 
         it_behaves_like 'an invalid attribute input',
                         :start_date,
-                        'Enter a real start date'
+                        'Start date must be a real date'
       end
 
       context 'when start day is negative' do
@@ -159,7 +159,7 @@ describe SearchVrnForm do
 
         it_behaves_like 'an invalid attribute input',
                         :start_date,
-                        'Enter a real start date'
+                        'Start date must be a real date'
       end
 
       context 'when the start date not earlier than end date' do
@@ -242,7 +242,7 @@ describe SearchVrnForm do
 
         it_behaves_like 'an invalid attribute input',
                         :end_date,
-                        'Enter a real end date'
+                        'End date must be a real date'
       end
 
       context 'when end day is negative' do
@@ -252,7 +252,7 @@ describe SearchVrnForm do
 
         it_behaves_like 'an invalid attribute input',
                         :end_date,
-                        'Enter a real end date'
+                        'End date must be a real date'
       end
 
       context 'when end month is negative' do
@@ -262,7 +262,7 @@ describe SearchVrnForm do
 
         it_behaves_like 'an invalid attribute input',
                         :end_date,
-                        'Enter a real end date'
+                        'End date must be a real date'
       end
 
       context 'when start date with future date' do
@@ -273,6 +273,22 @@ describe SearchVrnForm do
         it_behaves_like 'an invalid attribute input',
                         :start_date,
                         'Start date must be before tomorrow'
+      end
+
+      describe '.validate_start_month_format' do
+        let(:start_date_month) { '0013' }
+
+        it_behaves_like 'an invalid attribute input',
+                        :start_date,
+                        'Start date must be a real date'
+      end
+
+      describe '.validate_end_month_format' do
+        let(:end_date_month) { '0013' }
+
+        it_behaves_like 'an invalid attribute input',
+                        :end_date,
+                        'End date must be a real date'
       end
     end
   end

@@ -56,8 +56,10 @@
                   = form.text_field :start_date_day,
                                     class: "govuk-input govuk-date-input__input govuk-input--width-2 #{'govuk-input--error' if @errors[:start_date_day].present?}",
                                     inputmode: 'numeric',
-                                    pattern: '[0-9]',
                                     type: 'number',
+                                    min: 1,
+                                    max: 31,
+                                    step: 1,
                                     value: params.dig(:search, :start_date_day)
 
               .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:start_date_month].present?}start_date_month"}
@@ -66,8 +68,10 @@
                   = form.text_field :start_date_month,
                                     class: "govuk-input govuk-date-input__input govuk-input--width-2 #{'govuk-input--error' if @errors[:start_date_month].present?}",
                                     inputmode: 'numeric',
-                                    pattern: '[0-9]',
                                     type: 'number',
+                                    min: 1,
+                                    max: 12,
+                                    step: 1,
                                     value: params.dig(:search, :start_date_month)
 
               .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:start_date_year].present?}start_date_year"}
@@ -76,8 +80,10 @@
                   = form.text_field :start_date_year,
                                     class: "govuk-input govuk-date-input__input govuk-input--width-4 #{'govuk-input--error' if @errors[:start_date_year].present?}",
                                     inputmode: 'numeric',
-                                    pattern: '[0-9]',
                                     type: 'number',
+                                    min: 1,
+                                    max: 9999,
+                                    step: 1,
                                     value: params.dig(:search, :start_date_year)
 
         .govuk-form-group
@@ -99,8 +105,10 @@
                   = form.text_field :end_date_day,
                                     class: "govuk-input govuk-date-input__input govuk-input--width-2 #{'govuk-input--error' if @errors[:end_date_day].present?}",
                                     inputmode: 'numeric',
-                                    pattern: '[0-9]',
                                     type: 'number',
+                                    min: 1,
+                                    max: 31,
+                                    step: 1,
                                     value: params.dig(:search, :end_date_day)
 
               .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:end_date_month].present?}end_date_month"}
@@ -109,8 +117,10 @@
                   = form.text_field :end_date_month,
                                     class: "govuk-input govuk-date-input__input govuk-input--width-2 #{'govuk-input--error' if @errors[:end_date_month].present?}",
                                     inputmode: 'numeric',
-                                    pattern: '[0-9]',
                                     type: 'number',
+                                    min: 1,
+                                    max: 12,
+                                    step: 1,
                                     value: params.dig(:search, :end_date_month)
 
               .govuk-date-input__item{id: "#{'govuk-error-' if @errors[:end_date_year].present?}end_date_year"}
@@ -119,6 +129,8 @@
                   = form.text_field :end_date_year,
                                     class: "govuk-input govuk-date-input__input govuk-input--width-4 #{'govuk-input--error' if @errors[:end_date_year].present?}",
                                     inputmode: 'numeric',
-                                    pattern: '[0-9]',
                                     type: 'number',
+                                    min: 1,
+                                    max: 9999,
+                                    step: 1,
                                     value: params.dig(:search, :end_date_year)
