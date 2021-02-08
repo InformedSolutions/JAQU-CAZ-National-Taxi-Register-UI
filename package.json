@@ -2,17 +2,17 @@
   "name": "jaqu-caz-ntr-ui",
   "private": true,
   "dependencies": {
-    "@ministryofjustice/frontend": "^0.0.21",
-    "@rails/actioncable": "^6.0.3",
-    "@rails/activestorage": "^6.0.3",
-    "@rails/ujs": "^6.0.3",
+    "@ministryofjustice/frontend": "^0.2.1",
+    "@rails/actioncable": "^6.1.1",
+    "@rails/activestorage": "^6.1.1",
+    "@rails/ujs": "^6.1.1",
     "@rails/webpacker": "^5.2.1",
-    "govuk-frontend": "^3.10.0",
-    "improved-yarn-audit": "^2.3.1",
+    "govuk-frontend": "^3.10.2",
+    "improved-yarn-audit": "^2.3.2",
     "rails-erb-loader": "^5.5.2"
   },
   "version": "0.1.0",
   "devDependencies": {
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.2"
   }
 }

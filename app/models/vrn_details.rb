@@ -55,6 +55,7 @@ class VrnDetails
   # Reader function for the vehicle registration number
   attr_reader :vrn
 
+  # Calls api to get taxi and phv registration details
   def vehicles_checker_api
     @vehicles_checker_api ||= VehiclesCheckerApi.licence_info(vrn)
   end

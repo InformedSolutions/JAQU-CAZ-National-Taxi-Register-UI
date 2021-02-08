@@ -22,6 +22,7 @@ describe Cognito::Client do
       )
     end
 
+    # rubocop:disable RSpec/MessageSpies
     it 'retries to call after credentials rotation' do
       expect(aws_cognito_client).to receive(:list_users).twice
       begin
@@ -29,6 +30,7 @@ describe Cognito::Client do
       rescue Aws::CognitoIdentityProvider::Errors::ResourceNotFoundException # rubocop:disable Lint/SuppressedException
       end
     end
+    # rubocop:enable RSpec/MessageSpies
   end
 
   context 'When cognito client raise UnrecognizedClientException' do
@@ -38,6 +40,7 @@ describe Cognito::Client do
       )
     end
 
+    # rubocop:disable RSpec/MessageSpies
     it 'retries to call after credentials rotation' do
       expect(aws_cognito_client).to receive(:list_users).twice
       begin
@@ -45,6 +48,7 @@ describe Cognito::Client do
       rescue Aws::CognitoIdentityProvider::Errors::UnrecognizedClientException # rubocop:disable Lint/SuppressedException
       end
     end
+    # rubocop:enable RSpec/MessageSpies
   end
 
   context 'When cognito client raise other exception' do
@@ -54,6 +58,7 @@ describe Cognito::Client do
       )
     end
 
+    # rubocop:disable RSpec/MessageSpies
     it 'does not retries the call' do
       expect(aws_cognito_client).to receive(:list_users).once
       begin
@@ -61,9 +66,10 @@ describe Cognito::Client do
       rescue Aws::CognitoIdentityProvider::Errors::UserNotFoundException # rubocop:disable Lint/SuppressedException
       end
     end
+    # rubocop:enable RSpec/MessageSpies
   end
 
-  context 'When cognito client raise other exception' do
+  context 'When cognito client not exception' do
     let(:users) { %w[user1 user2] }
 
     before do
@@ -76,8 +82,8 @@ describe Cognito::Client do
     end
 
     it 'calls AWS only once' do
-      expect(aws_cognito_client).to receive(:list_users).once
       service.instance.list_users
+      expect(aws_cognito_client).to have_received(:list_users).once
     end
   end
 end

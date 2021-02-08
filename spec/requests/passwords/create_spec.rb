@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'PasswordsController - POST #create' do
+describe 'PasswordsController - POST #create', type: :request do
   subject { post passwords_path, params: params }
 
   let(:params) { {} }

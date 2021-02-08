@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'PasswordsController - GET #new' do
+describe 'PasswordsController - GET #new', type: :request do
   subject { get new_password_path }
 
   before do

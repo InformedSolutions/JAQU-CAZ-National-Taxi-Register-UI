@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'VehiclesController - POST #submit_search' do
+describe 'VehiclesController - POST #submit_search', type: :request do
   subject { post search_vehicles_path, params: params }
 
   let(:params) do

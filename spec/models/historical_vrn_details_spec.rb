@@ -21,10 +21,9 @@ describe HistoricalVrnDetails do
     let(:changes) { subject.pagination }
 
     it 'calls `VehiclesCheckerApi.licence_info_historical` with proper params' do
-      expect(VehiclesCheckerApi)
-        .to receive(:licence_info_historical)
-        .with(vrn: vrn, page: page, start_date: start_date, end_date: end_date)
       changes
+      expect(VehiclesCheckerApi).to have_received(:licence_info_historical)
+        .with(vrn: vrn, page: page, start_date: start_date, end_date: end_date)
     end
 
     it 'returns a PaginatedVrnHistory' do
@@ -52,15 +51,14 @@ describe HistoricalVrnDetails do
 
   describe '.changes_empty?' do
     it 'calls `AccountsApi.licence_info_historical` with proper params' do
-      expect(VehiclesCheckerApi)
-        .to receive(:licence_info_historical)
-        .with(vrn: vrn, page: 1, start_date: start_date, end_date: end_date)
       subject.changes_empty?
+      expect(VehiclesCheckerApi).to have_received(:licence_info_historical)
+        .with(vrn: vrn, page: 1, start_date: start_date, end_date: end_date)
     end
 
     context 'when some changes returned' do
       it 'returns false' do
-        expect(subject.changes_empty?).to be_falsey
+        expect(subject).not_to be_changes_empty
       end
     end
 
@@ -68,22 +66,21 @@ describe HistoricalVrnDetails do
       let(:vrn_history) { { 'changes' => [] } }
 
       it 'returns true' do
-        expect(subject.changes_empty?).to be_truthy
+        expect(subject).to be_changes_empty
       end
     end
   end
 
   describe '.total_changes_count_zero??' do
     it 'calls `AccountsApi.licence_info_historical` with proper params' do
-      expect(VehiclesCheckerApi)
-        .to receive(:licence_info_historical)
-        .with(vrn: vrn, page: 1, start_date: start_date, end_date: end_date)
       subject.total_changes_count_zero?
+      expect(VehiclesCheckerApi).to have_received(:licence_info_historical)
+        .with(vrn: vrn, page: 1, start_date: start_date, end_date: end_date)
     end
 
     context 'when count not zero' do
       it 'returns false' do
-        expect(subject.total_changes_count_zero?).to be_falsey
+        expect(subject).not_to be_total_changes_count_zero
       end
     end
 
@@ -91,7 +88,7 @@ describe HistoricalVrnDetails do
       let(:vrn_history) { { 'totalChangesCount' => 0 } }
 
       it 'returns true' do
-        expect(subject.total_changes_count_zero?).to be_truthy
+        expect(subject).to be_total_changes_count_zero
       end
     end
   end

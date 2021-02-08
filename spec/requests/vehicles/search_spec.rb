@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'VehiclesController - GET #search' do
+describe 'VehiclesController - GET #search', type: :request do
   subject { get search_vehicles_path }
 
   context 'user belongs to proper group' do

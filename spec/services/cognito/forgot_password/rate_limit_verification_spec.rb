@@ -24,18 +24,18 @@ describe Cognito::ForgotPassword::RateLimitVerification do
     ).and_return(admin_get_user_response)
 
     allow(Cognito::ForgotPassword::UpdateUser).to receive(:call).with(
-      reset_counter: reset_counter,
+      reset_counter: 1,
       username: username
     ).and_return(true)
   end
 
   context 'when password reset counter no more than five' do
     it 'calls `Cognito::ForgotPassword::UpdateUser` with increased reset_counter' do
-      expect(Cognito::ForgotPassword::UpdateUser).to receive(:call).with(
+      service_call
+      expect(Cognito::ForgotPassword::UpdateUser).to have_received(:call).with(
         reset_counter: 1,
         username: username
-      ).and_return(true)
-      service_call
+      )
     end
   end
 
@@ -46,19 +46,22 @@ describe Cognito::ForgotPassword::RateLimitVerification do
       let(:reset_requested) { (DateTime.current - 2.hours).to_i.to_s }
 
       it 'calls `Cognito::ForgotPassword::UpdateUser` and reset reset_counter to 1' do
-        expect(Cognito::ForgotPassword::UpdateUser).to receive(:call).with(
+        service_call
+        expect(Cognito::ForgotPassword::UpdateUser).to have_received(:call).with(
           reset_counter: 1,
           username: username
-        ).and_return(true)
-        service_call
+        )
       end
     end
 
     context 'and request was made less than 1 hour ago' do
       let(:reset_requested) { (DateTime.current - 30.minutes).to_i.to_s }
 
-      it 'dont reset reset_counter and raises exception with proper params ' do
-        expect(Cognito::ForgotPassword::UpdateUser).to_not receive(:call)
+      it 'dont reset `reset_counter`' do
+        expect(Cognito::ForgotPassword::UpdateUser).not_to have_received(:call)
+      end
+
+      it 'raises `Cognito::CallException` exception with proper params ' do
         expect { service_call }.to raise_exception(Cognito::CallException, '') { |exception|
           exception.message.empty?
           exception.path == '/passwords/confirm_reset'

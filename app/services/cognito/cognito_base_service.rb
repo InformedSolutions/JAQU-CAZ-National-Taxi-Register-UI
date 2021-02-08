@@ -39,6 +39,7 @@ module Cognito
 
     private
 
+    # Cognito cline instance
     def client
       Cognito::Client.instance
     end

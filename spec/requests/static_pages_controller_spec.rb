@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe StaticPagesController do
+describe StaticPagesController, type: :request do
   describe 'GET #accessibility_statement' do
     subject { get accessibility_statement_path }
 

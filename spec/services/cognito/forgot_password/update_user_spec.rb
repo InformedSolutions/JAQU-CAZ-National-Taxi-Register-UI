@@ -3,12 +3,7 @@
 require 'rails_helper'
 
 describe Cognito::ForgotPassword::UpdateUser do
-  subject(:service_call) do
-    described_class.call(
-      reset_counter: reset_counter,
-      username: username
-    )
-  end
+  subject(:service_call) { described_class.call(reset_counter: reset_counter, username: username) }
 
   let(:reset_counter) { 0 }
   let(:username) { 'user@example.com' }
@@ -37,13 +32,13 @@ describe Cognito::ForgotPassword::UpdateUser do
   end
 
   context 'with successful call' do
-    it 'calls Cognito with proper params and returns true' do
-      expect(Cognito::Client.instance).to receive(:admin_update_user_attributes).with(
+    it 'calls Cognito with proper params' do
+      service_call
+      expect(Cognito::Client.instance).to have_received(:admin_update_user_attributes).with(
         user_pool_id: anything,
         username: username,
         user_attributes: user_attributes
-      ).and_return(true)
-      service_call
+      )
     end
   end
 
