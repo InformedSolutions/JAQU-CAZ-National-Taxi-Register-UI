@@ -5,7 +5,7 @@
 #
 class CsvUploadService < BaseService
   # regular expression for validating filename.
-  NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))-([a-zA-Z0-9]+)$/.freeze
+  NAME_FORMAT = /^CAZ-([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))-([a-zA-Z0-9]+)$/
   ##
   # Initializer method.
   #
@@ -103,7 +103,7 @@ class CsvUploadService < BaseService
 
   # Returns hash with metadata
   def metadata
-    { 'uploader-id': user.preferred_username, 'email': user.username, content_type: 'text/csv' }
+    { 'uploader-id': user.preferred_username, email: user.username, content_type: 'text/csv' }
   end
 
   # AWS S3 Bucket Name.

@@ -144,8 +144,8 @@ describe SearchVrnForm do
 
       context 'when start month is negative' do
         let(:start_date_day) { '12' }
-        let(:start_date_day) { '-12' }
-        let(:start_date_day) { '2020' }
+        let(:start_date_month) { '-12' }
+        let(:start_date_year) { '2020' }
 
         it_behaves_like 'an invalid attribute input',
                         :start_date,
@@ -154,8 +154,8 @@ describe SearchVrnForm do
 
       context 'when start day is negative' do
         let(:start_date_day) { '-12' }
-        let(:start_date_day) { '12' }
-        let(:start_date_day) { '2020' }
+        let(:start_date_month) { '12' }
+        let(:start_date_year) { '2020' }
 
         it_behaves_like 'an invalid attribute input',
                         :start_date,
@@ -247,8 +247,8 @@ describe SearchVrnForm do
 
       context 'when end day is negative' do
         let(:end_date_day) { '-12' }
-        let(:end_date_day) { '12' }
-        let(:end_date_day) { '2020' }
+        let(:end_date_month) { '12' }
+        let(:end_date_year) { '2020' }
 
         it_behaves_like 'an invalid attribute input',
                         :end_date,
@@ -257,8 +257,8 @@ describe SearchVrnForm do
 
       context 'when end month is negative' do
         let(:end_date_day) { '12' }
-        let(:end_date_day) { '-12' }
-        let(:end_date_day) { '2020' }
+        let(:end_date_month) { '-12' }
+        let(:end_date_year) { '2020' }
 
         it_behaves_like 'an invalid attribute input',
                         :end_date,
@@ -290,6 +290,23 @@ describe SearchVrnForm do
                         :end_date,
                         'End date must be a real date'
       end
+    end
+
+    context 'when a start and end date with more than a month between them' do
+      let(:end_date_day) { Date.current.day.to_s }
+      let(:end_date_month) { (Date.current.tomorrow.month + 1).to_s }
+
+      it_behaves_like 'an invalid attribute input',
+                      :end_date,
+                      'End date must be within 1 month of the start date'
+    end
+
+    context 'when a start and end date is no more than an one month between them' do
+      let(:start_date_day) { Date.current.day.to_s }
+      let(:end_date_day) { Date.current.day.to_s }
+      let(:end_date_month) { (Date.current.tomorrow.month + 1).to_s }
+
+      it { is_expected.to be_valid }
     end
   end
 end

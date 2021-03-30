@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'UploadController - GET #processing' do
+describe 'UploadController - GET #processing', type: :request do
   subject { get processing_upload_index_path }
 
   let(:job_status) { 'SUCCESS' }

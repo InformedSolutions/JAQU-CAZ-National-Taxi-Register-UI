@@ -36,13 +36,13 @@ describe Cognito::ForgotPassword::Confirm do
     end
 
     it 'calls ResetPasswordForm' do
-      expect(ConfirmResetPasswordForm).to receive(:new)
       service_call
+      expect(ConfirmResetPasswordForm).to have_received(:new)
     end
 
     it 'calls Cognito' do
-      expect(Cognito::Client.instance).to receive(:confirm_forgot_password)
       service_call
+      expect(Cognito::Client.instance).to have_received(:confirm_forgot_password)
     end
   end
 
@@ -82,7 +82,7 @@ describe Cognito::ForgotPassword::Confirm do
       end
     end
 
-    describe 'Aws::CognitoIdentityProvider::Errors::CodeMismatchException' do
+    describe 'Aws::CognitoIdentityProvider::Errors::InvalidPasswordException' do
       let(:exception) do
         Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
       end

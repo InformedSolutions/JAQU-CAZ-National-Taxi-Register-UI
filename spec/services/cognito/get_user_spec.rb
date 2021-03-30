@@ -50,6 +50,7 @@ describe Cognito::GetUser do
         expect(service_call.preferred_username).to eq(preferred_username)
       end
     end
+
     context 'when preferred_username is nil' do
       let(:preferred_username) { nil }
 

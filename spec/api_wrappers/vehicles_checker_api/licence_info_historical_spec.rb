@@ -32,25 +32,14 @@ describe 'VehiclesCheckerApi.licence_info' do
     end
 
     it 'returns proper fields' do
-      expect(call['1'].keys).to contain_exactly(
-        'perPage',
-        'page',
-        'pageCount',
-        'totalChangesCount',
-        'changes'
-      )
+      expect(call['1'].keys)
+        .to contain_exactly('perPage', 'page', 'pageCount', 'totalChangesCount', 'changes')
     end
 
     it 'returns proper `changes` fields' do
-      expect(call['1']['changes'].first.keys).to contain_exactly(
-        'modifyDate',
-        'action',
-        'licensingAuthorityName',
-        'plateNumber',
-        'licenceStartDate',
-        'licenceEndDate',
-        'wheelchairAccessible'
-      )
+      expect(call['1']['changes'].first.keys)
+        .to contain_exactly('modifyDate', 'action', 'licensingAuthorityName', 'plateNumber',
+                            'licenceStartDate', 'licenceEndDate', 'wheelchairAccessible')
     end
 
     it 'returns changes list' do

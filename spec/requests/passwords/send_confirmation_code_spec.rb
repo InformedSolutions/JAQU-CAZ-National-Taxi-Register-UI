@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'PasswordsController - POST #send_confirmation_code' do
+describe 'PasswordsController - POST #send_confirmation_code', type: :request do
   subject { post send_confirmation_code_passwords_path, params: params }
 
   let(:params) { { user: { username: username } } }

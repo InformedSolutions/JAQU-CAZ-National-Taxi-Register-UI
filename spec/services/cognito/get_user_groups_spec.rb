@@ -16,11 +16,11 @@ describe Cognito::GetUserGroups do
 
   context 'with successful call' do
     it 'calls Cognito with proper params and returns true' do
-      expect(Cognito::Client.instance).to receive(:admin_list_groups_for_user).with(
+      service_call
+      expect(Cognito::Client.instance).to have_received(:admin_list_groups_for_user).with(
         user_pool_id: anything,
         username: username
-      ).and_return(true)
-      service_call
+      )
     end
   end
 end

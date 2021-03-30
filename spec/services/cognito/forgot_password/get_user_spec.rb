@@ -15,12 +15,12 @@ describe Cognito::ForgotPassword::GetUser do
   end
 
   context 'with successful call' do
-    it 'calls Cognito with proper params and returns true' do
-      expect(Cognito::Client.instance).to receive(:admin_get_user).with(
+    it 'calls Cognito with proper params' do
+      service_call
+      expect(Cognito::Client.instance).to have_received(:admin_get_user).with(
         user_pool_id: anything,
         username: username
-      ).and_return(true)
-      service_call
+      )
     end
   end
 

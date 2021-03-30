@@ -9,10 +9,10 @@ describe VrnDetails do
 
   let(:response) do
     {
-      'active': active,
-      'description': description,
-      'wheelchairAccessible': wheelchair_accessible,
-      'licensingAuthoritiesNames': %w[Birmingham Leeds]
+      active: active,
+      description: description,
+      wheelchairAccessible: wheelchair_accessible,
+      licensingAuthoritiesNames: %w[Birmingham Leeds]
     }.stringify_keys
   end
   let(:active) { true }
@@ -33,12 +33,15 @@ describe VrnDetails do
     context 'when active value is true' do
       context 'when description is phv' do
         let(:description) { 'phv' }
+
         it 'returns `PHV`' do
           expect(subject.taxi_private_hire_vehicle).to eq('PHV')
         end
       end
+
       context 'when description is taxi' do
         let(:description) { 'taxi' }
+
         it 'returns `Taxi`' do
           expect(subject.taxi_private_hire_vehicle).to eq('Taxi')
         end
