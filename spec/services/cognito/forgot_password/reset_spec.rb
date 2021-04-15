@@ -26,13 +26,13 @@ describe Cognito::ForgotPassword::Reset do
     end
 
     it 'calls ResetPasswordForm' do
-      expect(ResetPasswordForm).to receive(:new).with(username)
       service_call
+      expect(ResetPasswordForm).to have_received(:new).with(username)
     end
 
     it 'calls Cognito' do
-      expect(Cognito::Client.instance).to receive(:forgot_password)
       service_call
+      expect(Cognito::Client.instance).to have_received(:forgot_password)
     end
   end
 

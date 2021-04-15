@@ -106,15 +106,18 @@ describe BackLinkHistoryService do
         }
       end
 
+      before { subject }
+
       it 'returns correct page' do
         expect(subject).to include('page=10')
       end
 
-      before { subject }
-
-      it 'removes first step and adding next one' do
+      it 'adding last step' do
         expect(session[:back_link_history]).to include({ '11' => 1 })
-        expect(session[:back_link_history]).to_not include({ '1' => 1 })
+      end
+
+      it 'removes first step' do
+        expect(session[:back_link_history]).not_to include({ '1' => 1 })
       end
     end
 
@@ -138,16 +141,22 @@ describe BackLinkHistoryService do
       end
       let(:back_button) { true }
 
+      before { subject }
+
       it 'returns correct page' do
         expect(subject).to include('page=9')
       end
 
-      before { subject }
-
-      it 'not adding the next step' do
+      it 'not adding first step' do
         expect(session[:back_link_history]).to include({ '1' => 1 })
+      end
+
+      it 'not adding last step' do
         expect(session[:back_link_history]).to include({ '10' => 10 })
-        expect(session[:back_link_history]).to_not include({ '11' => 1 })
+      end
+
+      it 'not adding more then ten steps' do
+        expect(session[:back_link_history]).not_to include({ '11' => 1 })
       end
     end
   end

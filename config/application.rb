@@ -11,9 +11,9 @@ module CsvUploader
   # The class is responsible for building the middleware stack
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 6.1
     # loads all files in folder
-    config.eager_load_paths << Rails.root.join('lib')
+    config.autoload_paths << "#{config.root}/lib"
     # timeout the user session without activity.
     config.x.session_timeout_in_min = ENV.fetch('SESSION_TIMEOUT', 15).to_i
     # link to feedback page.

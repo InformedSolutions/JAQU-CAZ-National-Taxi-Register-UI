@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'PasswordsController - POST #change' do
+describe 'PasswordsController - POST #change', type: :request do
   subject { post change_passwords_path, params: params }
 
   let(:params) do

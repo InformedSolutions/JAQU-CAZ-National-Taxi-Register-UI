@@ -112,8 +112,8 @@ class RegisterCheckerApi < BaseApi
     #
     def register_body(file_name)
       {
-        "filename": file_name,
-        "s3Bucket": ENV.fetch('S3_AWS_BUCKET', 'S3_AWS_BUCKET')
+        filename: file_name,
+        s3Bucket: ENV.fetch('S3_AWS_BUCKET', 'S3_AWS_BUCKET')
       }.to_json
     end
 

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'User singing in' do
+describe 'User singing in', type: :request do
   let(:email) { 'user@example.com' }
   let(:password) { '12345678' }
   let(:params) { { user: { username: email, password: password } } }
@@ -24,10 +24,9 @@ describe 'User singing in' do
       end
 
       it 'calls Cognito::AuthUser with proper params' do
-        expect(Cognito::AuthUser)
-          .to receive(:call)
-          .with(username: email, password: password, login_ip: @remote_ip)
         subject
+        expect(Cognito::AuthUser).to have_received(:call)
+          .with(username: email, password: password, login_ip: '1.2.3.4')
       end
     end
 

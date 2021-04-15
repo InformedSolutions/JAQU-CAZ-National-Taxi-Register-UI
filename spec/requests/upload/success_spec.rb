@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'UploadController - GET #success' do
+describe 'UploadController - GET #success', type: :request do
   subject { get success_upload_index_path }
 
   let(:user) { create_user }
@@ -10,14 +10,17 @@ describe 'UploadController - GET #success' do
   before { sign_in user }
 
   context 'with empty session' do
-    it 'returns a 200 OK status' do
+    before do
+      allow(Ses::SendSuccessEmail).to receive(:call)
       subject
+    end
+
+    it 'returns a 200 OK status' do
       expect(response).to have_http_status(:ok)
     end
 
     it 'does not call Ses::SendSuccessEmail' do
-      expect(Ses::SendSuccessEmail).not_to receive(:call)
-      subject
+      expect(Ses::SendSuccessEmail).not_to have_received(:call)
     end
   end
 
@@ -44,8 +47,8 @@ describe 'UploadController - GET #success' do
       end
 
       it 'calls Ses::SendSuccessEmail' do
-        expect(Ses::SendSuccessEmail).to receive(:call).with(user: user, job_data: job_data)
         subject
+        expect(Ses::SendSuccessEmail).to have_received(:call).with(user: user, job_data: job_data)
       end
 
       it 'clears job data from the session' do

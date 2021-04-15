@@ -31,7 +31,8 @@
       = form_for('search', url: search_vehicles_path, method: :post) do |form|
         = render 'vehicles/vrn_input', form: form
         = render 'vehicles/date_range', form: form
-        %p= submit_tag 'Continue',
-                    class: 'govuk-button',
-                    'data-module': 'govuk-button',
-                    id: 'search_button'
+        %p
+          = submit_tag 'Continue',
+                       class: 'govuk-button',
+                       'data-module': 'govuk-button',
+                       id: 'search_button'

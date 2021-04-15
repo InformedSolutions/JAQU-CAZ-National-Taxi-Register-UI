@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'VehiclesController - GET #not_found' do
+describe 'VehiclesController - GET #not_found', type: :request do
   subject { get not_found_vehicles_path }
 
   context 'user belongs to proper group' do

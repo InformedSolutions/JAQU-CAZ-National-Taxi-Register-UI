@@ -82,6 +82,7 @@ class VehiclesCheckerApi < BaseApi
 
     private
 
+    # Calculate page number in case if result page number is negative returns zero
     def calculate_page_number(page)
       result = page - 1
       result.negative? ? 0 : result

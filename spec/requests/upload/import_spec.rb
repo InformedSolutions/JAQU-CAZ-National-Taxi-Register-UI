@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe 'UploadController - POST #import' do
+describe 'UploadController - POST #import', type: :request do
   subject { post import_upload_index_path, params: { file: csv_file } }
 
   let(:file_path) do
@@ -13,7 +13,7 @@ describe 'UploadController - POST #import' do
   end
   let(:csv_file) { fixture_file_upload(file_path) }
 
-  before(:each) { sign_in create_user }
+  before { sign_in create_user }
 
   context 'with valid params' do
     let(:job_name) { 'name' }

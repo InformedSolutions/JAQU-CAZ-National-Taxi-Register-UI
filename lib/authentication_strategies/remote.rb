@@ -37,6 +37,7 @@ module AuthenticationStrategies
       authentication_hash[:username]
     end
 
+    # remote_authentication method is defined in Devise::Models::RemoteAuthenticatable
     def authenticate_user(resource, auth_params)
       # remote_authentication method is defined in Devise::Models::RemoteAuthenticatable
       #

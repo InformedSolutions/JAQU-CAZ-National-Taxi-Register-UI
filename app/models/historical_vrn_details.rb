@@ -40,6 +40,7 @@ class HistoricalVrnDetails
 
   attr_reader :vrn, :page, :start_date, :end_date
 
+  # Calls api to get historical details
   def vehicles_checker_api
     @vehicles_checker_api ||= VehiclesCheckerApi.licence_info_historical(
       vrn: vrn,

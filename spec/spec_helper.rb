@@ -11,7 +11,7 @@ require 'yard'
 
 # Run scanner to check which files was not documented
 warn('Code documentation coverage:')
-YARD::CLI::Stats.new.run('--list-undoc', '--compact', '--no-save', '-q')
+YARD::CLI::Stats.new.run('--list-undoc', '--compact', '--private', '--no-save', '-q')
 
 # Run simplecov scanner
 SimpleCov.start 'rails' do

@@ -26,7 +26,7 @@ module Cognito
       ##
       # Perform the call to AWS Cognito and returns true if errors were not raised
       def call
-        admin_update_user
+        admin_update_user unless Rails.env.development?
         true
       end
 
