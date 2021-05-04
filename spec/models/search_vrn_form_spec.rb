@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe SearchVrnForm do
+  include ActiveSupport::Testing::TimeHelpers
+
   subject(:form) { described_class.new(params) }
 
   let(:params) do
@@ -27,7 +29,10 @@ describe SearchVrnForm do
   let(:end_date_month) { '5' }
   let(:end_date_year) { '2021' }
 
-  before { form.valid? }
+  before do
+    travel_to(DateTime.parse('2021-04-30'))
+    subject.valid?
+  end
 
   context 'with proper VRN' do
     it { is_expected.to be_valid }

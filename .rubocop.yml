@@ -5,7 +5,7 @@ require:
 inherit_from: ./lib/rubocop/blacklist.yml
 
 AllCops:
-  TargetRubyVersion: 3.0.0
+  TargetRubyVersion: 3.0.1
   NewCops: enable
 
 Layout/LineLength:
