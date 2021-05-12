@@ -41,5 +41,8 @@ module CsvUploader
 
     # Configurable CSV upload size limit
     config.x.csv_file_size_limit = ENV.fetch('CSV_FILE_SIZE_LIMIT_MB', 50).to_i
+
+    # Configurable host of the application
+    config.x.host = ENV['HOST']
   end
 end
