@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
               BaseApi::Error422Exception,
               BaseApi::Error400Exception,
               InvalidHostException,
+              RefererXssException,
               with: :render_server_unavailable
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
