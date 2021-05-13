@@ -16,9 +16,9 @@
             There was a problem
           .govuk-error-summary__body
             %ul.govuk-list.govuk-error-summary__list
-              - @errors.values.each do |value|
+              - transformed_flat_errors(@errors).each_with_index do |error, index|
                 %li
-                  = link_to(value, '#govuk-error-message', id: 'error-message')
+                  = link_to(error.first, "##{error.second}_error", id: "#{error.second}-#{index}")
 
       %p
         If you want to set up an account or need support email us at
@@ -27,7 +27,7 @@
       = form_for(resource, as: resource_name, url: session_path(resource_name), html: {novalidate: 'novalidate'}) do |f|
         .govuk-form-group{class: ('govuk-form-group--error' if @errors)}
           = f.label :username, 'Email', class: 'govuk-label'
-          %span#govuk-error-message.govuk-error-message
+          %span#email_error.govuk-error-message
             - if @errors
               %span.govuk-visually-hidden Error:
               = @errors['email']
@@ -40,7 +40,7 @@
 
         .govuk-form-group{class: ('govuk-form-group--error' if @errors)}
           = f.label :password, class: 'govuk-label'
-          %span.govuk-error-message
+          %span#password_error.govuk-error-message
             - if @errors
               %span.govuk-visually-hidden Error:
               = @errors['password'] || @errors['email']
