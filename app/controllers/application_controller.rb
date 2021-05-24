@@ -105,7 +105,7 @@ class ApplicationController < ActionController::Base
   # Checks if hosts were not manipulated
   # :nocov:
   def validate_host_headers!
-    Security::HostHeaderValidator.call(request: request, allowed_host: Rails.configuration.x.host)
+    Security::HostHeaderValidator.call(request: request, allowed_hosts: Rails.configuration.x.host)
   end
   # :nocov:
 end
