@@ -19,14 +19,17 @@ Metrics/BlockLength:
     - 'config/environments/*.rb'
 
 Lint/MissingSuper:
-   Enabled: false
+  Enabled: false
+
+Rails/EnvironmentVariableAccess:
+  Enabled: false
 
 # rubocop-rspec gem excludes
 RSpec/NamedSubject:
-   Enabled: false
+  Enabled: false
 
 RSpec/ContextWording:
-   Enabled: false
+  Enabled: false
 
 RSpec/NestedGroups:
   Max: 5
