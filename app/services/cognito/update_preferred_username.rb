@@ -25,7 +25,7 @@ module Cognito
     def call
       return if preferred_username
 
-      admin_update_user
+      admin_update_user unless Rails.env.development?
     end
 
     private

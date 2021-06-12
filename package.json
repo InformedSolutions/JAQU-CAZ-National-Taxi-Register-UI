@@ -12,7 +12,9 @@
     "css-what": "5.0.1",
     "govuk-frontend": "^3.12.0",
     "improved-yarn-audit": "^2.3.3",
-    "rails-erb-loader": "^5.5.2"
+    "rails-erb-loader": "^5.5.2",
+    "stylelint": "^13.13.1",
+    "stylelint-config-gds": "^0.1.0"
   },
   "devDependencies": {
     "webpack-dev-server": "^3.11.2"

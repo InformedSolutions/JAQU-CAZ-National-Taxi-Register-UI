@@ -36,9 +36,9 @@ A Ruby static code analyzer and formatter.
 rubocop
 ```
 
-Configurable tool for writing clean, consistent SCSS.
+Configurable tool for writing clean and consistent SCSS.
 ```
-scss-lint app/javascript
+node_modules/.bin/stylelint 'app/javascript/**/*.(s)?scss'
 ```
 
 ### SonarQube inspection

@@ -1,9 +1,6 @@
-$govuk-global-styles: true;
-$govuk-assets-path: '/packs/media/';
-
-@import '~govuk-frontend/govuk/all';
-@import '~@ministryofjustice/frontend/moj/all';
-@import 'cookie_control';
+@import 'govuk-frontend';
+@import 'ministryofjustice-frontend';
+@import 'cookie-control';
 
 html {
   background-color: govuk-colour($colour: 'light-grey');

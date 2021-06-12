@@ -25,7 +25,6 @@ group :development, :test do
   gem 'dotenv-rails'
   gem 'haml-rails'
   gem 'rspec-rails'
-  gem 'rubocop-rspec', require: false
   gem 'ruby_jard'
   gem 'yard'
 end
@@ -48,6 +47,7 @@ group :test do
   gem 'rack_session_access'
   gem 'rails-controller-testing'
   gem 'rubocop-rails'
+  gem 'rubocop-rspec', require: false
   gem 'scss_lint-govuk', require: false
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
