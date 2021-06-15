@@ -48,7 +48,7 @@ steps:
     environment:
       ZAP: true
       ZAP_PROXY_URL: 'zap'
-      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
+      BASEURL_NTR: 'https://dev-ntr-web.cleanairzone.defra.gov.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123...'
       SCREENSHOT_TYPE: 'base'
@@ -74,7 +74,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
+      BASEURL_NTR: 'https://dev-ntr-web.cleanairzone.defra.gov.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123...'
       BROWSER_SET: 'mid'
@@ -147,7 +147,7 @@ steps:
     pull: never
     commands:
       - rubocop
-      - node_modules/.bin/stylelint 'app/javascript/**/*.(s)?scss'
+      - scss-lint app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -158,6 +158,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
       - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
     volumes:
@@ -298,7 +299,7 @@ steps:
   - name: await ecs rollout
     image: docker:19.03.11-git
     environment:
-      build_id_url: https://dev-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://dev-ntr-web.cleanairzone.defra.gov.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -328,7 +329,7 @@ steps:
     image: pa11y-ci
     pull: never
     environment:
-      BASE_URL: https://dev-upload.taxiphvdata.co.uk
+      BASE_URL: https://dev-ntr-web.cleanairzone.defra.gov.uk
     commands:
       - mkdir screenshots
       - /usr/local/bin/pa11y-ci -c pa11y/.pa11yci.conf.js
@@ -343,7 +344,7 @@ steps:
       - gem install csv
       - ruby jmeter/generate_taxi.rb
       - mv CAZ-2020-01-08-100.csv jmeter
-      - bzt -o modules.jmeter.properties.hostname=dev-upload.taxiphvdata.co.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
+      - bzt -o modules.jmeter.properties.hostname=dev-ntr-web.cleanairzone.defra.gov.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -423,7 +424,7 @@ steps:
     pull: never
     commands:
       - rubocop
-      - node_modules/.bin/stylelint 'app/javascript/**/*.(s)?scss'
+      - scss-lint app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -434,6 +435,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
       - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
     volumes:
@@ -705,7 +707,7 @@ steps:
     pull: never
     commands:
       - rubocop
-      - node_modules/.bin/stylelint 'app/javascript/**/*.(s)?scss'
+      - scss-lint app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -1181,7 +1183,7 @@ steps:
     pull: never
     commands:
       - rubocop
-      - node_modules/.bin/stylelint 'app/javascript/**/*.(s)?scss'
+      - scss-lint app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -1192,6 +1194,7 @@ steps:
     pull: never
     commands:
       - bundle audit check --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
       - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
     volumes:
