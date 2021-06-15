@@ -48,7 +48,7 @@ steps:
     environment:
       ZAP: true
       ZAP_PROXY_URL: 'zap'
-      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
+      BASEURL_NTR: 'https://dev-ntr-web.cleanairzone.defra.gov.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123...'
       SCREENSHOT_TYPE: 'base'
@@ -74,7 +74,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_NTR: 'https://dev-upload.taxiphvdata.co.uk'
+      BASEURL_NTR: 'https://dev-ntr-web.cleanairzone.defra.gov.uk'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123...'
       BROWSER_SET: 'mid'
@@ -298,7 +298,7 @@ steps:
   - name: await ecs rollout
     image: docker:19.03.11-git
     environment:
-      build_id_url: https://dev-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://dev-ntr-web.cleanairzone.defra.gov.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -328,7 +328,7 @@ steps:
     image: pa11y-ci
     pull: never
     environment:
-      BASE_URL: https://dev-upload.taxiphvdata.co.uk
+      BASE_URL: https://dev-ntr-web.cleanairzone.defra.gov.uk
     commands:
       - mkdir screenshots
       - /usr/local/bin/pa11y-ci -c pa11y/.pa11yci.conf.js
@@ -1765,4 +1765,4 @@ get:
   path: /build-tools/drone
   name: ntrRubySecret
 
-################################################ End Secrets -IAC Resrucgture #########################################################
+################################################ End Secrets #########################################################
