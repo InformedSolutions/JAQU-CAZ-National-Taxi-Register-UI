@@ -343,7 +343,7 @@ steps:
       - gem install csv
       - ruby jmeter/generate_taxi.rb
       - mv CAZ-2020-01-08-100.csv jmeter
-      - bzt -o modules.jmeter.properties.hostname=dev-upload.taxiphvdata.co.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
+      - bzt -o modules.jmeter.properties.hostname=dev-ntr-web.cleanairzone.defra.gov.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
