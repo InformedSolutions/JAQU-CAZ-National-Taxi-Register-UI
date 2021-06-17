@@ -9,20 +9,9 @@ describe Cognito::RespondToAuthChallenge do
 
   let(:password) { 'password' }
   let(:password_confirmation) { password }
-
-  let(:user) do
-    create_user(
-      hashed_password: Digest::MD5.hexdigest('temporary_password')
-    )
-  end
-
-  let(:cognito_user) do
-    create_user
-  end
-
-  let(:auth_response) do
-    OpenStruct.new(authentication_result: OpenStruct.new(access_token: token))
-  end
+  let(:user) { create_user(hashed_password: Digest::MD5.hexdigest('temporary_password')) }
+  let(:cognito_user) { create_user }
+  let(:auth_response) { OpenStruct.new(authentication_result: OpenStruct.new(access_token: token)) }
   let(:token) { SecureRandom.uuid }
 
   before do

@@ -168,23 +168,19 @@ describe SearchVrnForm do
       end
 
       context 'when the start date not earlier than end date' do
-        context 'show errors' do
-          let(:start_date_day) { '2' }
-          let(:start_date_month) { '5' }
+        let(:start_date_day) { '2' }
+        let(:start_date_month) { '5' }
 
-          it_behaves_like 'an invalid attribute input',
-                          :start_date,
-                          'Start date must be earlier than end date'
-        end
+        it_behaves_like 'an invalid attribute input',
+                        :start_date,
+                        'Start date must be earlier than end date'
       end
 
       context 'when the start date and end date the same' do
-        context 'show errors' do
-          let(:end_date_day) { '30' }
-          let(:end_date_month) { '4' }
+        let(:end_date_day) { '30' }
+        let(:end_date_month) { '4' }
 
-          it { is_expected.to be_valid }
-        end
+        it { is_expected.to be_valid }
       end
     end
 

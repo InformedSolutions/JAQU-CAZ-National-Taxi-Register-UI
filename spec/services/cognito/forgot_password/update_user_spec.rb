@@ -35,9 +35,7 @@ describe Cognito::ForgotPassword::UpdateUser do
     it 'calls Cognito with proper params' do
       service_call
       expect(Cognito::Client.instance).to have_received(:admin_update_user_attributes).with(
-        user_pool_id: anything,
-        username: username,
-        user_attributes: user_attributes
+        user_pool_id: anything, username: username, user_attributes: user_attributes
       )
     end
   end

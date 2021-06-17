@@ -7,6 +7,9 @@
 class BaseApi
   include HTTParty
 
+  # Normalize non-ascii URIs
+  uri_adapter Addressable::URI
+
   # Url is needed for submit taxi and phv registration
   API_URL = ENV.fetch('TAXI_PHV_REGISTER_API_URL', 'localhost:3001').freeze
 

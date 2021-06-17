@@ -302,7 +302,7 @@ steps:
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
-      - sh build_utils/check_build_number.sh
+      - sh ci-cd-resources/check_build_number.sh
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -314,7 +314,7 @@ steps:
   - name: build pa11y-ci image
     image: docker:19.03.11-git
     commands:
-      - cd pa11y
+      - cd ci-cd-resources/pa11y
       - docker build -t pa11y-ci .
     volumes:
       - name: docker_sock
@@ -331,7 +331,7 @@ steps:
       BASE_URL: https://dev-ntr-web.cleanairzone.defra.gov.uk
     commands:
       - mkdir screenshots
-      - /usr/local/bin/pa11y-ci -c pa11y/.pa11yci.conf.js
+      - /usr/local/bin/pa11y-ci -c ci-cd-resources/pa11y/.pa11yci.conf.js
     when:
       event:
         - push
@@ -341,9 +341,9 @@ steps:
     image: blazemeter/taurus
     commands:
       - gem install csv
-      - ruby jmeter/generate_taxi.rb
+      - ruby ci-cd-resources/jmeter/generate_taxi.rb
       - mv CAZ-2020-01-08-100.csv jmeter
-      - bzt -o modules.jmeter.properties.hostname=dev-ntr-web.cleanairzone.defra.gov.uk jmeter/ntr_valid_upload.jmx jmeter/assertion.yml
+      - bzt -o modules.jmeter.properties.hostname=dev-ntr-web.cleanairzone.defra.gov.uk ci-cd-resources/jmeter/ntr_valid_upload.jmx ci-cd-resources/jmeter/assertion.yml
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -627,7 +627,7 @@ steps:
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
-      - sh build_utils/check_build_number.sh
+      - sh ci-cd-resources/check_build_number.sh
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -896,7 +896,7 @@ steps:
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
-      - sh build_utils/check_build_number.sh
+      - sh ci-cd-resources/check_build_number.sh
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -1103,7 +1103,7 @@ steps:
       - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export build_id=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
-      - sh build_utils/check_build_number.sh
+      - sh ci-cd-resources/check_build_number.sh
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -1385,7 +1385,7 @@ steps:
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
-      - sh build_utils/check_build_number.sh
+      - sh ci-cd-resources/check_build_number.sh
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -1592,7 +1592,7 @@ steps:
       - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-preprod  --services ntr-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export build_id=`aws ecs describe-task-definition  --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
-      - sh build_utils/check_build_number.sh
+      - sh ci-cd-resources/check_build_number.sh
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock

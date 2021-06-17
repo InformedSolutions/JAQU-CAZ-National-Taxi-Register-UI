@@ -66,7 +66,7 @@ describe Cognito::GetUser do
     end
 
     let(:user) { User.new(login_ip: remote_ip) }
-    let(:remote_ip) { '1.2.3.4' }
+    let(:remote_ip) { '127.0.0.1' }
 
     it 'does not override login_ip' do
       expect(service_call.login_ip).to eq(remote_ip)

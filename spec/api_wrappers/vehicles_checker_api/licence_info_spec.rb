@@ -15,10 +15,7 @@ describe 'VehiclesCheckerApi.licence_info' do
 
     it 'returns proper fields' do
       expect(call.keys).to contain_exactly(
-        'active',
-        'wheelchairAccessible',
-        'description',
-        'licensingAuthoritiesNames'
+        'active', 'wheelchairAccessible', 'description', 'licensingAuthoritiesNames'
       )
     end
   end

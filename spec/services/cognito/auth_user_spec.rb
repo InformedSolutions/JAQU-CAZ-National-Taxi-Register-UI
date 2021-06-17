@@ -9,7 +9,7 @@ describe Cognito::AuthUser do
 
   let(:username) { 'user@example.com' }
   let(:password) { 'password' }
-  let(:remote_ip) { '1.2.3.4' }
+  let(:remote_ip) { '127.0.0.1' }
   let(:auth_params) do
     {
       client_id: anything,
