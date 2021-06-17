@@ -8,6 +8,7 @@ ruby '3.0.1'
 gem 'rails', '~> 6.1'
 
 gem 'activerecord-nulldb-adapter'
+gem 'addressable'
 gem 'aws-sdk-cognitoidentityprovider'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
@@ -26,7 +27,6 @@ group :development, :test do
   gem 'haml-rails'
   gem 'rspec-rails'
   gem 'ruby_jard'
-  gem 'yard'
 end
 
 group :development do
@@ -48,10 +48,10 @@ group :test do
   gem 'rails-controller-testing'
   gem 'rubocop-rails'
   gem 'rubocop-rspec', require: false
-  gem 'scss_lint-govuk', require: false
   gem 'selenium-webdriver'
   gem 'show_me_the_cookies'
   gem 'simplecov', '~> 0.17.1', require: false
   gem 'webdrivers'
   gem 'webmock'
+  gem 'yard'
 end

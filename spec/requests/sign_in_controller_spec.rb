@@ -26,7 +26,7 @@ describe 'User singing in', type: :request do
       it 'calls Cognito::AuthUser with proper params' do
         subject
         expect(Cognito::AuthUser).to have_received(:call)
-          .with(username: email, password: password, login_ip: '1.2.3.4')
+          .with(username: email, password: password, login_ip: '127.0.0.1')
       end
     end
 

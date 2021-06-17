@@ -52,7 +52,7 @@ module LoginHelpers
   end
 
   def remote_ip
-    '1.2.3.4'
+    '127.0.0.1'
   end
 end
 

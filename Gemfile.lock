@@ -66,13 +66,13 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     ast (2.4.2)
     aws-eventstream (1.1.1)
-    aws-partitions (1.467.0)
+    aws-partitions (1.468.0)
     aws-record (2.6.0)
       aws-sdk-dynamodb (~> 1.18)
     aws-sdk-cognitoidentityprovider (1.53.0)
       aws-sdk-core (~> 3, >= 3.112.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-core (3.114.2)
+    aws-sdk-core (3.114.3)
       aws-eventstream (~> 1, >= 1.0.2)
       aws-partitions (~> 1, >= 1.239.0)
       aws-sigv4 (~> 1.1)
@@ -80,7 +80,7 @@ GEM
     aws-sdk-dynamodb (1.60.0)
       aws-sdk-core (~> 3, >= 3.112.0)
       aws-sigv4 (~> 1.1)
-    aws-sdk-kms (1.43.0)
+    aws-sdk-kms (1.44.0)
       aws-sdk-core (~> 3, >= 3.112.0)
       aws-sigv4 (~> 1.1)
     aws-sdk-rails (3.6.1)
@@ -190,7 +190,7 @@ GEM
       railties (>= 3.2)
     erubi (1.10.0)
     erubis (2.7.0)
-    ffi (1.15.1)
+    ffi (1.15.3)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     haml (5.2.1)
@@ -246,8 +246,6 @@ GEM
     multi_test (0.1.2)
     multi_xml (0.6.0)
     nio4r (2.5.7)
-    nokogiri (1.11.7-x86_64-darwin)
-      racc (~> 1.4)
     nokogiri (1.11.7-x86_64-linux)
       racc (~> 1.4)
     orm_adapter (0.5.0)
@@ -335,7 +333,7 @@ GEM
       rspec-mocks (~> 3.10)
       rspec-support (~> 3.10)
     rspec-support (3.10.2)
-    rubocop (1.16.1)
+    rubocop (1.17.0)
       parallel (~> 1.10)
       parser (>= 3.0.0.0)
       rainbow (>= 2.2.2, < 4.0)
@@ -361,15 +359,6 @@ GEM
     ruby_parser (3.16.0)
       sexp_processor (~> 4.15, >= 4.15.1)
     rubyzip (2.3.0)
-    sass (3.7.4)
-      sass-listen (~> 4.0.0)
-    sass-listen (4.0.0)
-      rb-fsevent (~> 0.9, >= 0.9.4)
-      rb-inotify (~> 0.9, >= 0.9.7)
-    scss_lint (0.59.0)
-      sass (~> 3.5, >= 3.5.5)
-    scss_lint-govuk (0.2.0)
-      scss_lint
     sdoc (2.2.0)
       rdoc (>= 5.0)
     selenium-webdriver (3.142.7)
@@ -436,11 +425,11 @@ GEM
     zeitwerk (2.4.2)
 
 PLATFORMS
-  x86_64-darwin-19
   x86_64-linux
 
 DEPENDENCIES
   activerecord-nulldb-adapter
+  addressable
   aws-sdk-cognitoidentityprovider
   aws-sdk-rails
   aws-sdk-s3
@@ -467,7 +456,6 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rspec
   ruby_jard
-  scss_lint-govuk
   sdoc
   selenium-webdriver
   show_me_the_cookies
@@ -485,4 +473,4 @@ RUBY VERSION
    ruby 3.0.1p64
 
 BUNDLED WITH
-   2.2.15
+   2.2.20

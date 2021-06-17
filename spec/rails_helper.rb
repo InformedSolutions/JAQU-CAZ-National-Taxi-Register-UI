@@ -28,10 +28,6 @@ RSpec.configure do |config|
     config.include h
   end
 
-  config.before do
-    allow_any_instance_of(ActionDispatch::Request).to receive(:remote_ip).and_return('1.2.3.4')
-  end
-
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

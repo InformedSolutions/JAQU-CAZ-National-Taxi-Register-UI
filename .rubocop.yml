@@ -32,7 +32,7 @@ RSpec/ContextWording:
   Enabled: false
 
 RSpec/NestedGroups:
-  Max: 5
+  Max: 4
 
 RSpec/MultipleMemoizedHelpers:
   Max: 9
@@ -40,12 +40,3 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/DescribeClass:
   Exclude:
     - 'spec/api_wrappers/**/*.rb'
-
-RSpec/FilePath:
-  Enabled: false
-
-RSpec/ExampleLength:
-  Max: 6
-
-RSpec/AnyInstance:
-  Enabled: false

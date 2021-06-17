@@ -10,7 +10,8 @@ describe CsvUploadService do
   describe '#call' do
     context 'with valid params' do
       before do
-        allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(true)
+        mock = instance_double(Aws::S3::Object, upload_file: true)
+        allow(Aws::S3::Object).to receive(:new).and_return(mock)
       end
 
       it 'returns true' do
@@ -45,7 +46,8 @@ describe CsvUploadService do
 
       context 'when `S3UploadService` returns error' do
         before do
-          allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(false)
+          mock = instance_double(Aws::S3::Object, upload_file: false)
+          allow(Aws::S3::Object).to receive(:new).and_return(mock)
         end
 
         it 'raises exception' do
@@ -54,11 +56,7 @@ describe CsvUploadService do
       end
 
       context 'when S3 raises an exception' do
-        before do
-          allow_any_instance_of(Aws::S3::Object)
-            .to receive(:upload_file)
-            .and_raise(Aws::S3::Errors::MultipartUploadError.new('', ''))
-        end
+        before { stub_request(:put, /CAZ-2020-01-08-AuthorityID.csv/).to_return(status: 500, body: '') }
 
         it 'raises a proper exception' do
           expect { service_call }.to raise_exception(CsvUploadFailureException)
