@@ -52,13 +52,29 @@ describe 'User singing in', type: :request do
       end
     end
 
-    context 'when email is an invalid format' do
+    context 'when `email` is an invalid format' do
       let(:email) { 'invalid_email_format' }
 
       before { subject }
 
       it 'provides proper error messages' do
         errors = { email: 'Enter your email address in a valid format', password: 'Enter your password' }
+        expect(flash[:errors]).to eq(errors)
+      end
+
+      it 'redirects to the sign in page' do
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'when `password` is missing' do
+      let(:password) { nil }
+
+      before { subject }
+
+      it 'provides proper error messages' do
+        errors = { email: 'Enter a valid email address and password',
+                   password: 'Enter a valid email address and password' }
         expect(flash[:errors]).to eq(errors)
       end
 

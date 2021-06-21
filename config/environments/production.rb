@@ -139,4 +139,6 @@ Rails.application.configure do
   #
   # Hide rendering of partials
   config.action_view.logger = nil
+  # Remove `X-Runtime` header from logs in production
+  config.middleware.delete(Rack::Runtime)
 end

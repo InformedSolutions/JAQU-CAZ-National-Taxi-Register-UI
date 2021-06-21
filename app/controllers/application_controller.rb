@@ -6,15 +6,22 @@
 class ApplicationController < ActionController::Base
   # protects applications against CSRF
   protect_from_forgery prepend: true
-  # rescues from API errors
+  # rescues from API and security errors
   rescue_from Errno::ECONNREFUSED,
               SocketError,
               BaseApi::Error500Exception,
               BaseApi::Error422Exception,
               BaseApi::Error400Exception,
+              InvalidHostException,
+              RefererXssException,
               with: :render_server_unavailable
   # rescues from upload validation or if upload to AWS S3 failed
   rescue_from CsvUploadFailureException, with: :handle_exception
+
+  # check if host headers are valid
+  before_action :validate_host_headers!,
+                except: %i[health build_id],
+                if: -> { Rails.env.production? && Rails.configuration.x.host.present? }
 
   ##
   # Health endpoint
@@ -91,5 +98,14 @@ class ApplicationController < ActionController::Base
   # Assign back button url
   def assign_back_button_url
     @back_button_url = request.referer || root_path
+
+    Security::RefererXssHandler.call(referer: @back_button_url)
   end
+
+  # Checks if hosts were not manipulated
+  # :nocov:
+  def validate_host_headers!
+    Security::HostHeaderValidator.call(request: request, allowed_hosts: Rails.configuration.x.host)
+  end
+  # :nocov:
 end

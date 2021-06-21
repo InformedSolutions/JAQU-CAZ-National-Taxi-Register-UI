@@ -3,6 +3,8 @@
 require 'rails_helper'
 
 describe SearchVrnForm do
+  include ActiveSupport::Testing::TimeHelpers
+
   subject(:form) { described_class.new(params) }
 
   let(:params) do
@@ -20,14 +22,17 @@ describe SearchVrnForm do
 
   let(:vrn) { 'CU57ABC' }
   let(:historic) { 'false' }
-  let(:start_date_day) { Date.current.yesterday.day.to_s }
-  let(:start_date_month) { Date.current.yesterday.month.to_s }
-  let(:start_date_year) { Date.current.yesterday.year.to_s }
-  let(:end_date_day) { Date.current.tomorrow.day.to_s }
-  let(:end_date_month) { Date.current.tomorrow.month.to_s }
-  let(:end_date_year) { Date.current.tomorrow.year.to_s }
+  let(:start_date_day) { '30' }
+  let(:start_date_month) { '4' }
+  let(:start_date_year) { '2021' }
+  let(:end_date_day) { '1' }
+  let(:end_date_month) { '5' }
+  let(:end_date_year) { '2021' }
 
-  before { form.valid? }
+  before do
+    travel_to(DateTime.parse('2021-04-30'))
+    subject.valid?
+  end
 
   context 'with proper VRN' do
     it { is_expected.to be_valid }
@@ -164,12 +169,8 @@ describe SearchVrnForm do
 
       context 'when the start date not earlier than end date' do
         context 'show errors' do
-          let(:start_date_day) { Date.tomorrow.day.to_s }
-          let(:start_date_month) { Date.tomorrow.month.to_s }
-          let(:start_date_year) { Date.tomorrow.year.to_s }
-          let(:end_date_day) { Date.current.day.to_s }
-          let(:end_date_month) { Date.current.month.to_s }
-          let(:end_date_year) { Date.current.year.to_s }
+          let(:start_date_day) { '2' }
+          let(:start_date_month) { '5' }
 
           it_behaves_like 'an invalid attribute input',
                           :start_date,
@@ -179,12 +180,8 @@ describe SearchVrnForm do
 
       context 'when the start date and end date the same' do
         context 'show errors' do
-          let(:start_date_day) { Date.yesterday.day.to_s }
-          let(:start_date_month) { Date.yesterday.month.to_s }
-          let(:start_date_year) { Date.yesterday.year.to_s }
-          let(:end_date_day) { Date.yesterday.day.to_s }
-          let(:end_date_month) { Date.yesterday.month.to_s }
-          let(:end_date_year) { Date.yesterday.year.to_s }
+          let(:end_date_day) { '30' }
+          let(:end_date_month) { '4' }
 
           it { is_expected.to be_valid }
         end
@@ -266,9 +263,8 @@ describe SearchVrnForm do
       end
 
       context 'when start date with future date' do
-        let(:start_date_day) { Date.current.tomorrow.day.to_s }
-        let(:start_date_month) { Date.current.tomorrow.month.to_s }
-        let(:start_date_year) { Date.current.tomorrow.year.to_s }
+        let(:start_date_day) { '1' }
+        let(:start_date_month) { '5' }
 
         it_behaves_like 'an invalid attribute input',
                         :start_date,
@@ -293,8 +289,7 @@ describe SearchVrnForm do
     end
 
     context 'when a start and end date with more than a month between them' do
-      let(:end_date_day) { Date.current.day.to_s }
-      let(:end_date_month) { (Date.current.tomorrow.month + 1).to_s }
+      let(:end_date_day) { '31' }
 
       it_behaves_like 'an invalid attribute input',
                       :end_date,
@@ -302,9 +297,7 @@ describe SearchVrnForm do
     end
 
     context 'when a start and end date is no more than an one month between them' do
-      let(:start_date_day) { Date.current.day.to_s }
-      let(:end_date_day) { Date.current.day.to_s }
-      let(:end_date_month) { (Date.current.tomorrow.month + 1).to_s }
+      let(:end_date_day) { '30' }
 
       it { is_expected.to be_valid }
     end
