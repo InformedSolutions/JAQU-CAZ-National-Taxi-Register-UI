@@ -892,7 +892,7 @@ steps:
   - name: await ecs rollout
     image: docker:19.03.11-git
     environment:
-      build_id_url: https://sit-upload.taxiphvdata.co.uk/build_id
+      build_id_url: https://sit-ntr-web.cleanairzone.defra.gov.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
