@@ -1052,7 +1052,7 @@ steps:
       event:
         - push
     depends_on:
-      - deploy to sit
+      - codedeploy ui sit
         
   - name: await ecs rollout (sit2)
     image: docker:19.03.11-git
@@ -1069,7 +1069,7 @@ steps:
       event:
         - push
     depends_on:
-      - deploy to sit2
+      - codedeploy ui sit2
 
   ################################################# End of SIT Environment Steps ############################################################
 
