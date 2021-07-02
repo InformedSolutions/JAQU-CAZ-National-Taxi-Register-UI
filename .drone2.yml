@@ -759,6 +759,8 @@ steps:
     environment:
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
+    depends_on:
+      - static code analysis (Ruby)
 
   - name: plan terraform updates in sit
     image: hashicorp/terraform:0.12.23
