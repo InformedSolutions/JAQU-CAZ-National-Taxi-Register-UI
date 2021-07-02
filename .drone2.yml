@@ -928,6 +928,7 @@ steps:
         - push
     depends_on:
       - clone iac
+      - publish image to ecr
 
   # Invoke terraform scripts with tagged image number
   - name: deploy to sit2
