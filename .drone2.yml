@@ -1067,7 +1067,7 @@ steps:
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
-      - sh ci-cd-resources/check_build_number.sh
+      - sh build_utils/check_build_number.sh
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
