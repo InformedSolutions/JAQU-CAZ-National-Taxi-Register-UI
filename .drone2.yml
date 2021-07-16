@@ -1090,9 +1090,26 @@ trigger:
     - pull_request
     - push
 concurrency:
-  limit: 1
+  limit: 2
 
 steps:
+
+  - name: clone iac
+    image: hashicorp/terraform:0.12.23
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout staging_preprod
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key   
 
   - name: plan terraform updates in preprod
     image: hashicorp/terraform:0.12.23
@@ -1103,15 +1120,7 @@ steps:
       - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
       - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
-      - mkdir ~/.ssh
-      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - touch ~/.ssh/known_hosts
-      - chmod 600 ~/.ssh/known_hosts
-      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
-      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout staging_preprod
       - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
@@ -1143,8 +1152,6 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_staging_aws_secret_access_key
-      GIT_PRIVATE_SSH:
-        from_secret: jaqu_lower_github_private_key
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-staging
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
@@ -1157,6 +1164,64 @@ steps:
     when:
       event:
         - pull_request
+    depends_on:
+      - clone iac
+
+  - name: plan terraform updates in preprod2
+    image: hashicorp/terraform:0.12.23
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - cd JAQU-CAZ-IAC
+      - cd terraform-iac/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select preprod2 || tf workspace new preprod2
+      - tf plan
+      - cd ../02.backends
+      - tf init
+      - tf workspace select preprod2 || tf workspace new preprod2
+      - tf plan
+      - cd ../04.web
+      - tf init
+      - tf workspace select preprod2 || tf workspace new preprod2
+      - tf plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      TF_VAR_secret_key_base:
+        from_secret: ntr_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
+      environment: preprod2
+    when:
+      event:
+        - pull_request
+    depends_on:
+      - plan terraform updates in preprod
 
   - name: provisioning warning
     image: docker:19.03.11-git
@@ -1176,16 +1241,8 @@ steps:
       - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
       - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
-      - mkdir ~/.ssh
-      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
-      - chmod 600 ~/.ssh/id_rsa
-      - touch ~/.ssh/known_hosts
-      - chmod 600 ~/.ssh/known_hosts
-      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
-      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
-      - git checkout staging_preprod
-      - cd terraform-iac/projects/ntr/layers/01.networking
+        - cd terraform-iac/projects/ntr/layers/01.networking
       - PATH=$PATH:../../../../bin/
       - chmod +x ../../../../bin/tf
       - tf init
@@ -1216,8 +1273,6 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_staging_aws_secret_access_key
-      GIT_PRIVATE_SSH:
-        from_secret: jaqu_lower_github_private_key
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-staging
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
@@ -1230,6 +1285,65 @@ steps:
     when:
       event:
         - push
+    depends_on:
+      - clone iac
+
+  # Invoke terraform scripts with tagged image number
+  - name: deploy to preprod2
+    image: hashicorp/terraform:0.12.23
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - cd JAQU-CAZ-IAC
+        - cd terraform-iac/projects/ntr/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select preprod2 || tf workspace new preprod2
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select preprod2 || tf workspace new preprod2
+      - tf apply -auto-approve
+      - cd ../04.web
+      - tf init
+      - tf workspace select preprod2 || tf workspace new preprod2
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      TF_VAR_secret_key_base:
+        from_secret: ntr_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_2iugBKyyYVyl0LX
+      environment: preprod2
+    when:
+      event:
+        - push
+    depends_on:
+      - deploy to preprod
 
   - name: codedeploy ui preprod
     image: alpine:3.11.6
@@ -1256,6 +1370,36 @@ steps:
     when:
       event:
         - push
+    depends_on:
+      - deploy to preprod
+
+  - name: codedeploy ui preprod2
+    image: alpine:3.11.6
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-shared-project-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: ntr-codedeploy-service-preprod
+      DEPLOYMENT_GROUP: ntr-codedeploy-service-preprod
+      AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
+      PROJECT: ntr
+      DEPLOY_ENVIRONMENT: preprod2
+      LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
+    when:
+      event:
+        - push
+    depends_on:
+      - deploy to preprod2
 
   - name: await ecs rollout
     image: alpine:3.11.6
@@ -1282,6 +1426,37 @@ steps:
     when:
       event:
         - push
+    depends_on:
+      - codedeploy ui preprod
+
+  - name: await ecs rollout (preprod2)
+    image: alpine:3.11.6
+    environment:
+      build_id_url: https://preprod2-ntr-web.cleanairzone.defra.gov.uk/build_id
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_controlled_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_controlled_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster ntr-cluster-sit  --services ntr-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export build_id=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - apk add curl
+      - sh ci-cd-resources/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+    depends_on:
+      - codedeploy ui preprod2
+
   ################################################# End of Preprod Environment Steps ############################################################
 
 ---
